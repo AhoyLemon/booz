@@ -1,21 +1,3 @@
 id,name,category,tags,inStock,bottleSize,bottleState,image
-1,Espolon Reposado,Staples,"tequila,reposado",true,750ml,opened,/images/bottles/espolon-reposado.jpg
-2,Fords Gin,Staples,"gin,london-dry",true,750ml,unopened,/images/bottles/fords-gin.jpg
-3,Bacardi Superior,Staples,"rum,white-rum",true,1.75l,opened,/images/bottles/bacardi-superior.jpg
-4,Buffalo Trace Bourbon,Staples,"whiskey,bourbon",true,750ml,opened,/images/bottles/buffalo-trace.jpg
-5,Tanqueray No. 10,Special Occasion,"gin,premium",false,750ml,empty,/images/bottles/tanqueray-10.jpg
-6,Don Julio Blanco,Special Occasion,"tequila,blanco",true,750ml,unopened,/images/bottles/don-julio-blanco.jpg
-7,Cointreau,Liqueur,"liqueur,triple-sec,orange",true,750ml,opened,/images/bottles/cointreau.jpg
-8,Angostura Bitters,Mixers,"bitters,aromatic",true,200ml,opened,/images/bottles/angostura.jpg
-9,Green Chartreuse,Liqueur,"liqueur,herbal",false,375ml,empty,/images/bottles/green-chartreuse.jpg
-10,Fresh Lime,Mixers,"citrus,lime,fresh",true,1lb,opened,/images/bottles/lime.jpg
-11,Simple Syrup,Mixers,"syrup,sweetener",true,750ml,opened,/images/bottles/simple-syrup.jpg
-12,Club Soda,Mixers,"soda,carbonated",true,1l,opened,/images/bottles/club-soda.jpg
-13,Ginger Beer,Mixers,"ginger-beer,carbonated,non-alcoholic",true,750ml,opened,/images/bottles/ginger-beer.jpg
-14,Grenadine,Mixers,"grenadine,syrup,pomegranate,non-alcoholic",true,375ml,opened,/images/bottles/grenadine.jpg
-15,Corona Extra,Beer,"beer,lager,mexican",true,12oz,unopened,/images/bottles/corona.jpg
-16,Pinot Grigio,Wine,"wine,white-wine,italian",true,750ml,opened,/images/bottles/pinot-grigio.jpg
-17,Cabernet Sauvignon,Wine,"wine,red-wine,californian",false,750ml,empty,/images/bottles/cabernet.jpg
-18,Sparkling Water,Mixers,"water,carbonated,non-alcoholic",true,1l,opened,/images/bottles/sparkling-water.jpg
-19,Orange Juice,Mixers,"juice,orange,citrus,non-alcoholic",true,1l,opened,/images/bottles/orange-juice.jpg
-20,Tonic Water,Mixers,"tonic,carbonated,non-alcoholic",true,1l,opened,/images/bottles/tonic-water.jpg
+1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,3_amigos_reposado.jpg
+2,Beefeater,Staples,"gin, london dry",true,750ml,opened,beefeater_gin.jpg

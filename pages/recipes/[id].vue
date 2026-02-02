@@ -1,7 +1,6 @@
 <template lang="pug">
-NuxtLayout
-  .recipe-detail-page(v-if="recipe")
-    .container
+.recipe-detail-page(v-if="recipe")
+  .container
       .recipe-hero
         .recipe-hero__image(v-if="recipe.imageUrl")
           img(:src="recipe.imageUrl" :alt="recipe.name")

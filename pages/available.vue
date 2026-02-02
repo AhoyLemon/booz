@@ -1,7 +1,6 @@
 <template lang="pug">
-NuxtLayout
-  .available-page
-    .container
+.available-page
+  .container
       h2 🎯 Available Now
       p.mb-3 Cocktails you can make with 100% of ingredients in stock
 

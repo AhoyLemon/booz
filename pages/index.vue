@@ -1,39 +1,38 @@
 <template lang="pug">
-NuxtLayout
-  .home-page
-    .container
-      section.intro.mb-3
-        h2.text-center Welcome to Your Bar
-        p.text-center Manage your inventory and discover cocktails you can make right now
+.home-page
+  .container
+    section.intro.mb-3
+      h2.text-center Welcome to Your Bar
+      p.text-center Manage your inventory and discover cocktails you can make right now
 
-      nav.navigation.mb-3
-        NuxtLink.nav-card(to="/inventory")
-          .nav-card__icon 🍾
-          h3 Inventory
-          p View and manage your bottle collection
+    nav.navigation.mb-3
+      NuxtLink.nav-card(to="/inventory")
+        .nav-card__icon 🍾
+        h3 Inventory
+        p View and manage your bottle collection
 
-        NuxtLink.nav-card(to="/recipes")
-          .nav-card__icon 🍹
-          h3 Recipes
-          p Discover cocktails you can make
+      NuxtLink.nav-card(to="/recipes")
+        .nav-card__icon 🍹
+        h3 Recipes
+        p Discover cocktails you can make
 
-        NuxtLink.nav-card(to="/available")
-          .nav-card__icon ✨
-          h3 Available Now
-          p See drinks with 100% ingredients in stock
+      NuxtLink.nav-card(to="/available")
+        .nav-card__icon ✨
+        h3 Available Now
+        p See drinks with 100% ingredients in stock
 
-      section.quick-stats.mb-3
-        .stat-card
-          h3 {{ inventoryCount }}
-          p Bottles in Inventory
+    section.quick-stats.mb-3
+      .stat-card
+        h3 {{ inventoryCount }}
+        p Bottles in Inventory
 
-        .stat-card
-          h3 {{ inStockCount }}
-          p Currently In Stock
+      .stat-card
+        h3 {{ inStockCount }}
+        p Currently In Stock
 
-        .stat-card
-          h3 {{ availableRecipesCount }}
-          p Drinks Available
+      .stat-card
+        h3 {{ availableRecipesCount }}
+        p Drinks Available
 </template>
 
 <script setup lang="ts">

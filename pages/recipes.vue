@@ -1,7 +1,6 @@
 <template lang="pug">
-NuxtLayout
-  .recipes-page
-    .container
+.recipes-page
+  .container
       h2 All Recipes
       p.mb-3 Explore cocktails from TheCocktailDB and custom recipes
 

@@ -1,7 +1,6 @@
 <template lang="pug">
-NuxtLayout
-  .inventory-page
-    .container
+.inventory-page
+  .container
       h2 Your Bar Inventory
       p.mb-3 Manage your bottle collection
 

@@ -13,8 +13,15 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
-  // CSS configuration
-  css: ['@/assets/styles/main.scss'],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/styles/_variables.scss" as *;'
+        }
+      }
+    }
+  },
 
   // Build configuration for GitHub Pages
   app: {
