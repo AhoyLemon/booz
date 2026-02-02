@@ -57,6 +57,8 @@ const filteredBottles = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
 .inventory-page {
   min-height: 60vh;
 
@@ -66,7 +68,7 @@ const filteredBottles = computed(() => {
   }
 
   p {
-    color: lighten($text-dark, 20%);
+    color: color.adjust($text-dark, $lightness: 20%);
   }
 }
 
@@ -89,7 +91,7 @@ const filteredBottles = computed(() => {
 
   &:hover {
     border-color: $accent-color;
-    background: lighten($accent-color, 45%);
+    background: color.adjust($accent-color, $lightness: 45%);
   }
 
   &.active {

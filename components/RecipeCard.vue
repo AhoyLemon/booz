@@ -53,6 +53,8 @@ const isIngredientAvailable = (ingredientName: string) => {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
 .recipe-card {
   container-type: inline-size;
   container-name: recipe-card;
@@ -137,7 +139,7 @@ const isIngredientAvailable = (ingredientName: string) => {
 
     .availability-text {
       font-size: 0.875rem;
-      color: lighten($text-dark, 20%);
+      color: color.adjust($text-dark, $lightness: 20%);
     }
   }
 
@@ -172,7 +174,7 @@ const isIngredientAvailable = (ingredientName: string) => {
         }
 
         .ingredient-qty {
-          color: lighten($text-dark, 30%);
+          color: color.adjust($text-dark, $lightness: 30%);
           font-size: 0.875rem;
         }
       }
@@ -196,7 +198,7 @@ const isIngredientAvailable = (ingredientName: string) => {
       color: white;
 
       &:hover {
-        background: darken($accent-color, 10%);
+        background: color.adjust($accent-color, $lightness: -10%);
       }
     }
   }

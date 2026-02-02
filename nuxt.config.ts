@@ -25,5 +25,5 @@ export default defineNuxtConfig({
   // SSG target for static generation
   ssr: true,
 
-  compatibilityDate: '2024-02-02',
+  compatibilityDate: '2026-02-02',
 })

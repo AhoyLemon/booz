@@ -53,6 +53,8 @@ const availableRecipesCount = computed(() => getAvailableRecipes.value.length)
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
 .home-page {
   min-height: 60vh;
 }
@@ -65,7 +67,7 @@ const availableRecipesCount = computed(() => getAvailableRecipes.value.length)
 
   p {
     font-size: 1.125rem;
-    color: lighten($text-dark, 20%);
+    color: color.adjust($text-dark, $lightness: 20%);
   }
 }
 
@@ -105,7 +107,7 @@ const availableRecipesCount = computed(() => getAvailableRecipes.value.length)
 
   p {
     margin: 0;
-    color: lighten($text-dark, 30%);
+    color: color.adjust($text-dark, $lightness: 30%);
   }
 }
 
@@ -116,7 +118,11 @@ const availableRecipesCount = computed(() => getAvailableRecipes.value.length)
 }
 
 .stat-card {
-  background: linear-gradient(135deg, $accent-color 0%, darken($accent-color, 10%) 100%);
+  background: linear-gradient(
+    135deg,
+    $accent-color 0%,
+    color.adjust($accent-color, $lightness: -10%) 100%
+  );
   color: white;
   padding: $spacing-xl;
   border-radius: $border-radius-lg;

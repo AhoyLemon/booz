@@ -1,81 +1,98 @@
-<!--
-Get your module up and running quickly.
+# 🍸 The Headless Bar
 
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
-
-# My Module
-
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
-
-My new Nuxt module for doing amazing things.
-
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-  <!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-  <!-- - [📖 &nbsp;Documentation](https://example.com) -->
+A custom bar inventory and cocktail app built with Nuxt 3.
 
 ## Features
 
-<!-- Highlight some of the features your module provide here -->
+- **Inventory Management**: Track your bottles with size, state, and images
+- **Recipe Discovery**: Find cocktails from TheCocktailDB API
+- **Smart Matching**: See which drinks you can make with your current inventory
+- **Non-Alcoholic Support**: Includes mocktails, beer, and wine recipes
+- **Data Sync**: Import from Notion API, CSV, or local JSON files
 
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+## Getting Started
 
-## Quick Setup
-
-Install the module to your Nuxt application with one command:
+### Install Dependencies
 
 ```bash
-npx nuxt module add my-module
+npm install
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+### Sync Your Inventory Data
 
-## Contribution
+```bash
+npm run sync-data
+```
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
+This will read from `data/inventory.csv` and `data/recipes.json` and generate normalized JSON files in `public/data/`.
 
-</details>
+### Development
 
-<!-- Badges -->
+```bash
+npm run dev
+```
 
-[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/my-module
-[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/my-module
-[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/my-module
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
-[nuxt-href]: https://nuxt.com
+### Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+### Generate Static Site
+
+```bash
+npm run generate
+```
+
+## Data Structure
+
+### Inventory CSV
+
+Your `data/inventory.csv` should have these columns:
+
+- `id`, `name`, `category`, `tags`, `inStock`, `bottleSize`, `bottleState`, `image`
+
+### Recipes JSON
+
+Your `data/recipes.json` should follow this structure:
+
+```json
+{
+  "recipes": [
+    {
+      "id": "custom-1",
+      "name": "Recipe Name",
+      "ingredients": [{ "name": "Ingredient", "qty": "2 oz" }],
+      "instructions": "Mix and serve",
+      "category": "Category",
+      "tags": ["tag1", "tag2"]
+    }
+  ]
+}
+```
+
+### Notion Integration (Optional)
+
+Set environment variables:
+
+- `NOTION_API_KEY`
+- `NOTION_DATABASE_ID`
+
+The sync script will automatically fetch from Notion if these are present.
+
+## Testing
+
+```bash
+npm test
+```
+
+## Code Formatting
+
+```bash
+npm run format
+```
+
+## License
+
+MIT

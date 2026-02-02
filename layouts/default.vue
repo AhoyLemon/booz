@@ -8,12 +8,15 @@ div
     slot
   footer.app-footer
     .container
-      p &copy; 2024 The Headless Bar
+      p &copy; 2026 The Headless Bar
 </template>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
+
 .app-header {
-  background: linear-gradient(135deg, $dark-bg 0%, darken($dark-bg, 10%) 100%);
+  background: linear-gradient(135deg, $dark-bg 0%, color.adjust($dark-bg, $lightness: -10%) 100%);
   color: $text-light;
   padding: $spacing-xl 0;
   margin-bottom: $spacing-xxl;

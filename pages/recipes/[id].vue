@@ -92,6 +92,8 @@ const isIngredientAvailable = (ingredientName: string) => {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
 .recipe-detail-page {
   min-height: 60vh;
 }
@@ -193,7 +195,7 @@ const isIngredientAvailable = (ingredientName: string) => {
       &.available {
         opacity: 1;
         font-weight: 600;
-        background: lighten($accent-color, 45%);
+        background: color.adjust($accent-color, $lightness: 45%);
         padding: $spacing-md $spacing-sm;
         border-radius: $border-radius-sm;
         margin-bottom: $spacing-xs;
@@ -204,7 +206,7 @@ const isIngredientAvailable = (ingredientName: string) => {
       }
 
       .ingredient-qty {
-        color: lighten($text-dark, 30%);
+        color: color.adjust($text-dark, $lightness: 30%);
         margin-left: $spacing-md;
       }
     }
@@ -292,7 +294,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 
   p {
-    color: lighten($text-dark, 20%);
+    color: color.adjust($text-dark, $lightness: 20%);
     margin-bottom: $spacing-lg;
   }
 }
@@ -310,7 +312,7 @@ const isIngredientAvailable = (ingredientName: string) => {
     color: white;
 
     &:hover {
-      background: darken($accent-color, 10%);
+      background: color.adjust($accent-color, $lightness: -10%);
     }
   }
 }

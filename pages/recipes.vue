@@ -76,6 +76,8 @@ const filteredRecipes = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+@use '@/assets/styles/variables' as *;
 .recipes-page {
   min-height: 60vh;
 
@@ -85,7 +87,7 @@ const filteredRecipes = computed(() => {
   }
 
   p {
-    color: lighten($text-dark, 20%);
+    color: color.adjust($text-dark, $lightness: 20%);
   }
 }
 
@@ -119,7 +121,7 @@ const filteredRecipes = computed(() => {
   transition: all 0.3s ease;
 
   &:hover {
-    background: darken($accent-color, 10%);
+    background: color.adjust($accent-color, $lightness: -10%);
   }
 }
 
@@ -140,7 +142,7 @@ const filteredRecipes = computed(() => {
 
   &:hover {
     border-color: $accent-color;
-    background: lighten($accent-color, 45%);
+    background: color.adjust($accent-color, $lightness: 45%);
   }
 
   &.active {
