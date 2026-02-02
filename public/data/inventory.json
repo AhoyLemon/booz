@@ -11,7 +11,7 @@
       "inStock": true,
       "bottleSize": "750ml",
       "bottleState": "opened",
-      "image": "/images/bottles/3_amigos_reposado.jpg"
+      "image": "/images/bottles/3amigos_reposado.webp"
     },
     {
       "id": "2",
@@ -24,7 +24,7 @@
       "inStock": true,
       "bottleSize": "750ml",
       "bottleState": "opened",
-      "image": "/images/bottles/beefeater_gin.jpg"
+      "image": "/images/bottles/beefeater.webp"
     },
     {
       "id": "3",
@@ -38,7 +38,71 @@
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/bibandtucker.webp"
+    },
+    {
+      "id": "4",
+      "name": "Blue Run Chosen",
+      "category": "Staples",
+      "tags": [
+        "whiskey",
+        "bourbon"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "unopened",
+      "image": "/images/bottles/bluerun_chosen.webp"
+    },
+    {
+      "id": "5",
+      "name": "Bombay Sapphire East",
+      "category": "Staples",
+      "tags": [
+        "gin",
+        "london dry"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/bombay_east.webp"
+    },
+    {
+      "id": "6",
+      "name": "Camarena Reposado",
+      "category": "Staples",
+      "tags": [
+        "tequila",
+        "reposado"
+      ],
+      "inStock": true,
+      "bottleSize": "airplane",
+      "bottleState": "unopened",
+      "image": "/images/bottles/camarena_airplane.webp"
+    },
+    {
+      "id": "7",
+      "name": "Castle & Key Restoration",
+      "category": "Staples",
+      "tags": [
+        "whiskey",
+        "rye"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/restoration.webp"
+    },
+    {
+      "id": "8",
+      "name": "Castle & Key Roots of Ruin",
+      "category": "Staples",
+      "tags": [
+        "gin"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "unopened",
+      "image": "/images/bottles/roots_of_ruin.webp"
     }
   ],
-  "lastUpdated": "2026-02-02T03:49:23.716Z"
+  "lastUpdated": "2026-02-02T04:01:42.112Z"
 }
