@@ -86,7 +86,7 @@ const instructionSteps = computed(() => {
   
   // Handle array of instruction steps (new format)
   if (Array.isArray(recipe.value.instructions)) {
-    return recipe.value.instructions
+    return recipe.value.instructions.map(step => step.trim())
   }
   
   // Handle string instructions (old format from API)
