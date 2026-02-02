@@ -4,11 +4,15 @@
       .back-navigation
         NuxtLink.btn.btn-back(to="/recipes") ← Back to Recipes
       .recipe-hero
-        .recipe-hero__image(v-if="recipe.imageUrl")
-          img(:src="recipe.imageUrl" :alt="recipe.name")
+        .recipe-hero__image(v-if="recipeImageUrl")
+          img(:src="recipeImageUrl" :alt="recipe.name")
         .recipe-hero__content
           h1 {{ recipe.name }}
-          span.category-badge(v-if="recipe.category") {{ recipe.category }}
+          .badge-row
+            span.category-badge(v-if="recipe.category") {{ recipe.category }}
+            span.prep-badge(v-if="recipe.prep") {{ recipe.prep }}
+          .tags-row(v-if="recipe.tags && recipe.tags.length > 0")
+            span.tag(v-for="tag in recipe.tags" :key="tag") \#{{ tag }}
           .availability-info
             p(v-if="isFullyAvailable") ✅ All ingredients available!
             p(v-else) ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
@@ -23,7 +27,7 @@
               :class="{ 'available': isIngredientAvailable(ingredient.name) }"
             )
               span.ingredient-name {{ ingredient.name }}
-              span.ingredient-qty {{ ingredient.qty }}
+              span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
 
         .recipe-instructions
           h2 Instructions
@@ -68,9 +72,24 @@ const recipe = computed(() => {
   return getAllRecipes.value.find(r => r.id === route.params.id)
 })
 
+// Get image URL (support both 'image' and 'imageUrl' fields)
+const recipeImageUrl = computed(() => {
+  if (!recipe.value) return ''
+  if (recipe.value.imageUrl) return recipe.value.imageUrl
+  if (recipe.value.image) return `/images/drinks/${recipe.value.image}`
+  return ''
+})
+
 // Split instructions into steps
 const instructionSteps = computed(() => {
   if (!recipe.value) return []
+
+  // Handle array of instruction steps (new format)
+  if (Array.isArray(recipe.value.instructions)) {
+    return recipe.value.instructions.map(step => step.trim())
+  }
+
+  // Handle string instructions (old format from API)
   return recipe.value.instructions
     .split(/\.\s+/)
     .filter(step => step.trim().length > 0)
@@ -140,15 +159,43 @@ const isIngredientAvailable = (ingredientName: string) => {
       color: $dark-bg;
     }
 
-    .category-badge {
+    .badge-row {
+      display: flex;
+      gap: $spacing-md;
+      margin-bottom: $spacing-md;
+      flex-wrap: wrap;
+    }
+
+    .category-badge,
+    .prep-badge {
       display: inline-block;
       background: $primary-color;
       color: white;
       padding: $spacing-sm $spacing-lg;
       border-radius: $border-radius-md;
       font-weight: 600;
-      margin-bottom: $spacing-lg;
       align-self: flex-start;
+    }
+
+    .prep-badge {
+      background: $accent-color;
+    }
+
+    .tags-row {
+      display: flex;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-md;
+      flex-wrap: wrap;
+
+      .tag {
+        display: inline-block;
+        background: white;
+        color: $dark-bg;
+        padding: $spacing-xs $spacing-md;
+        border-radius: $border-radius-sm;
+        font-size: 0.875rem;
+        border: 1px solid $border-color;
+      }
     }
 
     .availability-info {

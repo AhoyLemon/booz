@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { join } from 'path'
-import { readInventoryCSV, writeInventoryCSV, getNextId, normalizeImagePath } from '../server/utils/csvHelper'
+import {
+  readInventoryCSV,
+  writeInventoryCSV,
+  getNextId,
+  normalizeImagePath,
+} from '../server/utils/csvHelper'
 import type { Bottle } from '../types'
 
 const TEST_CSV_PATH = join(process.cwd(), 'data', 'inventory.test.csv')

@@ -2,7 +2,7 @@ import { readInventoryCSV, writeInventoryCSV, normalizeImagePath } from '~/serve
 import { syncInventoryData } from '~/server/utils/syncHelper'
 import type { Bottle } from '~/types'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const id = getRouterParam(event, 'id')
     const body = await readBody<Partial<Bottle>>(event)
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const bottles = readInventoryCSV()
-    const index = bottles.findIndex((b) => b.id === id)
+    const index = bottles.findIndex(b => b.id === id)
 
     if (index === -1) {
       throw createError({

@@ -33,6 +33,7 @@
         "Stir drink while bringing some product further up the glass",
         "Finally, take a sprig of mint, whack it against the side of the glass to express oil, and put the lime in the glass for garnish and odor."
       ],
+      "image": "mojito.webp",
       "prep": "Muddle",
       "category": "Fizzy",
       "tags": [
@@ -72,6 +73,7 @@
         "shake some more",
         "pour into glass"
       ],
+      "image": "margarita.webp",
       "prep": "Shaker",
       "category": "Margarita",
       "tags": [
@@ -81,5 +83,5 @@
       ]
     }
   ],
-  "lastUpdated": "2026-02-02T18:04:22.851Z"
+  "lastUpdated": "2026-02-02T18:15:01.954Z"
 }

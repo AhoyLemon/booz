@@ -31,11 +31,11 @@ export function readInventoryCSV(): Bottle[] {
       skip_empty_lines: true,
     }) as CSVBottle[]
 
-    return records.map((record) => ({
+    return records.map(record => ({
       id: record.id,
       name: record.name,
       category: record.category,
-      tags: record.tags.split(',').map((tag) => tag.trim()),
+      tags: record.tags.split(',').map(tag => tag.trim()),
       inStock: record.inStock === 'true',
       bottleSize: record.bottleSize || undefined,
       bottleState: (record.bottleState as 'unopened' | 'opened' | 'empty') || undefined,
@@ -50,7 +50,7 @@ export function readInventoryCSV(): Bottle[] {
 
 export function writeInventoryCSV(bottles: Bottle[]): void {
   try {
-    const records: CSVBottle[] = bottles.map((bottle) => ({
+    const records: CSVBottle[] = bottles.map(bottle => ({
       id: bottle.id,
       name: bottle.name,
       category: bottle.category,
@@ -64,7 +64,17 @@ export function writeInventoryCSV(bottles: Bottle[]): void {
 
     const csv = stringify(records, {
       header: true,
-      columns: ['id', 'name', 'category', 'tags', 'inStock', 'bottleSize', 'bottleState', 'image', 'company'],
+      columns: [
+        'id',
+        'name',
+        'category',
+        'tags',
+        'inStock',
+        'bottleSize',
+        'bottleState',
+        'image',
+        'company',
+      ],
     })
 
     writeFileSync(CSV_PATH, csv, 'utf-8')
@@ -80,29 +90,27 @@ export function writeInventoryCSV(bottles: Bottle[]): void {
  */
 export function normalizeImagePath(imagePath: string | undefined): string | undefined {
   if (!imagePath || imagePath.trim() === '') return undefined
-  
+
   // If already has the prefix, return as-is
   if (imagePath.startsWith('/images/bottles/')) {
     return imagePath
   }
-  
+
   // If it's just a filename, add the prefix
   if (!imagePath.startsWith('/')) {
     return `/images/bottles/${imagePath}`
   }
-  
+
   // Otherwise return as-is
   return imagePath
 }
 
 export function getNextId(bottles: Bottle[]): string {
   if (bottles.length === 0) return '1'
-  
-  const numericIds = bottles
-    .map((b) => parseInt(b.id, 10))
-    .filter((id) => !isNaN(id))
-  
+
+  const numericIds = bottles.map(b => parseInt(b.id, 10)).filter(id => !isNaN(id))
+
   if (numericIds.length === 0) return '1'
-  
+
   return String(Math.max(...numericIds) + 1)
 }

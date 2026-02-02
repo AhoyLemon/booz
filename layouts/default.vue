@@ -39,7 +39,14 @@ div
     opacity: 0.9;
     font-size: 1.125rem;
   }
-  nav { display: flex; gap: $spacing-lg; margin-top: $spacing-md; max-width: $container-max-width; margin-left: auto; margin-right: auto; }
+  nav {
+    display: flex;
+    gap: $spacing-lg;
+    margin-top: $spacing-md;
+    max-width: $container-max-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .app-footer {

@@ -63,22 +63,20 @@ const totalTagCount = computed(() => {
 
 const filteredTags = computed(() => {
   const query = searchQuery.value.toLowerCase().trim()
-  
+
   // Always include "All Tags" option with total count
-  const allOption: TagOption = { 
-    label: 'All Tags', 
-    value: 'all', 
-    count: totalTagCount.value
+  const allOption: TagOption = {
+    label: 'All Tags',
+    value: 'all',
+    count: totalTagCount.value,
   }
-  
+
   if (!query) {
     return [allOption, ...props.tags]
   }
-  
-  const filtered = props.tags.filter(tag => 
-    tag.label.toLowerCase().includes(query)
-  )
-  
+
+  const filtered = props.tags.filter(tag => tag.label.toLowerCase().includes(query))
+
   return [allOption, ...filtered]
 })
 

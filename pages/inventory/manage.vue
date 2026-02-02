@@ -136,7 +136,7 @@ const form = ref({
 
 onMounted(async () => {
   await loadBottles()
-  
+
   // Check if we have a bottle ID in the query params
   const bottleId = route.query.id as string
   if (bottleId) {
@@ -149,9 +149,7 @@ onMounted(async () => {
 
 async function loadBottles() {
   try {
-    const response = await $fetch<{ success: boolean; bottles: Bottle[] }>(
-      '/api/inventory'
-    )
+    const response = await $fetch<{ success: boolean; bottles: Bottle[] }>('/api/inventory')
     bottles.value = response.bottles
   } catch (e) {
     error.value = 'Failed to load bottles'
@@ -238,7 +236,7 @@ async function handleSubmit() {
 
     await loadBottles()
     resetForm()
-    
+
     // Scroll to top to see the message
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -290,12 +288,12 @@ async function toggleInStock(bottle: Bottle) {
       ...bottle,
       inStock: !bottle.inStock,
     }
-    
+
     await $fetch(`/api/inventory/${bottle.id}`, {
       method: 'PUT',
       body: updatedData,
     })
-    
+
     const action = updatedData.inStock ? 'marked as in stock' : 'marked as empty'
     successMessage.value = `${bottle.name} ${action} successfully!`
     await loadBottles()

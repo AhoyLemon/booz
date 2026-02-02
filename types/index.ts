@@ -14,15 +14,17 @@ export interface Bottle {
 
 export interface Ingredient {
   name: string
-  qty: string
+  qty?: string
 }
 
 export interface Recipe {
   id: string
   name: string
   ingredients: Ingredient[]
-  instructions: string
+  instructions: string | string[]
+  image?: string
   imageUrl?: string
+  prep?: string
   category?: string
   tags?: string[]
   starred?: boolean

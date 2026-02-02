@@ -73,11 +73,9 @@ async function loadBottle() {
   try {
     loading.value = true
     error.value = null
-    
-    const response = await $fetch<{ success: boolean; bottles: Bottle[] }>(
-      '/api/inventory'
-    )
-    
+
+    const response = await $fetch<{ success: boolean; bottles: Bottle[] }>('/api/inventory')
+
     const foundBottle = response.bottles.find(b => b.id === bottleId)
     if (foundBottle) {
       bottle.value = foundBottle
@@ -103,18 +101,18 @@ function bottleStateLabel(state: string) {
 
 async function toggleInStock() {
   if (!bottle.value) return
-  
+
   try {
     const updatedData = {
       ...bottle.value,
       inStock: !bottle.value.inStock,
     }
-    
+
     await $fetch(`/api/inventory/${bottle.value.id}`, {
       method: 'PUT',
       body: updatedData,
     })
-    
+
     bottle.value = updatedData
   } catch (e: any) {
     error.value = 'Failed to update bottle status'
@@ -180,7 +178,7 @@ async function toggleInStock() {
   border-radius: $border-radius-lg;
   padding: $spacing-lg;
   box-shadow: $shadow-md;
-  
+
   img {
     width: 100%;
     height: auto;

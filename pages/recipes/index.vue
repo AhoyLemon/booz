@@ -54,7 +54,7 @@ onMounted(async () => {
   await loadInventory()
   await loadLocalRecipes()
   loadStarredRecipes()
-  
+
   // If there are no starred recipes or API recipes yet, fetch some default recipes
   await fetchCocktailDBRecipes('margarita')
 })
@@ -84,14 +84,12 @@ const filteredRecipes = computed(() => {
   // If there's a search term, filter and sort by relevance
   if (searchTerm.value.trim()) {
     const term = searchTerm.value.toLowerCase()
-    
+
     // Filter recipes that match the search term
     const matchingRecipes = recipes.filter(recipe => {
       const nameMatch = recipe.name.toLowerCase().includes(term)
       const categoryMatch = recipe.category?.toLowerCase().includes(term)
-      const ingredientMatch = recipe.ingredients.some(ing => 
-        ing.name.toLowerCase().includes(term)
-      )
+      const ingredientMatch = recipe.ingredients.some(ing => ing.name.toLowerCase().includes(term))
       return nameMatch || categoryMatch || ingredientMatch
     })
 
@@ -99,15 +97,15 @@ const filteredRecipes = computed(() => {
     return matchingRecipes.sort((a, b) => {
       const aNameLower = a.name.toLowerCase()
       const bNameLower = b.name.toLowerCase()
-      
+
       // Exact matches first
       if (aNameLower === term && bNameLower !== term) return -1
       if (bNameLower === term && aNameLower !== term) return 1
-      
+
       // Name starts with search term
       if (aNameLower.startsWith(term) && !bNameLower.startsWith(term)) return -1
       if (bNameLower.startsWith(term) && !aNameLower.startsWith(term)) return 1
-      
+
       // Name contains search term (already filtered, so all contain it)
       return 0
     })
@@ -117,7 +115,7 @@ const filteredRecipes = computed(() => {
   return recipes.slice().sort((a, b) => {
     const aStarred = isStarred(a.id)
     const bStarred = isStarred(b.id)
-    
+
     if (aStarred && !bStarred) return -1
     if (bStarred && !aStarred) return 1
     return 0
