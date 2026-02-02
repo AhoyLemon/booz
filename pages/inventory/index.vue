@@ -23,7 +23,7 @@
 
       .tag-filters.mb-3(v-if="availableTags.length > 0")
         h3 Filter by Tag
-        TagFilterSelect(v-model="tagFilter" :tags="tagOptions")
+        TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredBottles.length")
 
       .bottle-grid
         BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")

@@ -9,7 +9,6 @@
       .search-input-wrapper
         input.search-input(
           v-model="searchQuery"
-          @input="handleSearch"
           placeholder="Type to search tags..."
           @click.stop
           ref="searchInput"
@@ -36,6 +35,7 @@ interface TagOption {
 const props = defineProps<{
   modelValue: string
   tags: TagOption[]
+  totalCount?: number
 }>()
 
 const emit = defineEmits<{
@@ -57,8 +57,12 @@ const displayText = computed(() => {
 const filteredTags = computed(() => {
   const query = searchQuery.value.toLowerCase().trim()
   
-  // Always include "All Tags" option
-  const allOption: TagOption = { label: 'All Tags', value: 'all', count: 0 }
+  // Always include "All Tags" option with total count
+  const allOption: TagOption = { 
+    label: 'All Tags', 
+    value: 'all', 
+    count: props.totalCount || props.tags.reduce((sum, tag) => sum + tag.count, 0)
+  }
   
   if (!query) {
     return [allOption, ...props.tags]
@@ -86,10 +90,6 @@ const selectTag = (value: string) => {
   searchQuery.value = ''
 }
 
-const handleSearch = () => {
-  // Search happens reactively through computed property
-}
-
 // Close dropdown when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
@@ -100,11 +100,15 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
+  if (typeof window !== 'undefined') {
+    document.addEventListener('click', handleClickOutside)
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
+  if (typeof window !== 'undefined') {
+    document.removeEventListener('click', handleClickOutside)
+  }
 })
 </script>
 
