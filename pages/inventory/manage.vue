@@ -27,9 +27,10 @@
               option(value="Other") Other
 
           .form-group
-            label(for="tags") Tags (comma-separated)
-            input#tags(v-model="tagsInput" type="text" placeholder="e.g., gin, london dry, premium")
-            small.help-text Enter spirit types and characteristics separated by commas
+            label Tags
+            .tag-selector-wrapper
+              TagSelector(v-model="form.tags")
+            small.help-text Select spirit types and characteristics using the hierarchical selector
 
           .form-group
             label
@@ -39,6 +40,16 @@
           .form-group
             label(for="bottleSize") Bottle Size
             input#bottleSize(v-model="form.bottleSize" type="text" placeholder="e.g., 750ml")
+
+          .form-group
+            label(for="abv") ABV (Alcohol by Volume %)
+            input#abv(v-model.number="form.abv" type="number" min="0" max="100" step="0.1" placeholder="e.g., 40")
+            small.help-text Enter the alcohol percentage (0-100)
+
+          .form-group
+            label(for="origin") Origin
+            input#origin(v-model="form.origin" type="text" placeholder="e.g., Kentucky, Scotland")
+            small.help-text Enter the country or region of origin
 
           .form-group
             label(for="bottleState") Bottle State
@@ -72,16 +83,21 @@
                 span.badge(v-if="bottle.inStock" class="in-stock") In Stock
                 span.badge(v-else class="out-of-stock") Out of Stock
                 span.size(v-if="bottle.bottleSize") {{ bottle.bottleSize }}
+                span.abv(v-if="bottle.abv") {{ bottle.abv }}% ABV
+                span.origin(v-if="bottle.origin") {{ bottle.origin }}
               .bottle-tags(v-if="bottle.tags.length")
                 span.tag(v-for="tag in bottle.tags" :key="tag") {{ tag }}
             .bottle-actions
               button.btn-edit(@click="startEdit(bottle)") Edit
+              button.btn-mark-empty(v-if="bottle.inStock" @click="toggleInStock(bottle)") Mark Empty
+              button.btn-mark-in-stock(v-else @click="toggleInStock(bottle)") Mark In Stock
               button.btn-delete(@click="confirmDelete(bottle)") Delete
 </template>
 
 <script setup lang="ts">
 import type { Bottle } from '~/types'
 
+const route = useRoute()
 const bottles = ref<Bottle[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -91,16 +107,26 @@ const editingBottle = ref<Bottle | null>(null)
 const form = ref({
   name: '',
   category: '',
+  tags: [] as string[],
   inStock: true,
   bottleSize: '',
   bottleState: '',
   image: '',
+  abv: undefined as number | undefined,
+  origin: '',
 })
 
-const tagsInput = ref('')
-
-onMounted(() => {
-  loadBottles()
+onMounted(async () => {
+  await loadBottles()
+  
+  // Check if we have a bottle ID in the query params
+  const bottleId = route.query.id as string
+  if (bottleId) {
+    const bottle = bottles.value.find(b => b.id === bottleId)
+    if (bottle) {
+      startEdit(bottle)
+    }
+  }
 })
 
 async function loadBottles() {
@@ -119,12 +145,14 @@ function resetForm() {
   form.value = {
     name: '',
     category: '',
+    tags: [],
     inStock: true,
     bottleSize: '',
     bottleState: '',
     image: '',
+    abv: undefined,
+    origin: '',
   }
-  tagsInput.value = ''
   editingBottle.value = null
   error.value = null
   successMessage.value = null
@@ -135,12 +163,14 @@ function startEdit(bottle: Bottle) {
   form.value = {
     name: bottle.name,
     category: bottle.category,
+    tags: [...bottle.tags],
     inStock: bottle.inStock,
     bottleSize: bottle.bottleSize || '',
     bottleState: bottle.bottleState || '',
     image: bottle.image || '',
+    abv: bottle.abv,
+    origin: bottle.origin || '',
   }
-  tagsInput.value = bottle.tags.join(', ')
   error.value = null
   successMessage.value = null
   // Scroll to form
@@ -160,14 +190,13 @@ async function handleSubmit() {
     const bottleData: Partial<Bottle> = {
       name: form.value.name,
       category: form.value.category,
-      tags: tagsInput.value
-        .split(',')
-        .map(t => t.trim())
-        .filter(t => t.length > 0),
+      tags: form.value.tags,
       inStock: form.value.inStock,
       bottleSize: form.value.bottleSize || undefined,
       bottleState: (form.value.bottleState as 'unopened' | 'opened' | 'empty') || undefined,
       image: form.value.image || undefined,
+      abv: form.value.abv,
+      origin: form.value.origin || undefined,
     }
 
     if (editingBottle.value) {
@@ -176,7 +205,7 @@ async function handleSubmit() {
         method: 'PUT',
         body: bottleData,
       })
-      successMessage.value = 'Bottle updated successfully!'
+      successMessage.value = `Bottle updated successfully! Form cleared - you are now adding a new bottle.`
     } else {
       // Create new bottle
       await $fetch('/api/inventory', {
@@ -188,11 +217,14 @@ async function handleSubmit() {
 
     await loadBottles()
     resetForm()
+    
+    // Scroll to top to see the message
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    // Clear success message after 3 seconds
+    // Clear success message after 5 seconds
     setTimeout(() => {
       successMessage.value = null
-    }, 3000)
+    }, 5000)
   } catch (e: any) {
     error.value = e.data?.statusMessage || 'Failed to save bottle'
     console.error(e)
@@ -222,6 +254,37 @@ async function confirmDelete(bottle: Bottle) {
     }, 3000)
   } catch (e: any) {
     error.value = e.data?.statusMessage || 'Failed to delete bottle'
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function toggleInStock(bottle: Bottle) {
+  loading.value = true
+  error.value = null
+
+  try {
+    const updatedData = {
+      ...bottle,
+      inStock: !bottle.inStock,
+    }
+    
+    await $fetch(`/api/inventory/${bottle.id}`, {
+      method: 'PUT',
+      body: updatedData,
+    })
+    
+    const action = updatedData.inStock ? 'marked as in stock' : 'marked as empty'
+    successMessage.value = `${bottle.name} ${action} successfully!`
+    await loadBottles()
+
+    // Clear success message after 3 seconds
+    setTimeout(() => {
+      successMessage.value = null
+    }, 3000)
+  } catch (e: any) {
+    error.value = e.data?.statusMessage || 'Failed to update bottle status'
     console.error(e)
   } finally {
     loading.value = false
@@ -330,6 +393,14 @@ async function confirmDelete(bottle: Bottle) {
     font-size: 0.875rem;
     color: color.adjust($text-dark, $lightness: 30%);
   }
+}
+
+.tag-selector-wrapper {
+  border: 2px solid $border-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-sm;
+  min-height: 200px;
+  background: white;
 }
 
 .form-actions {
@@ -483,6 +554,12 @@ async function confirmDelete(bottle: Bottle) {
   color: color.adjust($text-dark, $lightness: 20%);
 }
 
+.abv,
+.origin {
+  font-size: 0.875rem;
+  color: color.adjust($text-dark, $lightness: 20%);
+}
+
 .bottle-tags {
   display: flex;
   gap: $spacing-xs;
@@ -500,9 +577,12 @@ async function confirmDelete(bottle: Bottle) {
 .bottle-actions {
   display: flex;
   gap: $spacing-sm;
+  flex-wrap: wrap;
 }
 
 .btn-edit,
+.btn-mark-empty,
+.btn-mark-in-stock,
 .btn-delete {
   padding: $spacing-xs $spacing-md;
   border-radius: $border-radius-sm;
@@ -520,6 +600,28 @@ async function confirmDelete(bottle: Bottle) {
 
   &:hover {
     background: $primary-color;
+    color: white;
+  }
+}
+
+.btn-mark-empty {
+  background: color.adjust(orange, $lightness: 30%);
+  color: color.adjust(orange, $lightness: -30%);
+  border-color: color.adjust(orange, $lightness: -20%);
+
+  &:hover {
+    background: orange;
+    color: white;
+  }
+}
+
+.btn-mark-in-stock {
+  background: color.adjust(green, $lightness: 40%);
+  color: color.adjust(green, $lightness: -30%);
+  border-color: color.adjust(green, $lightness: -20%);
+
+  &:hover {
+    background: green;
     color: white;
   }
 }

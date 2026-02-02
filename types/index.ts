@@ -7,6 +7,8 @@ export interface Bottle {
   bottleSize?: string
   bottleState?: 'unopened' | 'opened' | 'empty'
   image?: string
+  abv?: number
+  origin?: string
 }
 
 export interface Ingredient {

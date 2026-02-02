@@ -21,6 +21,12 @@
         button.category-btn(:class="{ active: categoryFilter === 'Beer' }" @click="categoryFilter = 'Beer'") Beer
         button.category-btn(:class="{ active: categoryFilter === 'Wine' }" @click="categoryFilter = 'Wine'") Wine
 
+      .tag-filters.mb-3(v-if="availableTags.length > 0")
+        h3 Filter by Tag
+        button.tag-btn(:class="{ active: tagFilter === 'all' }" @click="tagFilter = 'all'") All Tags
+        button.tag-btn(v-for="tag in availableTags" :key="tag" :class="{ active: tagFilter === tag }" @click="tagFilter = tag") 
+          | {{ tag }} ({{ getBottleCountForTag(tag) }})
+
       .bottle-grid
         BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
 </template>
@@ -30,6 +36,7 @@ const { loadInventory, inventory } = useCocktails()
 
 const filter = ref<'all' | 'inStock' | 'outOfStock'>('all')
 const categoryFilter = ref<string>('all')
+const tagFilter = ref<string>('all')
 
 // Load data on mount
 onMounted(async () => {
@@ -38,6 +45,20 @@ onMounted(async () => {
 
 const inStockBottles = computed(() => inventory.value.filter(b => b.inStock))
 const outOfStockBottles = computed(() => inventory.value.filter(b => !b.inStock))
+
+// Get all unique tags from inventory
+const availableTags = computed(() => {
+  const tags = new Set<string>()
+  inventory.value.forEach(bottle => {
+    bottle.tags.forEach(tag => tags.add(tag))
+  })
+  return Array.from(tags).sort()
+})
+
+// Get bottle count for a specific tag
+const getBottleCountForTag = (tag: string) => {
+  return inventory.value.filter(b => b.tags.includes(tag)).length
+}
 
 const filteredBottles = computed(() => {
   let bottles = inventory.value
@@ -52,6 +73,11 @@ const filteredBottles = computed(() => {
   // Apply category filter
   if (categoryFilter.value !== 'all') {
     bottles = bottles.filter(b => b.category === categoryFilter.value)
+  }
+
+  // Apply tag filter
+  if (tagFilter.value !== 'all') {
+    bottles = bottles.filter(b => b.tags.includes(tagFilter.value))
   }
 
   return bottles
@@ -139,6 +165,36 @@ const filteredBottles = computed(() => {
   &.active {
     background: $primary-color;
     border-color: $primary-color;
+  }
+}
+
+.tag-filters {
+  h3 {
+    font-size: 1rem;
+    margin-bottom: $spacing-sm;
+    color: $text-dark;
+  }
+}
+
+.tag-btn {
+  font-size: 0.875rem;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  background: white;
+  border: 2px solid $border-color;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $accent-color;
+    background: color.adjust($accent-color, $lightness: 45%);
+  }
+
+  &.active {
+    background: color.adjust($primary-color, $lightness: 10%);
+    border-color: color.adjust($primary-color, $lightness: 10%);
+    color: white;
   }
 }
 

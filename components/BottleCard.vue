@@ -9,6 +9,10 @@
     .bottle-card__meta
       span.bottle-card__size(v-if="bottle.bottleSize") 
         | 📏 {{ bottle.bottleSize }}
+      span.bottle-card__abv(v-if="bottle.abv") 
+        | 🍷 {{ bottle.abv }}% ABV
+      span.bottle-card__origin(v-if="bottle.origin") 
+        | 🌍 {{ bottle.origin }}
       span.bottle-card__state(v-if="bottle.bottleState" :class="`state-${bottle.bottleState}`") 
         | {{ bottleStateLabel }}
     .bottle-card__tags
@@ -16,6 +20,9 @@
     .bottle-card__status
       span.status-indicator(:class="{ 'in-stock': bottle.inStock, 'out-of-stock': !bottle.inStock }")
         | {{ bottle.inStock ? 'In Stock' : 'Out of Stock' }}
+    .bottle-card__actions
+      NuxtLink.action-btn.action-btn--view(:to="`/inventory/${bottle.id}`") 👁️ View
+      NuxtLink.action-btn.action-btn--edit(:to="`/inventory/manage?id=${bottle.id}`") ✏️ Edit
 </template>
 
 <script setup lang="ts">
@@ -121,6 +128,8 @@ const bottleStateLabel = computed(() => {
   }
 
   &__size,
+  &__abv,
+  &__origin,
   &__state {
     font-size: 0.875rem;
     padding: $spacing-xs $spacing-sm;
@@ -166,6 +175,7 @@ const bottleStateLabel = computed(() => {
     display: flex;
     align-items: center;
     margin-top: auto;
+    margin-bottom: $spacing-sm;
   }
 
   .status-indicator {
@@ -182,6 +192,46 @@ const bottleStateLabel = computed(() => {
     &.out-of-stock {
       background: color.adjust($secondary-color, $lightness: 35%);
       color: color.adjust($secondary-color, $lightness: -10%);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-sm;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &--view {
+      background: color.adjust($primary-color, $lightness: 40%);
+      color: $primary-color;
+      border: 2px solid $primary-color;
+
+      &:hover {
+        background: $primary-color;
+        color: white;
+      }
+    }
+
+    &--edit {
+      background: color.adjust($accent-color, $lightness: 40%);
+      color: color.adjust($accent-color, $lightness: -20%);
+      border: 2px solid $accent-color;
+
+      &:hover {
+        background: $accent-color;
+        color: white;
+      }
     }
   }
 
