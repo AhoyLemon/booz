@@ -23,9 +23,7 @@
 
       .tag-filters.mb-3(v-if="availableTags.length > 0")
         h3 Filter by Tag
-        button.tag-btn(:class="{ active: tagFilter === 'all' }" @click="tagFilter = 'all'") All Tags
-        button.tag-btn(v-for="tag in availableTags" :key="tag" :class="{ active: tagFilter === tag }" @click="tagFilter = tag") 
-          | {{ tag }} ({{ getBottleCountForTag(tag) }})
+        TagFilterSelect(v-model="tagFilter" :tags="tagOptions")
 
       .bottle-grid
         BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
@@ -53,6 +51,15 @@ const availableTags = computed(() => {
     bottle.tags.forEach(tag => tags.add(tag))
   })
   return Array.from(tags).sort()
+})
+
+// Create tag options for the select component
+const tagOptions = computed(() => {
+  return availableTags.value.map(tag => ({
+    label: tag,
+    value: tag,
+    count: getBottleCountForTag(tag),
+  }))
 })
 
 // Get bottle count for a specific tag

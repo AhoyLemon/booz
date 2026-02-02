@@ -130,9 +130,19 @@ const toggleTag = (tag: string, categoryName: string) => {
     
     const filteredTags = newTags.filter(t => !dependentTags.includes(t))
     selectedTags.value = filteredTags
+    
+    // Auto-collapse dependent categories when parent is removed
+    tagHierarchy
+      .filter(c => c.parent === tag)
+      .forEach(c => expandedCategories.value.delete(c.name))
   } else {
     // Add tag
     selectedTags.value = [...selectedTags.value, tag]
+    
+    // Auto-expand dependent categories when parent is added
+    tagHierarchy
+      .filter(c => c.parent === tag)
+      .forEach(c => expandedCategories.value.add(c.name))
   }
 }
 
@@ -149,12 +159,24 @@ const removeTag = (tag: string) => {
     
     const filteredTags = newTags.filter(t => !dependentTags.includes(t))
     selectedTags.value = filteredTags
+    
+    // Auto-collapse dependent categories when parent is removed
+    tagHierarchy
+      .filter(c => c.parent === tag)
+      .forEach(c => expandedCategories.value.delete(c.name))
   }
 }
 
 // Expand categories with parent dependencies by default
 onMounted(() => {
   expandedCategories.value.add('Base Spirits')
+  
+  // Auto-expand categories for already selected tags
+  selectedTags.value.forEach(tag => {
+    tagHierarchy
+      .filter(c => c.parent === tag)
+      .forEach(c => expandedCategories.value.add(c.name))
+  })
 })
 </script>
 
