@@ -1,20 +1,18 @@
-id,name,category,tags,inStock,bottleSize,bottleState,image,company
-1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,/images/bottles/3amigos_reposado.webp,3 Amigos
-2,Beefeater,Staples,"gin, london dry",true,750ml,opened,/images/bottles/beefeater.webp,Beefeater
-3,Bib & Tucker,Special Occasion,"bourbon, whiskey",true,750ml,unopened,/images/bottles/bibandtucker.webp,Bib & Tucker
-4,Blue Run Chosen,Staples,"whiskey, bourbon",true,750ml,unopened,/images/bottles/bluerun_chosen.webp,Blue Run
-5,Bombay Sapphire East,Staples,"gin, london dry",true,750ml,opened,/images/bottles/bombay_east.webp,Bombay Sapphire
-6,Camarena Reposado,Staples,"tequila, reposado",true,airplane,unopened,/images/bottles/camarena_airplane.webp,Camarena
-7,Castle & Key Restoration,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/restoration.webp,Castle & Key
-8,Castle & Key Roots of Ruin,Staples,gin,true,750ml,unopened,/images/bottles/roots_of_ruin.webp,Castle & Key
-9,Fresh Lime,Mixers,"citrus, lime",true,,,,
-10,Fresh Lemon,Mixers,"citrus, lemon",true,,,,
-11,Simple Syrup,Mixers,syrup,true,,,,
-12,Club Soda,Mixers,"soda, carbonated",true,,,,
-13,Ginger Beer,Mixers,ginger-beer,true,,,,
-14,Tonic Water,Mixers,tonic,true,,,,
-15,Orange Juice,Mixers,"juice, orange",true,,,,
-16,Sparkling Water,Mixers,"water, carbonated",true,,,,
-17,Grenadine,Mixers,grenadine,true,,,,
-18,Beer,Beer,beer,true,,,,
-
+id,name,category,tags,inStock,bottleSize,bottleState,image
+1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,/images/bottles/3amigos_reposado.webp
+2,Beefeater,Staples,"gin, london dry",true,750ml,opened,/images/bottles/beefeater.webp
+3,Bib & Tucker,Special Occasion,"bourbon, whiskey",true,750ml,unopened,/images/bottles/bibandtucker.webp
+4,Blue Run Chosen,Staples,"whiskey, bourbon",true,750ml,unopened,/images/bottles/bluerun_chosen.webp
+5,Bombay Sapphire East,Staples,"gin, london dry",true,750ml,opened,/images/bottles/bombay_east.webp
+6,Camarena Reposado,Staples,"tequila, reposado",true,airplane,unopened,/images/bottles/camarena_airplane.webp
+7,Castle & Key Restoration,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/restoration.webp
+8,Castle & Key Roots of Ruin,Staples,gin,true,750ml,unopened,/images/bottles/roots_of_ruin.webp
+9,J Wray Silver Rum,Staples,"rum, white rum",true,750ml,,/images/bottles/jwray_silver.webp
+10,Jefferson's Reserve,Staples,"whiskey, bourbon",true,750ml,,/images/bottles/jeffersons_reserve.webp
+11,Kirkland Reposado,Staples,"tequila, reposado",true,1 liter,opened,/images/bottles/kirkland_reposado.webp
+12,Kraken 94,Staples,"rum, dark rum, spiced rum",true,1 liter,opened,/images/bottles/kraken_94.webp
+13,Lawless Rum,Staples,"rum, white rum",true,750ml,opened,/images/bottles/lawless_rum.webp
+14,Michter's Straight Bourbon,Staples,"whiskey, bourbon",true,750ml,opened,/images/bottles/michters_bourbon.webp
+15,New Amsterdam Vodka,Staples,vodka,true,750ml,opened,/images/bottles/newamsterdam_vodka.webp
+16,Tincup Rye,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/tincup_rye.webp
+17,Tullibardine Artisan,Staples,"whiskey, scotch",true,750ml,opened,/images/bottles/tullibardine_artisan.webp
