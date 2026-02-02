@@ -146,7 +146,6 @@ const filteredBottles = computed(() => {
 
 .tag-btn {
   font-size: 0.875rem;
-  padding: $spacing-xs $spacing-md;
   padding: $spacing-sm $spacing-lg;
   border-radius: $border-radius-md;
   background: white;
