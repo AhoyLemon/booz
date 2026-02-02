@@ -45,8 +45,7 @@ async function fetchFromNotion(): Promise<Bottle[]> {
         tags: props['Type(s)']?.multi_select?.map(tag => tag.name) || [],
         inStock: status !== 'empty',
         bottleSize: undefined,
-        bottleState:
-          (status as 'unopened' | 'opened' | 'empty') || undefined,
+        bottleState: (status as 'unopened' | 'opened' | 'empty') || undefined,
         image: imageUrl || undefined,
       }
     })

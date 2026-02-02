@@ -79,11 +79,41 @@ const tagHierarchy: TagCategory[] = [
   },
   {
     name: 'Liqueurs & Spirits',
-    tags: ['vermouth', 'amaro', 'bitters', 'chocolate', 'violet', 'cherry', 'anise', 'schnapps', 'mint', 'coffee', 'melon', 'elderflower', 'aquavit', 'grapefruit', 'orange', 'blood orange'],
+    tags: [
+      'vermouth',
+      'amaro',
+      'bitters',
+      'chocolate',
+      'violet',
+      'cherry',
+      'anise',
+      'schnapps',
+      'mint',
+      'coffee',
+      'melon',
+      'elderflower',
+      'aquavit',
+      'grapefruit',
+      'orange',
+      'blood orange',
+    ],
   },
   {
     name: 'Modifiers & Mixers',
-    tags: ['citrus', 'syrup', 'juice', 'soda', 'tonic', 'sugar', 'agave', 'tomato', 'bloody mary', 'lemon', 'pomegranate', 'grenadine'],
+    tags: [
+      'citrus',
+      'syrup',
+      'juice',
+      'soda',
+      'tonic',
+      'sugar',
+      'agave',
+      'tomato',
+      'bloody mary',
+      'lemon',
+      'pomegranate',
+      'grenadine',
+    ],
   },
   {
     name: 'Other',
@@ -102,12 +132,12 @@ const toggleCategory = (categoryName: string) => {
 const isTagDisabled = (tag: string, categoryName: string): boolean => {
   // Find the category for this tag
   const category = tagHierarchy.find(c => c.name === categoryName)
-  
+
   // If category has a parent requirement, check if parent tag is selected
   if (category?.parent) {
     return !selectedTags.value.includes(category.parent)
   }
-  
+
   return false
 }
 
@@ -117,32 +147,26 @@ const toggleTag = (tag: string, categoryName: string) => {
   }
 
   const index = selectedTags.value.indexOf(tag)
-  
+
   if (index > -1) {
     // Remove tag and any dependent tags
     const newTags = [...selectedTags.value]
     newTags.splice(index, 1)
-    
+
     // Remove any tags that depend on this tag
-    const dependentTags = tagHierarchy
-      .filter(c => c.parent === tag)
-      .flatMap(c => c.tags)
-    
+    const dependentTags = tagHierarchy.filter(c => c.parent === tag).flatMap(c => c.tags)
+
     const filteredTags = newTags.filter(t => !dependentTags.includes(t))
     selectedTags.value = filteredTags
-    
+
     // Auto-collapse dependent categories when parent is removed
-    tagHierarchy
-      .filter(c => c.parent === tag)
-      .forEach(c => expandedCategories.value.delete(c.name))
+    tagHierarchy.filter(c => c.parent === tag).forEach(c => expandedCategories.value.delete(c.name))
   } else {
     // Add tag
     selectedTags.value = [...selectedTags.value, tag]
-    
+
     // Auto-expand dependent categories when parent is added
-    tagHierarchy
-      .filter(c => c.parent === tag)
-      .forEach(c => expandedCategories.value.add(c.name))
+    tagHierarchy.filter(c => c.parent === tag).forEach(c => expandedCategories.value.add(c.name))
   }
 }
 
@@ -151,31 +175,25 @@ const removeTag = (tag: string) => {
   if (index > -1) {
     const newTags = [...selectedTags.value]
     newTags.splice(index, 1)
-    
+
     // Remove any tags that depend on this tag
-    const dependentTags = tagHierarchy
-      .filter(c => c.parent === tag)
-      .flatMap(c => c.tags)
-    
+    const dependentTags = tagHierarchy.filter(c => c.parent === tag).flatMap(c => c.tags)
+
     const filteredTags = newTags.filter(t => !dependentTags.includes(t))
     selectedTags.value = filteredTags
-    
+
     // Auto-collapse dependent categories when parent is removed
-    tagHierarchy
-      .filter(c => c.parent === tag)
-      .forEach(c => expandedCategories.value.delete(c.name))
+    tagHierarchy.filter(c => c.parent === tag).forEach(c => expandedCategories.value.delete(c.name))
   }
 }
 
 // Expand categories with parent dependencies by default
 onMounted(() => {
   expandedCategories.value.add('Base Spirits')
-  
+
   // Auto-expand categories for already selected tags
   selectedTags.value.forEach(tag => {
-    tagHierarchy
-      .filter(c => c.parent === tag)
-      .forEach(c => expandedCategories.value.add(c.name))
+    tagHierarchy.filter(c => c.parent === tag).forEach(c => expandedCategories.value.add(c.name))
   })
 })
 </script>
@@ -221,7 +239,7 @@ onMounted(() => {
   cursor: pointer;
   padding: 0 $spacing-xs;
   margin-left: $spacing-xs;
-  
+
   &:hover {
     color: color.adjust($primary-color, $lightness: -30%);
   }

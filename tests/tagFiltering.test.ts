@@ -3,9 +3,27 @@ import { describe, it, expect } from 'vitest'
 describe('Tag Filtering', () => {
   it('should extract unique tags from inventory', () => {
     const inventory = [
-      { id: '1', name: 'Bottle 1', category: 'Staples', tags: ['tequila', 'reposado'], inStock: true },
-      { id: '2', name: 'Bottle 2', category: 'Staples', tags: ['gin', 'london dry'], inStock: true },
-      { id: '3', name: 'Bottle 3', category: 'Liqueur', tags: ['tequila', 'blanco'], inStock: false },
+      {
+        id: '1',
+        name: 'Bottle 1',
+        category: 'Staples',
+        tags: ['tequila', 'reposado'],
+        inStock: true,
+      },
+      {
+        id: '2',
+        name: 'Bottle 2',
+        category: 'Staples',
+        tags: ['gin', 'london dry'],
+        inStock: true,
+      },
+      {
+        id: '3',
+        name: 'Bottle 3',
+        category: 'Liqueur',
+        tags: ['tequila', 'blanco'],
+        inStock: false,
+      },
     ]
 
     const tags = new Set<string>()
@@ -19,9 +37,27 @@ describe('Tag Filtering', () => {
 
   it('should filter bottles by tag', () => {
     const inventory = [
-      { id: '1', name: 'Bottle 1', category: 'Staples', tags: ['tequila', 'reposado'], inStock: true },
-      { id: '2', name: 'Bottle 2', category: 'Staples', tags: ['gin', 'london dry'], inStock: true },
-      { id: '3', name: 'Bottle 3', category: 'Liqueur', tags: ['tequila', 'blanco'], inStock: false },
+      {
+        id: '1',
+        name: 'Bottle 1',
+        category: 'Staples',
+        tags: ['tequila', 'reposado'],
+        inStock: true,
+      },
+      {
+        id: '2',
+        name: 'Bottle 2',
+        category: 'Staples',
+        tags: ['gin', 'london dry'],
+        inStock: true,
+      },
+      {
+        id: '3',
+        name: 'Bottle 3',
+        category: 'Liqueur',
+        tags: ['tequila', 'blanco'],
+        inStock: false,
+      },
     ]
 
     const tagFilter = 'tequila'
@@ -33,9 +69,27 @@ describe('Tag Filtering', () => {
 
   it('should combine tag and category filters', () => {
     const inventory = [
-      { id: '1', name: 'Bottle 1', category: 'Staples', tags: ['tequila', 'reposado'], inStock: true },
-      { id: '2', name: 'Bottle 2', category: 'Staples', tags: ['gin', 'london dry'], inStock: true },
-      { id: '3', name: 'Bottle 3', category: 'Liqueur', tags: ['tequila', 'blanco'], inStock: false },
+      {
+        id: '1',
+        name: 'Bottle 1',
+        category: 'Staples',
+        tags: ['tequila', 'reposado'],
+        inStock: true,
+      },
+      {
+        id: '2',
+        name: 'Bottle 2',
+        category: 'Staples',
+        tags: ['gin', 'london dry'],
+        inStock: true,
+      },
+      {
+        id: '3',
+        name: 'Bottle 3',
+        category: 'Liqueur',
+        tags: ['tequila', 'blanco'],
+        inStock: false,
+      },
     ]
 
     const categoryFilter = 'Staples'
@@ -51,9 +105,27 @@ describe('Tag Filtering', () => {
 
   it('should count bottles for each tag', () => {
     const inventory = [
-      { id: '1', name: 'Bottle 1', category: 'Staples', tags: ['tequila', 'reposado'], inStock: true },
-      { id: '2', name: 'Bottle 2', category: 'Staples', tags: ['gin', 'london dry'], inStock: true },
-      { id: '3', name: 'Bottle 3', category: 'Liqueur', tags: ['tequila', 'blanco'], inStock: false },
+      {
+        id: '1',
+        name: 'Bottle 1',
+        category: 'Staples',
+        tags: ['tequila', 'reposado'],
+        inStock: true,
+      },
+      {
+        id: '2',
+        name: 'Bottle 2',
+        category: 'Staples',
+        tags: ['gin', 'london dry'],
+        inStock: true,
+      },
+      {
+        id: '3',
+        name: 'Bottle 3',
+        category: 'Liqueur',
+        tags: ['tequila', 'blanco'],
+        inStock: false,
+      },
     ]
 
     const getBottleCountForTag = (tag: string) => {
@@ -147,9 +219,7 @@ describe('Tag Hierarchy', () => {
       newTags.splice(index, 1)
 
       // Remove dependent tags
-      const dependentTags = tagHierarchy
-        .filter(c => c.parent === tagToRemove)
-        .flatMap(c => c.tags)
+      const dependentTags = tagHierarchy.filter(c => c.parent === tagToRemove).flatMap(c => c.tags)
 
       selectedTags = newTags.filter(t => !dependentTags.includes(t))
     }
@@ -167,9 +237,7 @@ describe('Tag Hierarchy', () => {
       const newTags = [...selectedTags]
       newTags.splice(index, 1)
 
-      const dependentTags = tagHierarchy
-        .filter(c => c.parent === tagToRemove)
-        .flatMap(c => c.tags)
+      const dependentTags = tagHierarchy.filter(c => c.parent === tagToRemove).flatMap(c => c.tags)
 
       selectedTags = newTags.filter(t => !dependentTags.includes(t))
     }

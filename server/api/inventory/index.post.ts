@@ -1,8 +1,13 @@
-import { readInventoryCSV, writeInventoryCSV, getNextId, normalizeImagePath } from '~/server/utils/csvHelper'
+import {
+  readInventoryCSV,
+  writeInventoryCSV,
+  getNextId,
+  normalizeImagePath,
+} from '~/server/utils/csvHelper'
 import { syncInventoryData } from '~/server/utils/syncHelper'
 import type { Bottle } from '~/types'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const body = await readBody<Partial<Bottle>>(event)
 

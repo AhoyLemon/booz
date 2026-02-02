@@ -25,6 +25,7 @@ npm install
 If you want to use your Notion database as the source of truth:
 
 1. Copy `.env.example` to `.env`:
+
    ```bash
    cp .env.example .env
    ```
@@ -118,6 +119,7 @@ To use your Notion database as the primary source of truth for your inventory, f
 #### Step 3: Get Your Database ID
 
 From your Notion database URL, extract the database ID:
+
 - **URL format**: `https://notion.so/workspace/<database_id>?v=<view_id>`
 - **Example**: For `https://ahoylemon.notion.site/c52ff95a53774261a8301435ee2c9be6?v=a9582664318d4f478b5922fa1b7bd2bd`
 - **Database ID**: `c52ff95a53774261a8301435ee2c9be6` (the part between the last `/` and `?v=`)
@@ -125,6 +127,7 @@ From your Notion database URL, extract the database ID:
 #### Step 4: Configure Environment Variables
 
 1. Copy the example file:
+
    ```bash
    cp .env.example .env
    ```
@@ -138,17 +141,20 @@ From your Notion database URL, extract the database ID:
 #### Step 5: Sync Your Data
 
 Run the sync script to fetch from Notion:
+
 ```bash
 npm run sync-data
 ```
 
 You should see output like:
+
 ```
 📡 Fetching inventory from Notion...
 ✅ Fetched X bottles from Notion
 ```
 
 **Important Notes:**
+
 - The sync script merges Notion data with your local CSV
 - When both sources have the same bottle (matching ID), **Notion data takes priority**
 - The web management UI updates the local CSV only - run `npm run sync-data` to sync with Notion
@@ -166,7 +172,6 @@ You can add, edit, and delete bottles directly from the web interface:
 Changes made through the web interface will update `data/inventory.csv` immediately. Run `npm run sync-data` afterward to regenerate the public JSON files.
 
 ## Testing
-
 
 ```bash
 npm test

@@ -1,7 +1,7 @@
 import { readInventoryCSV, writeInventoryCSV } from '~/server/utils/csvHelper'
 import { syncInventoryData } from '~/server/utils/syncHelper'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const id = getRouterParam(event, 'id')
 
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const bottles = readInventoryCSV()
-    const index = bottles.findIndex((b) => b.id === id)
+    const index = bottles.findIndex(b => b.id === id)
 
     if (index === -1) {
       throw createError({

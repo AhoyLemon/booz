@@ -83,12 +83,12 @@ const recipeImageUrl = computed(() => {
 // Split instructions into steps
 const instructionSteps = computed(() => {
   if (!recipe.value) return []
-  
+
   // Handle array of instruction steps (new format)
   if (Array.isArray(recipe.value.instructions)) {
     return recipe.value.instructions.map(step => step.trim())
   }
-  
+
   // Handle string instructions (old format from API)
   return recipe.value.instructions
     .split(/\.\s+/)
