@@ -1,6 +1,8 @@
 <template lang="pug">
 .recipe-detail-page(v-if="recipe")
   .container
+      .back-navigation
+        NuxtLink.btn.btn-back(to="/recipes") ← Back to Recipes
       .recipe-hero
         .recipe-hero__image(v-if="recipe.imageUrl")
           img(:src="recipe.imageUrl" :alt="recipe.name")
@@ -98,6 +100,10 @@ const isIngredientAvailable = (ingredientName: string) => {
 @use '@/assets/styles/variables' as *;
 .recipe-detail-page {
   min-height: 60vh;
+}
+
+.back-navigation {
+  margin-bottom: $spacing-lg;
 }
 
 .recipe-hero {
@@ -315,6 +321,18 @@ const isIngredientAvailable = (ingredientName: string) => {
 
     &:hover {
       background: color.adjust($accent-color, $lightness: -10%);
+    }
+  }
+
+  &-back {
+    background: white;
+    color: $dark-bg;
+    border: 2px solid $border-color;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      border-color: $accent-color;
+      box-shadow: $shadow-md;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template lang="pug">
-.recipe-card(:class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
+NuxtLink.recipe-card(:to="`/recipes/${recipe.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
   button.star-button(@click.prevent="handleToggleStar" :class="{ 'starred': starred }" :title="starred ? 'Remove from favorites' : 'Add to favorites'")
     span {{ starred ? '★' : '☆' }}
   .recipe-card__image(v-if="recipe.imageUrl")
@@ -73,6 +73,8 @@ const isIngredientAvailable = (ingredientName: string) => {
   display: flex;
   flex-direction: column;
   position: relative;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
     box-shadow: $shadow-lg;

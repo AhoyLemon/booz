@@ -118,6 +118,7 @@ export const useCocktails = () => {
 
   // Check if an ingredient name matches any in-stock inventory item
   const isIngredientInStock = (ingredientName: string): boolean => {
+    if (!inventory.value || !Array.isArray(inventory.value)) return false
     const inStockItems = inventory.value.filter(b => b.inStock)
     const lowerIngredient = ingredientName.toLowerCase()
 
@@ -173,7 +174,9 @@ export const useCocktails = () => {
 
   // Filter recipes where 100% of ingredients are in stock
   const getAvailableRecipes = computed(() => {
-    const allRecipes = [...localRecipes.value, ...apiRecipes.value]
+    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
+    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+    const allRecipes = [...local, ...api]
 
     return allRecipes.filter(recipe => {
       if (recipe.ingredients.length === 0) return false
@@ -184,12 +187,16 @@ export const useCocktails = () => {
 
   // Get all recipes (including those with missing ingredients)
   const getAllRecipes = computed(() => {
-    return [...localRecipes.value, ...apiRecipes.value]
+    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
+    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+    return [...local, ...api]
   })
 
   // Get recipes with missing ingredients count
   const getRecipesWithAvailability = computed(() => {
-    const allRecipes = [...localRecipes.value, ...apiRecipes.value]
+    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
+    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+    const allRecipes = [...local, ...api]
 
     return allRecipes.map(recipe => {
       const availableCount = recipe.ingredients.filter(ingredient =>
@@ -209,7 +216,9 @@ export const useCocktails = () => {
 
   // Get non-alcoholic recipes
   const getNonAlcoholicRecipes = computed(() => {
-    const allRecipes = [...localRecipes.value, ...apiRecipes.value]
+    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
+    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+    const allRecipes = [...local, ...api]
     return allRecipes.filter(
       recipe =>
         recipe.category?.toLowerCase().includes('non-alcoholic') ||
@@ -220,7 +229,9 @@ export const useCocktails = () => {
 
   // Get alcoholic recipes
   const getAlcoholicRecipes = computed(() => {
-    const allRecipes = [...localRecipes.value, ...apiRecipes.value]
+    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
+    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+    const allRecipes = [...local, ...api]
     return allRecipes.filter(
       recipe =>
         !recipe.category?.toLowerCase().includes('non-alcoholic') &&
