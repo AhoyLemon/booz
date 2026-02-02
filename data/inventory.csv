@@ -7,3 +7,12 @@ id,name,category,tags,inStock,bottleSize,bottleState,image
 6,Camarena Reposado,Staples,"tequila, reposado",true,airplane,unopened,/images/bottles/camarena_airplane.webp
 7,Castle & Key Restoration,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/restoration.webp
 8,Castle & Key Roots of Ruin,Staples,gin,true,750ml,unopened,/images/bottles/roots_of_ruin.webp
+9,J Wray Silver Rum,Staples,"rum, white rum",true,750ml,,/images/bottles/jwray_silver.webp
+10,Jefferson's Reserve,Staples,"whiskey, bourbon",true,750ml,,/images/bottles/jeffersons_reserve.webp
+11,Kirkland Reposado,Staples,"tequila, reposado",true,1 liter,opened,/images/bottles/kirkland_reposado.webp
+12,Kraken 94,Staples,"rum, dark rum, spiced rum",true,1 liter,opened,/images/bottles/kraken_94.webp
+13,Lawless Rum,Staples,"rum, white rum",true,750ml,opened,/images/bottles/lawless_rum.webp
+14,Michter's Straight Bourbon,Staples,"whiskey, bourbon",true,750ml,opened,/images/bottles/michters_bourbon.webp
+15,New Amsterdam Vodka,Staples,vodka,true,750ml,opened,/images/bottles/newamsterdam_vodka.webp
+16,Tincup Rye,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/tincup_rye.webp
+17,Tullibardine Artisan,Staples,"whiskey, scotch",true,750ml,opened,/images/bottles/tullibardine_artisan.webp

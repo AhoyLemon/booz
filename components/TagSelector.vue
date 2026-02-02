@@ -59,7 +59,7 @@ const tagHierarchy: TagCategory[] = [
   },
   {
     name: 'Whiskey Types',
-    tags: ['bourbon', 'scotch', 'rye', 'irish whiskey'],
+    tags: ['bourbon', 'scotch', 'rye', 'irish whiskey', 'single malt', 'japanese whiskey'],
     parent: 'whiskey',
   },
   {

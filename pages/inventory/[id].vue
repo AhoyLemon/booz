@@ -8,7 +8,7 @@
     .content-grid(v-if="bottle")
       .bottle-info-section
         .bottle-image(v-if="bottle.image")
-          img(:src="`/images/bottles/${bottle.image}`" :alt="bottle.name")
+          img(:src="`${bottle.image}`" :alt="bottle.name")
         
         .bottle-details-card
           h3 Details
