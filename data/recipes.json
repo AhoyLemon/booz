@@ -19,6 +19,7 @@
         "Stir drink while bringing some product further up the glass",
         "Finally, take a sprig of mint, whack it against the side of the glass to express oil, and put the lime in the glass for garnish and odor."
       ],
+      "image": "mojito.webp",
       "prep": "Muddle",
       "category": "Fizzy",
       "tags": ["mint", "rum", "classic"]
@@ -40,6 +41,7 @@
         "shake some more",
         "pour into glass"
       ],
+      "image": "margarita.webp",
       "prep": "Shaker",
       "category": "Margarita",
       "tags": ["tequila", "lime", "classic"]
