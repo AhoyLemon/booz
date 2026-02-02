@@ -10,7 +10,9 @@
         input.search-input(
           v-model="searchQuery"
           placeholder="Type to search tags..."
+          aria-label="Search tags"
           @click.stop
+          @keydown.esc="closeDropdown"
           ref="searchInput"
         )
       
@@ -54,6 +56,11 @@ const displayText = computed(() => {
   return selected ? `${selected.label} (${selected.count})` : 'All Tags'
 })
 
+// Compute total count once
+const totalTagCount = computed(() => {
+  return props.totalCount || props.tags.reduce((sum, tag) => sum + tag.count, 0)
+})
+
 const filteredTags = computed(() => {
   const query = searchQuery.value.toLowerCase().trim()
   
@@ -61,7 +68,7 @@ const filteredTags = computed(() => {
   const allOption: TagOption = { 
     label: 'All Tags', 
     value: 'all', 
-    count: props.totalCount || props.tags.reduce((sum, tag) => sum + tag.count, 0)
+    count: totalTagCount.value
   }
   
   if (!query) {
@@ -86,6 +93,10 @@ const toggleDropdown = () => {
 
 const selectTag = (value: string) => {
   emit('update:modelValue', value)
+  closeDropdown()
+}
+
+const closeDropdown = () => {
   isOpen.value = false
   searchQuery.value = ''
 }
@@ -94,21 +105,16 @@ const selectTag = (value: string) => {
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   if (!target.closest('.tag-filter-select')) {
-    isOpen.value = false
-    searchQuery.value = ''
+    closeDropdown()
   }
 }
 
 onMounted(() => {
-  if (typeof window !== 'undefined') {
-    document.addEventListener('click', handleClickOutside)
-  }
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
-  if (typeof window !== 'undefined') {
-    document.removeEventListener('click', handleClickOutside)
-  }
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
