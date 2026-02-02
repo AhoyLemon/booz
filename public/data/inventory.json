@@ -1,0 +1,277 @@
+{
+  "bottles": [
+    {
+      "id": "1",
+      "name": "Espolon Reposado",
+      "category": "Staples",
+      "tags": [
+        "tequila",
+        "reposado"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/espolon-reposado.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Fords Gin",
+      "category": "Staples",
+      "tags": [
+        "gin",
+        "london-dry"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "unopened",
+      "image": "/images/bottles/fords-gin.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Bacardi Superior",
+      "category": "Staples",
+      "tags": [
+        "rum",
+        "white-rum"
+      ],
+      "inStock": true,
+      "bottleSize": "1.75l",
+      "bottleState": "opened",
+      "image": "/images/bottles/bacardi-superior.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Buffalo Trace Bourbon",
+      "category": "Staples",
+      "tags": [
+        "whiskey",
+        "bourbon"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/buffalo-trace.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Tanqueray No. 10",
+      "category": "Special Occasion",
+      "tags": [
+        "gin",
+        "premium"
+      ],
+      "inStock": false,
+      "bottleSize": "750ml",
+      "bottleState": "empty",
+      "image": "/images/bottles/tanqueray-10.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Don Julio Blanco",
+      "category": "Special Occasion",
+      "tags": [
+        "tequila",
+        "blanco"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "unopened",
+      "image": "/images/bottles/don-julio-blanco.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Cointreau",
+      "category": "Liqueur",
+      "tags": [
+        "liqueur",
+        "triple-sec",
+        "orange"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/cointreau.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Angostura Bitters",
+      "category": "Mixers",
+      "tags": [
+        "bitters",
+        "aromatic"
+      ],
+      "inStock": true,
+      "bottleSize": "200ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/angostura.jpg"
+    },
+    {
+      "id": "9",
+      "name": "Green Chartreuse",
+      "category": "Liqueur",
+      "tags": [
+        "liqueur",
+        "herbal"
+      ],
+      "inStock": false,
+      "bottleSize": "375ml",
+      "bottleState": "empty",
+      "image": "/images/bottles/green-chartreuse.jpg"
+    },
+    {
+      "id": "10",
+      "name": "Fresh Lime",
+      "category": "Mixers",
+      "tags": [
+        "citrus",
+        "lime",
+        "fresh"
+      ],
+      "inStock": true,
+      "bottleSize": "1lb",
+      "bottleState": "opened",
+      "image": "/images/bottles/lime.jpg"
+    },
+    {
+      "id": "11",
+      "name": "Simple Syrup",
+      "category": "Mixers",
+      "tags": [
+        "syrup",
+        "sweetener"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/simple-syrup.jpg"
+    },
+    {
+      "id": "12",
+      "name": "Club Soda",
+      "category": "Mixers",
+      "tags": [
+        "soda",
+        "carbonated"
+      ],
+      "inStock": true,
+      "bottleSize": "1l",
+      "bottleState": "opened",
+      "image": "/images/bottles/club-soda.jpg"
+    },
+    {
+      "id": "13",
+      "name": "Ginger Beer",
+      "category": "Mixers",
+      "tags": [
+        "ginger-beer",
+        "carbonated",
+        "non-alcoholic"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/ginger-beer.jpg"
+    },
+    {
+      "id": "14",
+      "name": "Grenadine",
+      "category": "Mixers",
+      "tags": [
+        "grenadine",
+        "syrup",
+        "pomegranate",
+        "non-alcoholic"
+      ],
+      "inStock": true,
+      "bottleSize": "375ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/grenadine.jpg"
+    },
+    {
+      "id": "15",
+      "name": "Corona Extra",
+      "category": "Beer",
+      "tags": [
+        "beer",
+        "lager",
+        "mexican"
+      ],
+      "inStock": true,
+      "bottleSize": "12oz",
+      "bottleState": "unopened",
+      "image": "/images/bottles/corona.jpg"
+    },
+    {
+      "id": "16",
+      "name": "Pinot Grigio",
+      "category": "Wine",
+      "tags": [
+        "wine",
+        "white-wine",
+        "italian"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "/images/bottles/pinot-grigio.jpg"
+    },
+    {
+      "id": "17",
+      "name": "Cabernet Sauvignon",
+      "category": "Wine",
+      "tags": [
+        "wine",
+        "red-wine",
+        "californian"
+      ],
+      "inStock": false,
+      "bottleSize": "750ml",
+      "bottleState": "empty",
+      "image": "/images/bottles/cabernet.jpg"
+    },
+    {
+      "id": "18",
+      "name": "Sparkling Water",
+      "category": "Mixers",
+      "tags": [
+        "water",
+        "carbonated",
+        "non-alcoholic"
+      ],
+      "inStock": true,
+      "bottleSize": "1l",
+      "bottleState": "opened",
+      "image": "/images/bottles/sparkling-water.jpg"
+    },
+    {
+      "id": "19",
+      "name": "Orange Juice",
+      "category": "Mixers",
+      "tags": [
+        "juice",
+        "orange",
+        "citrus",
+        "non-alcoholic"
+      ],
+      "inStock": true,
+      "bottleSize": "1l",
+      "bottleState": "opened",
+      "image": "/images/bottles/orange-juice.jpg"
+    },
+    {
+      "id": "20",
+      "name": "Tonic Water",
+      "category": "Mixers",
+      "tags": [
+        "tonic",
+        "carbonated",
+        "non-alcoholic"
+      ],
+      "inStock": true,
+      "bottleSize": "1l",
+      "bottleState": "opened",
+      "image": "/images/bottles/tonic-water.jpg"
+    }
+  ],
+  "lastUpdated": "2026-02-02T02:49:13.670Z"
+}
