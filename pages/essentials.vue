@@ -49,6 +49,20 @@ const {
   completionPercentage,
 } = useEssentials()
 
+// Load from localStorage on mount
+onMounted(() => {
+  if (process.client) {
+    const saved = localStorage.getItem('checkedEssentials')
+    if (saved) {
+      try {
+        checkedEssentials.value = JSON.parse(saved)
+      } catch (e) {
+        console.error('Failed to parse saved essentials:', e)
+      }
+    }
+  }
+})
+
 const getCategoryCheckedCount = (category: { items: string[] }) => {
   return category.items.filter(item => isChecked(item)).length
 }

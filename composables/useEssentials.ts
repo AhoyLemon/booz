@@ -1,13 +1,6 @@
 // Composable for managing essential ingredients checklist
 export const useEssentials = () => {
-  const checkedEssentials = useState<string[]>('checkedEssentials', () => {
-    // Try to load from localStorage if on client
-    if (process.client) {
-      const saved = localStorage.getItem('checkedEssentials')
-      return saved ? JSON.parse(saved) : []
-    }
-    return []
-  })
+  const checkedEssentials = useState<string[]>('checkedEssentials', () => [])
 
   // List of essential ingredients categorized
   const essentialCategories = [
@@ -35,13 +28,13 @@ export const useEssentials = () => {
       items: [
         'Fresh Lime',
         'Fresh Lemon',
-        "Fresh Orange",
+        'Fresh Orange',
         'Lime Juice',
         'Lemon Juice',
         'Orange Juice',
         'Grapefruit Juice',
         'Pineapple Juice',
-        'Cranberry Juice'
+        'Cranberry Juice',
       ],
     },
     {
@@ -49,7 +42,7 @@ export const useEssentials = () => {
       icon: '🍯',
       items: ['Simple Syrup', 'Sugar', 'Honey', 'Agave Nectar', 'Grenadine', 'Maple Syrup'],
     },
-    
+
     {
       name: 'Bitters & Aromatics',
       icon: '🌿',
@@ -67,16 +60,11 @@ export const useEssentials = () => {
       icon: '🥛',
       items: ['Eggs', 'Heavy Cream', 'Milk', 'Half and Half', 'Coconut Cream'],
     },
-    
+
     {
       name: 'Garnishes',
       icon: '🍒',
-      items: [
-        'Maraschino Cherries',
-        'Olives',
-        'Cocktail Onions',
-        'Celery',
-        'Cucumber'      ],
+      items: ['Maraschino Cherries', 'Olives', 'Cocktail Onions', 'Celery', 'Cucumber'],
     },
   ]
 
