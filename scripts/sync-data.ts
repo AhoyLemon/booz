@@ -8,13 +8,11 @@ const DATA_DIR = join(process.cwd(), 'data')
 const PUBLIC_DATA_DIR = join(process.cwd(), 'public', 'data')
 
 interface NotionBottle {
-  Name: { title: Array<{ plain_text: string }> }
+  '': { title: Array<{ plain_text: string }> } // Empty string for title column
   Category: { select: { name: string } }
-  Tags: { multi_select: Array<{ name: string }> }
-  InStock: { checkbox: boolean }
-  BottleSize: { rich_text: Array<{ plain_text: string }> }
-  BottleState: { select: { name: string } }
-  Image: { files: Array<{ file?: { url: string }; external?: { url: string } }> }
+  'Type(s)': { multi_select: Array<{ name: string }> }
+  Status: { select: { name: string } }
+  Photo: { files: Array<{ file?: { url: string }; external?: { url: string } }> }
 }
 
 async function fetchFromNotion(): Promise<Bottle[]> {
@@ -36,19 +34,19 @@ async function fetchFromNotion(): Promise<Bottle[]> {
 
     const bottles: Bottle[] = response.results.map((page: any) => {
       const props = page.properties as NotionBottle
-      const imageFile = props.Image?.files?.[0]
+      const imageFile = props.Photo?.files?.[0]
       const imageUrl = imageFile?.file?.url || imageFile?.external?.url
+      const status = props.Status?.select?.name?.toLowerCase()
 
       return {
         id: page.id,
-        name: props.Name.title[0]?.plain_text || '',
+        name: props[''].title[0]?.plain_text || '',
         category: props.Category.select?.name || 'Other',
-        tags: props.Tags.multi_select.map(tag => tag.name),
-        inStock: props.InStock.checkbox,
-        bottleSize: props.BottleSize?.rich_text?.[0]?.plain_text || undefined,
+        tags: props['Type(s)']?.multi_select?.map(tag => tag.name) || [],
+        inStock: status !== 'empty',
+        bottleSize: undefined,
         bottleState:
-          (props.BottleState?.select?.name?.toLowerCase() as 'unopened' | 'opened' | 'empty') ||
-          undefined,
+          (status as 'unopened' | 'opened' | 'empty') || undefined,
         image: imageUrl || undefined,
       }
     })
@@ -77,16 +75,24 @@ function parseCSV(): Bottle[] {
       skip_empty_lines: true,
     })
 
-    const bottles: Bottle[] = records.map((record: any) => ({
-      id: record.id,
-      name: record.name,
-      category: record.category,
-      tags: record.tags.split(',').map((tag: string) => tag.trim()),
-      inStock: record.inStock === 'true',
-      bottleSize: record.bottleSize || undefined,
-      bottleState: (record.bottleState as 'unopened' | 'opened' | 'empty') || undefined,
-      image: record.image || undefined,
-    }))
+    const bottles: Bottle[] = records.map((record: any) => {
+      let imagePath = record.image || undefined
+      // Normalize image path to ensure it has the correct prefix
+      if (imagePath && !imagePath.startsWith('/images/bottles/') && !imagePath.startsWith('/')) {
+        imagePath = `/images/bottles/${imagePath}`
+      }
+
+      return {
+        id: record.id,
+        name: record.name,
+        category: record.category,
+        tags: record.tags.split(',').map((tag: string) => tag.trim()),
+        inStock: record.inStock === 'true',
+        bottleSize: record.bottleSize || undefined,
+        bottleState: (record.bottleState as 'unopened' | 'opened' | 'empty') || undefined,
+        image: imagePath,
+      }
+    })
 
     console.log(`✅ Parsed ${bottles.length} bottles from CSV`)
     return bottles

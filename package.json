@@ -10,7 +10,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "sync-data": "tsx scripts/sync-data.ts",
+    "sync-data": "tsx --env-file=.env scripts/sync-data.ts",
     "watch-data": "chokidar \"data/inventory.csv\" \"data/recipes.json\" -c \"npm run sync-data\"",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "csv-parse": "^5.5.3",
+    "csv-stringify": "^6.6.0",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21"
   },

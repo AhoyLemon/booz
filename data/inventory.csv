@@ -1,3 +1,9 @@
 id,name,category,tags,inStock,bottleSize,bottleState,image
-1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,3_amigos_reposado.jpg
-2,Beefeater,Staples,"gin, london dry",true,750ml,opened,beefeater_gin.jpg
+1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,/images/bottles/3amigos_reposado.webp
+2,Beefeater,Staples,"gin, london dry",true,750ml,opened,/images/bottles/beefeater.webp
+3,Bib & Tucker,Special Occasion,"bourbon, whiskey",true,750ml,unopened,/images/bottles/bibandtucker.webp
+4,Blue Run Chosen,Staples,"whiskey, bourbon",true,750ml,unopened,/images/bottles/bluerun_chosen.webp
+5,Bombay Sapphire East,Staples,"gin, london dry",true,750ml,opened,/images/bottles/bombay_east.webp
+6,Camarena Reposado,Staples,"tequila, reposado",true,airplane,unopened,/images/bottles/camarena_airplane.webp
+7,Castle & Key Restoration,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/restoration.webp
+8,Castle & Key Roots of Ruin,Staples,gin,true,750ml,unopened,/images/bottles/roots_of_ruin.webp

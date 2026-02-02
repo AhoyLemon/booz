@@ -34,11 +34,11 @@
               .step-number {{ index + 1 }}
               p {{ step }}
 
-  .not-found(v-else)
-    .container
-      h2 Recipe Not Found
-      p The recipe you're looking for doesn't exist.
-      NuxtLink.btn.btn-primary(to="/recipes") Back to Recipes
+.not-found(v-else)
+  .container
+    h2 Recipe Not Found
+    p The recipe you're looking for doesn't exist.
+    NuxtLink.btn.btn-primary(to="/recipes") Back to Recipes
 </template>
 
 <script setup lang="ts">

@@ -1,12 +1,11 @@
 <template lang="pug">
 .inventory-page
   .container
-      .header-section
-        .header-content
+      .header-with-action.mb-3
+        div
           h2 Your Bar Inventory
-          p.mb-3 Manage your bottle collection
-        NuxtLink.manage-btn(to="/inventory/manage")
-          | ⚙️ Manage Inventory
+          p Manage your bottle collection
+        NuxtLink.manage-btn(to="/inventory/manage") ✏️ Manage Inventory
 
       .filters.mb-3
         button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ inventory.length }})
@@ -101,45 +100,32 @@ const filteredBottles = computed(() => {
   }
 }
 
-.header-section {
+.header-with-action {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: $spacing-lg;
-  margin-bottom: $spacing-lg;
-  flex-wrap: wrap;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 }
 
-.header-content {
-  flex: 1;
-}
-
 .manage-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: $spacing-sm;
-  padding: $spacing-md $spacing-lg;
-  background: $primary-color;
+  padding: $spacing-sm $spacing-xl;
+  background: $accent-color;
   color: white;
+  text-decoration: none;
   border-radius: $border-radius-md;
   font-weight: 600;
-  text-decoration: none;
   transition: all 0.3s ease;
   white-space: nowrap;
 
   &:hover {
-    background: color.adjust($primary-color, $lightness: -10%);
+    background: color.adjust($accent-color, $lightness: -10%);
     transform: translateY(-2px);
     box-shadow: $shadow-md;
-  }
-
-  @media (max-width: 768px) {
-    justify-content: center;
   }
 }
 
