@@ -1,0 +1,31 @@
+{
+  "bottles": [
+    {
+      "id": "1",
+      "name": "3 Amigos Reposado",
+      "category": "Staples",
+      "tags": [
+        "tequila",
+        "reposado"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "3_amigos_reposado.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Beefeater",
+      "category": "Staples",
+      "tags": [
+        "gin",
+        "london dry"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "opened",
+      "image": "beefeater_gin.jpg"
+    }
+  ],
+  "lastUpdated": "2026-02-02T03:21:09.596Z"
+}

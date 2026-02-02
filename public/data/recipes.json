@@ -1,0 +1,128 @@
+{
+  "recipes": [
+    {
+      "id": "custom-1",
+      "name": "Lemon Bar Special",
+      "ingredients": [
+        {
+          "name": "Gin",
+          "qty": "2 oz"
+        },
+        {
+          "name": "Fresh Lime",
+          "qty": "1 oz"
+        },
+        {
+          "name": "Simple Syrup",
+          "qty": "0.5 oz"
+        },
+        {
+          "name": "Club Soda",
+          "qty": "2 oz"
+        }
+      ],
+      "instructions": "Shake gin, lime, and simple syrup with ice. Strain into a glass over fresh ice. Top with club soda. Garnish with a lime wheel.",
+      "category": "Custom"
+    },
+    {
+      "id": "custom-2",
+      "name": "Bourbon Sunset",
+      "ingredients": [
+        {
+          "name": "Whiskey",
+          "qty": "2 oz"
+        },
+        {
+          "name": "Fresh Lime",
+          "qty": "0.75 oz"
+        },
+        {
+          "name": "Simple Syrup",
+          "qty": "0.5 oz"
+        }
+      ],
+      "instructions": "Shake all ingredients with ice. Strain into a rocks glass over a large ice cube. Garnish with an orange peel.",
+      "category": "Custom"
+    },
+    {
+      "id": "custom-3",
+      "name": "Utah Mule",
+      "ingredients": [
+        {
+          "name": "Ginger Beer",
+          "qty": "6 oz"
+        },
+        {
+          "name": "Grenadine",
+          "qty": "0.5 oz"
+        },
+        {
+          "name": "Fresh Lime",
+          "qty": "0.5 oz"
+        }
+      ],
+      "instructions": "Fill a copper mug or glass with ice. Add lime juice and grenadine. Top with ginger beer. Stir gently. Garnish with a lime wedge.",
+      "category": "Non-Alcoholic",
+      "tags": [
+        "non-alcoholic",
+        "mocktail",
+        "refreshing"
+      ]
+    },
+    {
+      "id": "custom-4",
+      "name": "Sparkling Citrus Refresher",
+      "ingredients": [
+        {
+          "name": "Orange Juice",
+          "qty": "3 oz"
+        },
+        {
+          "name": "Sparkling Water",
+          "qty": "3 oz"
+        },
+        {
+          "name": "Fresh Lime",
+          "qty": "0.5 oz"
+        },
+        {
+          "name": "Simple Syrup",
+          "qty": "0.25 oz"
+        }
+      ],
+      "instructions": "Combine orange juice, lime juice, and simple syrup in a glass with ice. Top with sparkling water. Stir gently and garnish with an orange slice.",
+      "category": "Non-Alcoholic",
+      "tags": [
+        "non-alcoholic",
+        "mocktail",
+        "citrus"
+      ]
+    },
+    {
+      "id": "custom-5",
+      "name": "Michelada",
+      "ingredients": [
+        {
+          "name": "Beer",
+          "qty": "12 oz"
+        },
+        {
+          "name": "Fresh Lime",
+          "qty": "1 oz"
+        },
+        {
+          "name": "Tonic Water",
+          "qty": "2 oz"
+        }
+      ],
+      "instructions": "Rim a glass with salt. Fill with ice. Add lime juice and tonic water. Top with beer. Stir gently and garnish with a lime wedge.",
+      "category": "Beer Cocktail",
+      "tags": [
+        "beer",
+        "mexican",
+        "refreshing"
+      ]
+    }
+  ],
+  "lastUpdated": "2026-02-02T03:21:09.597Z"
+}

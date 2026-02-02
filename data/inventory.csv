@@ -1,0 +1,3 @@
+id,name,category,tags,inStock,bottleSize,bottleState,image
+1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,3_amigos_reposado.jpg
+2,Beefeater,Staples,"gin, london dry",true,750ml,opened,beefeater_gin.jpg
