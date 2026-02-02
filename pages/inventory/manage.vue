@@ -97,6 +97,7 @@
 <script setup lang="ts">
 import type { Bottle } from '~/types'
 
+const route = useRoute()
 const bottles = ref<Bottle[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -115,8 +116,17 @@ const form = ref({
   origin: '',
 })
 
-onMounted(() => {
-  loadBottles()
+onMounted(async () => {
+  await loadBottles()
+  
+  // Check if we have a bottle ID in the query params
+  const bottleId = route.query.id as string
+  if (bottleId) {
+    const bottle = bottles.value.find(b => b.id === bottleId)
+    if (bottle) {
+      startEdit(bottle)
+    }
+  }
 })
 
 async function loadBottles() {
@@ -195,7 +205,7 @@ async function handleSubmit() {
         method: 'PUT',
         body: bottleData,
       })
-      successMessage.value = 'Bottle updated successfully!'
+      successMessage.value = `Bottle updated successfully! Form cleared - you are now adding a new bottle.`
     } else {
       // Create new bottle
       await $fetch('/api/inventory', {
@@ -207,11 +217,14 @@ async function handleSubmit() {
 
     await loadBottles()
     resetForm()
+    
+    // Scroll to top to see the message
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    // Clear success message after 3 seconds
+    // Clear success message after 5 seconds
     setTimeout(() => {
       successMessage.value = null
-    }, 3000)
+    }, 5000)
   } catch (e: any) {
     error.value = e.data?.statusMessage || 'Failed to save bottle'
     console.error(e)
