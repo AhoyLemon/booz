@@ -64,6 +64,9 @@
         {
           "name": "Simple Syrup",
           "qty": ".25 oz"
+        },
+        {
+          "name": "Salt"
         }
       ],
       "instructions": [
@@ -71,7 +74,8 @@
         "put ingredients in the shaker",
         "shake",
         "shake some more",
-        "pour into glass"
+        "pour into glass",
+        "salt the glass (optional)"
       ],
       "image": "margarita.webp",
       "prep": "Shaker",
@@ -86,13 +90,25 @@
       "id": "utah-mule",
       "name": "Simone's Utah Mule",
       "ingredients": [
-        { "name": "Ice"},
-        { "name": "Ginger Ale", "qty": "8 oz" },
-        { "name": "Grenadine" },
-        { "name": "Bitters "},
-        { "name": "Ginger Candy", "qty": "1" }
+        {
+          "name": "Ice"
+        },
+        {
+          "name": "Ginger Ale",
+          "qty": "8 oz"
+        },
+        {
+          "name": "Grenadine"
+        },
+        {
+          "name": "Bitters "
+        },
+        {
+          "name": "Ginger Candy",
+          "qty": "1"
+        }
       ],
-      "instructions":[
+      "instructions": [
         "put some ice in a copper mug",
         "pour in ginger ale",
         "add a splash of grenadine",
@@ -103,8 +119,39 @@
       "image": "utah-mule.webp",
       "prep": "Build",
       "category": "Fizzy",
-      "tags": ["ginger", "non-alcoholic", "easy"]
+      "tags": [
+        "ginger",
+        "non-alcoholic",
+        "easy"
+      ]
+    },
+    {
+      "id": "just-bourbon-cream",
+      "name": "A Nice Nightcap",
+      "ingredients": [
+        {
+          "name": "Ice"
+        },
+        {
+          "name": "Bourbon Cream",
+          "qty": "4 oz"
+        }
+      ],
+      "instructions": [
+        "put ice in a rocks glass",
+        "then some bourbon cream",
+        "sit outside on the porch and relax"
+      ],
+      "image": "cream-rocks.webp",
+      "prep": "Simple",
+      "category": "Nightcap",
+      "tags": [
+        "bourbon",
+        "cream",
+        "easy",
+        "nightcap"
+      ]
     }
   ],
-  "lastUpdated": "2026-02-02T19:17:26.625Z"
+  "lastUpdated": "2026-02-02T21:47:29.982Z"
 }

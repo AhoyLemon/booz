@@ -10,6 +10,7 @@ export interface Bottle {
   abv?: number
   origin?: string
   company?: string
+  aka?: string[]
 }
 
 export interface Ingredient {

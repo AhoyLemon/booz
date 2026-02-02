@@ -153,6 +153,31 @@ export const useCocktails = () => {
     }
   }
 
+  // Fetch a single recipe by CocktailDB ID
+  const fetchCocktailDBRecipeById = async (cocktailDbId: string): Promise<Recipe | null> => {
+    try {
+      const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${cocktailDbId}`
+      const response = await $fetch<{ drinks: CocktailDBDrink[] | null }>(endpoint)
+
+      if (response.drinks && response.drinks[0]) {
+        const recipe = convertDrinkToRecipe(response.drinks[0])
+        
+        // Add to apiRecipes if not already there
+        const existingIndex = apiRecipes.value.findIndex(r => r.id === recipe.id)
+        if (existingIndex === -1) {
+          apiRecipes.value = [...apiRecipes.value, recipe]
+        }
+        
+        return recipe
+      }
+      
+      return null
+    } catch (e) {
+      console.error('Failed to fetch recipe from CocktailDB:', e)
+      return null
+    }
+  }
+
   // Helper function to check if a word matches as a whole word or phrase
   const matchesAsWord = (text: string, searchTerm: string): boolean => {
     // Exact match
@@ -174,6 +199,16 @@ export const useCocktails = () => {
       const lowerName = item.name.toLowerCase()
       if (matchesAsWord(lowerIngredient, lowerName) || matchesAsWord(lowerName, lowerIngredient)) {
         return true
+      }
+      
+      // Check aka (also known as) field for alternate names
+      if (item.aka && Array.isArray(item.aka)) {
+        for (const akaName of item.aka) {
+          const lowerAka = akaName.toLowerCase()
+          if (matchesAsWord(lowerIngredient, lowerAka) || matchesAsWord(lowerAka, lowerIngredient)) {
+            return true
+          }
+        }
       }
     }
 
@@ -287,6 +322,7 @@ export const useCocktails = () => {
     loadInventory,
     loadLocalRecipes,
     fetchCocktailDBRecipes,
+    fetchCocktailDBRecipeById,
     fetchRandomCocktails,
     getAvailableRecipes,
     getAllRecipes,

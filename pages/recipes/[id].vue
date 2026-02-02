@@ -1,5 +1,10 @@
 <template lang="pug">
-.recipe-detail-page(v-if="recipe")
+.recipe-detail-page(v-if="isLoading")
+  .container
+    .loading-state
+      p Loading recipe...
+
+.recipe-detail-page(v-else-if="recipe")
   .container
       .back-navigation
         NuxtLink.btn.btn-back(to="/recipes") ← Back to Recipes
@@ -9,6 +14,8 @@
         .recipe-hero__content
           h1 {{ recipe.name }}
           .badge-row
+            span.source-badge(:class="isLocalRecipe ? 'local' : 'external'")
+              | {{ isLocalRecipe ? '🏠 Local Recipe' : '🌐 CocktailDB' }}
             span.category-badge(v-if="recipe.category") {{ recipe.category }}
             span.prep-badge(v-if="recipe.prep") {{ recipe.prep }}
           .tags-row(v-if="recipe.tags && recipe.tags.length > 0")
@@ -40,7 +47,7 @@
               .step-number {{ index + 1 }}
               p {{ step }}
 
-.not-found(v-else)
+.not-found(v-else-if="!isLoading")
   .container
     h2 Recipe Not Found
     p The recipe you're looking for doesn't exist.
@@ -52,24 +59,47 @@ const route = useRoute()
 const {
   loadInventory,
   loadLocalRecipes,
-  fetchCocktailDBRecipes,
+  fetchCocktailDBRecipeById,
   getAllRecipes,
   isIngredientInStock,
 } = useCocktails()
 
 const { loadStarredRecipes } = useStarredRecipes()
 
+const isLoading = ref(false)
+
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
   await loadLocalRecipes()
   loadStarredRecipes()
-  await fetchCocktailDBRecipes('margarita')
+  
+  // Check if this is a CocktailDB recipe that needs to be fetched
+  const recipeId = route.params.id as string
+  if (recipeId.startsWith('cocktaildb-')) {
+    const cocktailDbId = recipeId.replace('cocktaildb-', '')
+    
+    // Check if we already have this recipe
+    const existingRecipe = getAllRecipes.value.find(r => r.id === recipeId)
+    
+    if (!existingRecipe) {
+      // Fetch the specific recipe from CocktailDB
+      isLoading.value = true
+      await fetchCocktailDBRecipeById(cocktailDbId)
+      isLoading.value = false
+    }
+  }
 })
 
 // Find the recipe by ID
 const recipe = computed(() => {
   return getAllRecipes.value.find(r => r.id === route.params.id)
+})
+
+// Check if this is a local recipe or from CocktailDB
+const isLocalRecipe = computed(() => {
+  if (!recipe.value) return false
+  return !recipe.value.id.startsWith('cocktaildb-')
 })
 
 // Get image URL (support both 'image' and 'imageUrl' fields)
@@ -164,6 +194,25 @@ const isIngredientAvailable = (ingredientName: string) => {
       gap: $spacing-md;
       margin-bottom: $spacing-md;
       flex-wrap: wrap;
+    }
+
+    .source-badge {
+      display: inline-block;
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $border-radius-md;
+      font-weight: 600;
+      font-size: 0.875rem;
+      align-self: flex-start;
+      
+      &.local {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      
+      &.external {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
     }
 
     .category-badge,

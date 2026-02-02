@@ -223,7 +223,6 @@
       "name": "Ballotin Bourbon Ball",
       "category": "Liqueur",
       "tags": [
-        "liqueur",
         "whiskey",
         "bourbon",
         "chocolate liqueur"
@@ -285,7 +284,11 @@
       "inStock": true,
       "bottleSize": "750ml",
       "bottleState": "unopened",
-      "image": "/images/bottles/kahlua.webp"
+      "image": "/images/bottles/kahlua.webp",
+      "aka": [
+        "Kahlua",
+        "Coffee liqueur"
+      ]
     },
     {
       "id": "23",
@@ -314,7 +317,10 @@
       "inStock": true,
       "bottleSize": "750ml",
       "bottleState": "opened",
-      "image": "/images/bottles/lazzaroni.webp"
+      "image": "/images/bottles/lazzaroni.webp",
+      "aka": [
+        "Maraschino liqueur"
+      ]
     },
     {
       "id": "25",
@@ -339,7 +345,11 @@
       ],
       "inStock": true,
       "bottleSize": "750ml",
-      "image": "/images/bottles/st-germain.webp"
+      "image": "/images/bottles/st-germain.webp",
+      "aka": [
+        "Elderflower cordial",
+        "Elderflower liqueur"
+      ]
     },
     {
       "id": "27",
@@ -461,7 +471,7 @@
       "category": "Special Occasion",
       "tags": [
         "absinthe",
-        "anise liqueur"
+        "anise"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -489,8 +499,7 @@
         "liqueur",
         "whiskey",
         "bourbon",
-        "cream liqueur",
-        "bourbon cream"
+        "cream"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -530,12 +539,10 @@
       "name": "Peanut Brittle Bourbon Cream",
       "category": "Special Occasion",
       "tags": [
-        "liqueur",
         "whiskey",
         "bourbon",
-        "cream liqueur",
-        "bourbon cream",
-        "peanut brittle liqueur"
+        "cream",
+        "peanut brittle"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -589,7 +596,7 @@
       "tags": [
         "liqueur",
         "tequila",
-        "coffee liqueur"
+        "coffee"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -684,10 +691,10 @@
       "name": "Mountain Creek Ginger Lemon",
       "category": "Liqueur",
       "tags": [
-        "gin",
-        "ginger liqueur",
-        "lemon liqueur",
-        "sparkly"
+        "ginger",
+        "lemon",
+        "sparkly",
+        "gin"
       ],
       "inStock": true,
       "bottleSize": "200ml",
@@ -708,5 +715,5 @@
       "image": "/images/bottles/egbert_cherries.webp"
     }
   ],
-  "lastUpdated": "2026-02-02T19:17:26.625Z"
+  "lastUpdated": "2026-02-02T21:47:29.981Z"
 }
