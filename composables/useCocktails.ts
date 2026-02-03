@@ -160,17 +160,10 @@ export const useCocktails = () => {
     }
   };
 
-  // Helper function to check if a word matches as a whole word or phrase
-  const matchesAsWord = (text: string, searchTerm: string): boolean => {
-    // Exact match
-    if (text === searchTerm) return true;
+  // Helper function to check for strict match (case-insensitive)
+  const matchesStrict = (a: string, b: string): boolean => a.trim().toLowerCase() === b.trim().toLowerCase();
 
-    // Check if searchTerm appears as a whole word in text
-    const regex = new RegExp(`\\b${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
-    return regex.test(text);
-  };
-
-  // Check if an ingredient name matches any in-stock inventory item, using one-way hierarchy for parents
+  // Strict ingredient matching: only exact name, synonym, or hierarchy matches
   const isIngredientInStock = (ingredientName: string): boolean => {
     if (!Array.isArray(inventory.value)) return false;
     const inStockItems = inventory.value.filter((b) => b.inStock);
@@ -181,11 +174,10 @@ export const useCocktails = () => {
 
     // Helper: check if a candidate (in-stock) can fulfill the requested ingredient
     const canFulfill = (requested: string, candidate: string): boolean => {
-      if (requested === candidate) return true;
+      if (matchesStrict(requested, candidate)) return true;
       // If requested is a parent, allow any child to fulfill
       const children = ingredientHierarchy[requested];
-      if (children && children.includes(candidate)) return true;
-      // Otherwise, do not allow candidate to fulfill requested if requested is more specific
+      if (children && children.some(child => matchesStrict(child, candidate))) return true;
       return false;
     };
 
@@ -196,82 +188,40 @@ export const useCocktails = () => {
       // Direct match or one-way parent-child
       if (canFulfill(lowerIngredient, lowerEssential)) return true;
 
-      // Use ingredientSynonyms for fruit/juice/wedge/peel/wheel matching
-      for (const [key, variations] of Object.entries(ingredientSynonyms)) {
-        if (["lime", "lemon", "orange", "grapefruit", "pineapple", "cranberry", "strawberry", "blueberry"].includes(key)) {
-          const essentialMatchesFruit = (variations as string[]).some((v) => lowerEssential.includes(v));
-          if (essentialMatchesFruit) {
-            if ((variations as string[]).some((v) => lowerIngredient.includes(v))) {
-              return true;
-            }
-          }
-        }
-      }
-
       // Check if ingredient name matches any synonyms for this essential
       const essentialSynonyms = ingredientSynonyms[lowerEssential];
-      if (essentialSynonyms && essentialSynonyms.some((syn) => matchesAsWord(lowerIngredient, syn))) {
-        return true;
-      }
-
-      // Check for word matching (whole word only)
-      if (matchesAsWord(lowerIngredient, lowerEssential) || matchesAsWord(lowerEssential, lowerIngredient)) {
+      if (essentialSynonyms && essentialSynonyms.some(syn => matchesStrict(lowerIngredient, syn))) {
         return true;
       }
     }
 
-    // Direct name match - check if bottle name appears as whole words in ingredient
+    // Inventory bottle name and aka check
     for (const item of inStockItems) {
-      const lowerName = item.name.toLowerCase();
-      if (matchesAsWord(lowerIngredient, lowerName) || matchesAsWord(lowerName, lowerIngredient)) {
-        return true;
-      }
-
-      // Check aka (also known as) field for alternate names
+      if (matchesStrict(lowerIngredient, item.name.toLowerCase())) return true;
       if (item.aka && Array.isArray(item.aka)) {
         for (const akaName of item.aka) {
-          const lowerAka = akaName.toLowerCase();
-          if (matchesAsWord(lowerIngredient, lowerAka) || matchesAsWord(lowerAka, lowerIngredient)) {
-            return true;
-          }
+          if (matchesStrict(lowerIngredient, akaName.toLowerCase())) return true;
         }
       }
     }
 
-    // Check tags - only exact matches to avoid false positives like "orange" matching "orange liqueur"
+    // Inventory tags: only exact matches
     for (const item of inStockItems) {
       for (const tag of item.tags) {
-        const lowerTag = tag.toLowerCase();
-
-        // Skip generic tags that are too broad
-        const genericTags = ["cream", "sugar", "garnish", "sparkly", "liqueur", "mixer"];
-        if (genericTags.includes(lowerTag)) {
-          continue;
-        }
-
-        // Only exact tag match - no partial word matching
-        if (lowerIngredient === lowerTag) {
+        if (matchesStrict(lowerIngredient, tag.toLowerCase())) return true;
+        // Check if ingredient name matches any synonyms for this tag
+        const mappedIngredients = ingredientSynonyms[tag.toLowerCase()];
+        if (mappedIngredients && mappedIngredients.some(syn => matchesStrict(lowerIngredient, syn))) {
           return true;
-        }
-
-        // Check ingredient mapping for this tag
-        const mappedIngredients = ingredientSynonyms[lowerTag];
-        if (mappedIngredients) {
-          for (const mapped of mappedIngredients) {
-            if (matchesAsWord(lowerIngredient, mapped)) {
-              return true;
-            }
-          }
         }
       }
     }
 
-    // Check if ingredient name maps to any tag through the ingredient mapping
+    // Check if ingredient name maps to any tag through the ingredient mapping (strict)
     for (const [key, aliases] of Object.entries(ingredientSynonyms)) {
       for (const alias of aliases as string[]) {
-        if (matchesAsWord(lowerIngredient, alias)) {
-          // Check if we have any item with this key in its tags
-          if (inStockItems.some((item) => item.tags.some((tag) => tag.toLowerCase() === key))) {
+        if (matchesStrict(lowerIngredient, alias)) {
+          if (inStockItems.some((item) => item.tags.some((tag) => matchesStrict(tag, key)))) {
             return true;
           }
         }
