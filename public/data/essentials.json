@@ -1,0 +1,269 @@
+{
+  "essentials": [
+    {
+      "id": "ice",
+      "name": "Ice",
+      "category": "Basics",
+      "inStock": true
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "category": "Basics",
+      "inStock": false
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "category": "Basics",
+      "inStock": false
+    },
+    {
+      "id": "black-pepper",
+      "name": "Black Pepper",
+      "category": "Basics",
+      "inStock": false
+    },
+    {
+      "id": "hot-sauce",
+      "name": "Hot Sauce",
+      "category": "Basics",
+      "inStock": false
+    },
+    {
+      "id": "worcestershire-sauce",
+      "name": "Worcestershire Sauce",
+      "category": "Basics",
+      "inStock": false
+    },
+    {
+      "id": "club-soda",
+      "name": "Club Soda",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "tonic-water",
+      "name": "Tonic Water",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "ginger-beer",
+      "name": "Ginger Beer",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "ginger-ale",
+      "name": "Ginger Ale",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "sparkling-water",
+      "name": "Sparkling Water",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "cola",
+      "name": "Cola",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "sprite-7up",
+      "name": "Sprite/7-Up",
+      "category": "Carbonated & Mixers",
+      "inStock": false
+    },
+    {
+      "id": "fresh-lime",
+      "name": "Fresh Lime",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "fresh-lemon",
+      "name": "Fresh Lemon",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "fresh-orange",
+      "name": "Fresh Orange",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "lime-juice",
+      "name": "Lime Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "lemon-juice",
+      "name": "Lemon Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "orange-juice",
+      "name": "Orange Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "grapefruit-juice",
+      "name": "Grapefruit Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "pineapple-juice",
+      "name": "Pineapple Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "cranberry-juice",
+      "name": "Cranberry Juice",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
+      "id": "simple-syrup",
+      "name": "Simple Syrup",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "sugar",
+      "name": "Sugar",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "honey",
+      "name": "Honey",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "agave-nectar",
+      "name": "Agave Nectar",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "grenadine",
+      "name": "Grenadine",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "maple-syrup",
+      "name": "Maple Syrup",
+      "category": "Sweeteners",
+      "inStock": false
+    },
+    {
+      "id": "angostura-bitters",
+      "name": "Angostura Bitters",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "orange-bitters",
+      "name": "Orange Bitters",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "peychauds-bitters",
+      "name": "Peychaud's Bitters",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "aromatic-bitters",
+      "name": "Aromatic Bitters",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "mint-leaves",
+      "name": "Mint Leaves",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "basil",
+      "name": "Basil",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
+      "id": "eggs",
+      "name": "Eggs",
+      "category": "Dairy & Cream",
+      "inStock": false
+    },
+    {
+      "id": "heavy-cream",
+      "name": "Heavy Cream",
+      "category": "Dairy & Cream",
+      "inStock": false
+    },
+    {
+      "id": "milk",
+      "name": "Milk",
+      "category": "Dairy & Cream",
+      "inStock": false
+    },
+    {
+      "id": "half-and-half",
+      "name": "Half and Half",
+      "category": "Dairy & Cream",
+      "inStock": false
+    },
+    {
+      "id": "coconut-cream",
+      "name": "Coconut Cream",
+      "category": "Dairy & Cream",
+      "inStock": false
+    },
+    {
+      "id": "maraschino-cherries",
+      "name": "Maraschino Cherries",
+      "category": "Garnishes",
+      "inStock": false
+    },
+    {
+      "id": "olives",
+      "name": "Olives",
+      "category": "Garnishes",
+      "inStock": false
+    },
+    {
+      "id": "cocktail-onions",
+      "name": "Cocktail Onions",
+      "category": "Garnishes",
+      "inStock": false
+    },
+    {
+      "id": "celery",
+      "name": "Celery",
+      "category": "Garnishes",
+      "inStock": false
+    },
+    {
+      "id": "cucumber",
+      "name": "Cucumber",
+      "category": "Garnishes",
+      "inStock": false
+    }
+  ],
+  "lastUpdated": "2026-02-03T02:24:07.781Z"
+}
