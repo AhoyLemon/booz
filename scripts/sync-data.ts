@@ -15,15 +15,15 @@ async function fetchFromNotion(): Promise<Bottle[]> {
 }
 
 function parseCSV(): Bottle[] {
-  const csvPath = join(DATA_DIR, 'inventory.csv')
+  const csvPath = join(DATA_DIR, 'bottles.csv')
 
   if (!existsSync(csvPath)) {
-    console.log('⚠️  inventory.csv not found, skipping CSV parsing')
+    console.log('⚠️  bottles.csv not found, skipping CSV parsing')
     return []
   }
 
   try {
-    console.log('📄 Parsing inventory.csv...')
+    console.log('📄 Parsing bottles.csv...')
     const csvContent = readFileSync(csvPath, 'utf-8')
     const records = parse(csvContent, {
       columns: true,
@@ -117,10 +117,10 @@ async function syncData() {
 
   // Write to public directory
   console.log('\n💾 Writing normalized data to public/data/...')
-  writeFileSync(join(PUBLIC_DATA_DIR, 'inventory.json'), JSON.stringify(inventoryData, null, 2))
+  writeFileSync(join(PUBLIC_DATA_DIR, 'bottles.json'), JSON.stringify(inventoryData, null, 2))
   writeFileSync(join(PUBLIC_DATA_DIR, 'drinks.json'), JSON.stringify(drinksData, null, 2))
 
-  console.log('✅ Inventory data written to public/data/inventory.json')
+  console.log('✅ Bottles data written to public/data/bottles.json')
   console.log('✅ Drinks data written to public/data/drinks.json')
   console.log(`\n🎉 Sync complete! ${bottles.length} bottles, ${localDrinks.length} local drinks`)
 }

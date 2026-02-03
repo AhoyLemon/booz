@@ -9,6 +9,7 @@ div
         NuxtLink.nav-link(to="/bottles" :class="{ active: $route.path.startsWith('/bottles') }") Bottles
         NuxtLink.nav-link(to="/drinks" :class="{ active: $route.path.startsWith('/drinks') }") Drinks
         NuxtLink.nav-link(to="/essentials" :class="{ active: $route.path.startsWith('/essentials') }") Essentials
+        NuxtLink.nav-link(to="/beer-wine" :class="{ active: $route.path.startsWith('/beer-wine') }") Beer & Wine
         NuxtLink.nav-link(to="/available" :class="{ active: $route.path.startsWith('/available') }") Available
       
   main

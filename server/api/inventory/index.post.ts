@@ -37,7 +37,7 @@ export default defineEventHandler(async event => {
     bottles.push(newBottle)
     writeInventoryCSV(bottles)
 
-    // Sync data to regenerate public/data/inventory.json
+    // Sync data to regenerate public/data/bottles.json
     await syncInventoryData()
 
     return {

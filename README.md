@@ -58,7 +58,7 @@ The script will fetch data from Notion and merge it with your local CSV. **Notio
 npm run sync-data
 ```
 
-This will read from `data/inventory.csv` and `data/drinks.json` and generate normalized JSON files in `public/data/`.
+This will read from `data/bottles.csv` and `data/drinks.json` and generate normalized JSON files in `public/data/`.
 
 ### Development
 
@@ -83,7 +83,7 @@ npm run generate
 
 ### Inventory CSV
 
-Your `data/inventory.csv` should have these columns:
+Your `data/bottles.csv` should have these columns:
 
 - `id`, `name`, `category`, `tags`, `inStock`, `bottleSize`, `bottleState`, `image`
 
@@ -180,7 +180,7 @@ You can add, edit, and delete bottles directly from the web interface:
 3. Click "Manage Inventory" button
 4. Use the form to add new bottles or click "Edit" on existing bottles to modify them
 
-Changes made through the web interface will update `data/inventory.csv` immediately. Run `npm run sync-data` afterward to regenerate the public JSON files.
+Changes made through the web interface will update `data/bottles.csv` immediately. Run `npm run sync-data` afterward to regenerate the public JSON files.
 
 ## Testing
 

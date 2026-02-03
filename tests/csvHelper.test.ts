@@ -9,8 +9,8 @@ import {
 } from '../server/utils/csvHelper'
 import type { Bottle } from '../types'
 
-const TEST_CSV_PATH = join(process.cwd(), 'data', 'inventory.test.csv')
-const ORIGINAL_CSV_PATH = join(process.cwd(), 'data', 'inventory.csv')
+const TEST_CSV_PATH = join(process.cwd(), 'data', 'bottles.test.csv')
+const ORIGINAL_CSV_PATH = join(process.cwd(), 'data', 'bottles.csv')
 
 describe('CSV Helper Functions', () => {
   let originalData: string

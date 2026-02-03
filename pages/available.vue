@@ -3,6 +3,16 @@
   .container
       h2 🎯 Available Now
       p.mb-3 Cocktails you can make with 100% of ingredients in stock
+      
+      // Beer & Wine Section
+      .beer-wine-section(v-if="getInStockBeerWine.length > 0")
+        h3.section-title 🍺🍷 Beer & Wine Available
+        .beer-wine-grid
+          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
+            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .beer-wine-info
+              .beer-wine-name {{ item.name }}
+              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
 
       .drinks-grid(v-if="getAvailableDrinks.length > 0")
         DrinkCard(
@@ -11,7 +21,7 @@
           :drink="drink"
         )
 
-      .empty-state(v-else)
+      .empty-state(v-else-if="getInStockBeerWine.length === 0")
         .empty-state__icon 🔍
         h3 No Fully Available Drinks
         p Try adding more items to your bottles or essentials, or search for different cocktails
@@ -23,12 +33,15 @@ const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrink
 
 const { loadStarredDrinks } = useStarredDrinks()
 
+const { loadBeerWine, getInStockBeerWine } = useBeerWine()
+
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
   await loadLocalDrinks()
   loadStarredDrinks()
   await fetchCocktailDBDrinks('margarita')
+  await loadBeerWine()
 })
 </script>
 
@@ -46,6 +59,58 @@ onMounted(async () => {
   p {
     color: color.adjust($text-dark, $lightness: 20%);
   }
+}
+
+.beer-wine-section {
+  margin-bottom: $spacing-xxl;
+}
+
+.section-title {
+  color: $dark-bg;
+  font-size: 1.5rem;
+  margin-bottom: $spacing-lg;
+}
+
+.beer-wine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.beer-wine-card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-sm;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-4px);
+  }
+}
+
+.beer-wine-icon {
+  font-size: 2.5rem;
+}
+
+.beer-wine-info {
+  flex: 1;
+}
+
+.beer-wine-name {
+  font-weight: 600;
+  color: $dark-bg;
+  margin-bottom: $spacing-xs;
+}
+
+.beer-wine-type {
+  font-size: 0.875rem;
+  color: color.adjust($text-dark, $lightness: 20%);
 }
 
 .drinks-grid {

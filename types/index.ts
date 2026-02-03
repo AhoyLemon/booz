@@ -53,6 +53,20 @@ export interface DrinkData {
   lastUpdated: string
 }
 
+export interface BeerWine {
+  id: string
+  name: string
+  type: 'beer' | 'wine'
+  subtype?: string
+  inStock: boolean
+  image?: string
+}
+
+export interface BeerWineData {
+  items: BeerWine[]
+  lastUpdated: string
+}
+
 // Legacy type alias for backwards compatibility
 export type Recipe = Drink
 export type RecipeData = DrinkData

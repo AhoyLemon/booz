@@ -5,7 +5,7 @@ import { stringify } from 'csv-stringify/sync'
 import type { Bottle } from '~/types'
 
 const DATA_DIR = join(process.cwd(), 'data')
-const CSV_PATH = join(DATA_DIR, 'inventory.csv')
+const CSV_PATH = join(DATA_DIR, 'bottles.csv')
 
 export interface CSVBottle {
   id: string

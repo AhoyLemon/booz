@@ -31,7 +31,7 @@ export const useCocktails = () => {
   // Load inventory from public data
   const loadInventory = async () => {
     try {
-      const data = await $fetch<InventoryData>("/data/inventory.json");
+      const data = await $fetch<InventoryData>("/data/bottles.json");
       inventory.value = data.bottles;
     } catch (e) {
       console.error("Failed to load inventory:", e);
