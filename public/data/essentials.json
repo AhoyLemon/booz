@@ -10,7 +10,7 @@
       "id": "water",
       "name": "Water",
       "category": "Basics",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "salt",
@@ -25,18 +25,6 @@
       "inStock": false
     },
     {
-      "id": "hot-sauce",
-      "name": "Hot Sauce",
-      "category": "Basics",
-      "inStock": false
-    },
-    {
-      "id": "worcestershire-sauce",
-      "name": "Worcestershire Sauce",
-      "category": "Basics",
-      "inStock": false
-    },
-    {
       "id": "club-soda",
       "name": "Club Soda",
       "category": "Carbonated & Mixers",
@@ -46,7 +34,7 @@
       "id": "tonic-water",
       "name": "Tonic Water",
       "category": "Carbonated & Mixers",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "ginger-beer",
@@ -82,7 +70,7 @@
       "id": "fresh-lime",
       "name": "Fresh Lime",
       "category": "Citrus & Fruit",
-      "inStock": true
+      "inStock": false
     },
     {
       "id": "fresh-lemon",
@@ -97,10 +85,16 @@
       "inStock": false
     },
     {
+      "id": "fresh-grapefruit",
+      "name": "Fresh Grapefruit",
+      "category": "Citrus & Fruit",
+      "inStock": false
+    },
+    {
       "id": "lime-juice",
       "name": "Lime Juice",
       "category": "Citrus & Fruit",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "lemon-juice",
@@ -154,42 +148,18 @@
       "id": "agave-nectar",
       "name": "Agave Nectar",
       "category": "Sweeteners",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "grenadine",
       "name": "Grenadine",
       "category": "Sweeteners",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "maple-syrup",
       "name": "Maple Syrup",
       "category": "Sweeteners",
-      "inStock": false
-    },
-    {
-      "id": "angostura-bitters",
-      "name": "Angostura Bitters",
-      "category": "Bitters & Aromatics",
-      "inStock": false
-    },
-    {
-      "id": "orange-bitters",
-      "name": "Orange Bitters",
-      "category": "Bitters & Aromatics",
-      "inStock": false
-    },
-    {
-      "id": "peychauds-bitters",
-      "name": "Peychaud's Bitters",
-      "category": "Bitters & Aromatics",
-      "inStock": false
-    },
-    {
-      "id": "aromatic-bitters",
-      "name": "Aromatic Bitters",
-      "category": "Bitters & Aromatics",
       "inStock": false
     },
     {
@@ -205,10 +175,22 @@
       "inStock": false
     },
     {
+      "id": "hot-sauce",
+      "name": "Hot Sauce",
+      "category": "Bitters & Aromatics",
+      "inStock": true
+    },
+    {
+      "id": "worcestershire-sauce",
+      "name": "Worcestershire Sauce",
+      "category": "Bitters & Aromatics",
+      "inStock": false
+    },
+    {
       "id": "eggs",
       "name": "Eggs",
       "category": "Dairy & Cream",
-      "inStock": false
+      "inStock": true
     },
     {
       "id": "heavy-cream",
@@ -235,8 +217,14 @@
       "inStock": false
     },
     {
-      "id": "maraschino-cherries",
-      "name": "Maraschino Cherries",
+      "id": "cocktail-cherries",
+      "name": "Cocktail Cherries",
+      "category": "Garnishes",
+      "inStock": true
+    },
+    {
+      "id": "ginger-candy",
+      "name": "Ginger Candy",
       "category": "Garnishes",
       "inStock": true
     },
@@ -265,5 +253,5 @@
       "inStock": false
     }
   ],
-  "lastUpdated": "2026-02-03T03:01:49.726Z"
+  "lastUpdated": "2026-02-03T04:20:02.063Z"
 }

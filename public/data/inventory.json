@@ -381,25 +381,11 @@
       "name": "Thatcher's Blood Orange",
       "category": "Liqueur",
       "tags": [
-        "orange",
-        "blood orange"
+        "orange liqueur"
       ],
       "inStock": true,
       "bottleSize": "750ml",
       "image": "/images/bottles/bloodorange_thatcher.webp"
-    },
-    {
-      "id": "30",
-      "name": "Agave Nectar",
-      "category": "Mixers",
-      "tags": [
-        "syrup",
-        "sugar",
-        "agave"
-      ],
-      "inStock": true,
-      "bottleSize": "200ml",
-      "image": "/images/bottles/agave_raw.webp"
     },
     {
       "id": "31",
@@ -423,19 +409,6 @@
       "inStock": true,
       "bottleSize": "200ml",
       "image": "/images/bottles/elguapo_lemon.webp"
-    },
-    {
-      "id": "33",
-      "name": "Rose's Grenadine",
-      "category": "Mixers",
-      "tags": [
-        "pomegranate",
-        "grenadine"
-      ],
-      "inStock": true,
-      "bottleSize": "200ml",
-      "bottleState": "opened",
-      "image": "/images/bottles/rose_grenadine.jpg"
     },
     {
       "id": "34",
@@ -699,19 +672,6 @@
       "image": "/images/bottles/gingerlemon_gin.webp"
     },
     {
-      "id": "53",
-      "name": "Egbert's Cherries",
-      "category": "Garnish",
-      "tags": [
-        "garnish",
-        "cherries"
-      ],
-      "inStock": true,
-      "bottleSize": "200ml",
-      "bottleState": "unopened",
-      "image": "/images/bottles/egbert_cherries.webp"
-    },
-    {
       "id": "54",
       "name": "Weller 12",
       "category": "Special Occasion",
@@ -726,5 +686,5 @@
       "image": "/images/bottles/weller12.webp"
     }
   ],
-  "lastUpdated": "2026-02-03T03:48:57.566Z"
+  "lastUpdated": "2026-02-03T04:22:01.090Z"
 }
