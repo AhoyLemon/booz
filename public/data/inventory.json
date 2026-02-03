@@ -710,7 +710,21 @@
       "bottleSize": "200ml",
       "bottleState": "unopened",
       "image": "/images/bottles/egbert_cherries.webp"
+    },
+    {
+      "id": "54",
+      "name": "Weller 12",
+      "category": "Special Occasion",
+      "tags": [
+        "whiskey",
+        "bourbon",
+        "american whiskey"
+      ],
+      "inStock": true,
+      "bottleSize": "750ml",
+      "bottleState": "unopened",
+      "image": "/images/bottles/weller12.webp"
     }
   ],
-  "lastUpdated": "2026-02-03T02:44:22.407Z"
+  "lastUpdated": "2026-02-03T03:48:57.566Z"
 }

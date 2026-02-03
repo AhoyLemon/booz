@@ -52,3 +52,4 @@ id,name,category,tags,inStock,bottleSize,bottleState,image,company,aka
 51,Dashfire Lavender,Garnish,"garnish, bitters, lavender",true,200ml,opened,/images/bottles/dashfire_lavender.webp,Dashfire,
 52,Mountain Creek Ginger Lemon,Liqueur,"ginger, lemon, sparkly, gin",true,200ml,unopened,/images/bottles/gingerlemon_gin.webp,Mountain Creek,
 53,Egbert's Cherries,Garnish,"garnish, cherries",true,200ml,unopened,/images/bottles/egbert_cherries.webp,Dashfire,
+54,Weller 12,Special Occasion,"whiskey, bourbon, american whiskey",true,750ml,unopened,/images/bottles/weller12.webp,Buffalo Trace,
