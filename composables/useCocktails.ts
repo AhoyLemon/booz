@@ -281,14 +281,15 @@ export const useCocktails = () => {
     return false;
   };
 
-  // Filter drinks where 100% of ingredients are in stock
+  // Filter drinks where 100% of non-optional ingredients are in stock
   const getAvailableDrinks = computed(() => {
     const allDrinks = safeGetAllDrinks();
 
     return allDrinks.filter((drink) => {
-      if (drink.ingredients.length === 0) return false;
+      const requiredIngredients = drink.ingredients.filter((ing) => !ing.optional);
+      if (requiredIngredients.length === 0) return false;
 
-      return drink.ingredients.every((ingredient) => isIngredientInStock(ingredient.name));
+      return requiredIngredients.every((ingredient) => isIngredientInStock(ingredient.name));
     });
   });
 
@@ -302,14 +303,15 @@ export const useCocktails = () => {
     const allDrinks = safeGetAllDrinks();
 
     return allDrinks.map((drink) => {
-      const availableCount = drink.ingredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
-      const totalCount = drink.ingredients.length;
+      const requiredIngredients = drink.ingredients.filter((ing) => !ing.optional);
+      const availableCount = requiredIngredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
+      const totalCount = requiredIngredients.length;
 
       return {
         ...drink,
         availableIngredients: availableCount,
         totalIngredients: totalCount,
-        isFullyAvailable: availableCount === totalCount,
+        isFullyAvailable: availableCount === totalCount && totalCount > 0,
         availabilityPercentage: totalCount > 0 ? (availableCount / totalCount) * 100 : 0,
       };
     });
@@ -393,16 +395,18 @@ export const useCocktails = () => {
     });
   };
 
-  // Helper function to count how many ingredients are in stock
+  // Helper function to count how many non-optional ingredients are in stock
   const countMatchedIngredients = (drink: Drink): number => {
-    return drink.ingredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
+    const requiredIngredients = drink.ingredients.filter((ingredient) => !ingredient.optional);
+    return requiredIngredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
   };
 
-  // Helper function to calculate percentage of ingredients available
+  // Helper function to calculate percentage of non-optional ingredients available
   const getAvailabilityPercentage = (drink: Drink): number => {
-    if (drink.ingredients.length === 0) return 0;
-    const matched = countMatchedIngredients(drink);
-    return (matched / drink.ingredients.length) * 100;
+    const requiredIngredients = drink.ingredients.filter((ingredient) => !ingredient.optional);
+    if (requiredIngredients.length === 0) return 0;
+    const matched = requiredIngredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
+    return (matched / requiredIngredients.length) * 100;
   };
 
   // Sort drinks by ingredient availability percentage, then by favorited status, then alphabetically

@@ -68,6 +68,13 @@
                   type="text"
                   placeholder="e.g., 2 oz"
                 )
+              .form-group.ingredient-optional
+                label.checkbox-label
+                  input(
+                    type="checkbox"
+                    v-model="ingredient.optional"
+                  )
+                  span Optional
               button.btn.btn-remove(
                 type="button"
                 @click="removeIngredient(index)"
@@ -156,7 +163,7 @@
   const form = reactive({
     id: "",
     name: "",
-    ingredients: [{ name: "", qty: "" }] as Ingredient[],
+    ingredients: [{ name: "", qty: "", optional: false }] as Ingredient[],
     instructions: [""],
     image: "",
     prep: "",
@@ -185,7 +192,7 @@
   };
 
   const addIngredient = () => {
-    form.ingredients.push({ name: "", qty: "" });
+    form.ingredients.push({ name: "", qty: "", optional: false });
   };
 
   const removeIngredient = (index: number) => {
@@ -242,6 +249,7 @@
         .map((i) => ({
           name: i.name.trim(),
           qty: i.qty?.trim() || undefined,
+          ...(i.optional && { optional: true }),
         }));
 
       const cleanedInstructions = form.instructions.filter((i) => i.trim()).map((i) => i.trim());
@@ -284,7 +292,7 @@
   const resetForm = () => {
     form.id = "";
     form.name = "";
-    form.ingredients = [{ name: "", qty: "" }];
+    form.ingredients = [{ name: "", qty: "", optional: false }];
     form.instructions = [""];
     form.image = "";
     form.prep = "";
@@ -412,7 +420,7 @@
 
   .ingredient-item {
     display: grid;
-    grid-template-columns: 2fr 1fr auto;
+    grid-template-columns: 2fr 1fr auto auto;
     gap: 1rem;
     align-items: end;
     margin-bottom: 1rem;
@@ -424,6 +432,30 @@
 
     .form-group {
       margin-bottom: 0;
+
+      &.ingredient-optional {
+        display: flex;
+        align-items: center;
+        padding-bottom: 0.75rem;
+      }
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-weight: normal;
+
+      input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      span {
+        user-select: none;
+      }
     }
   }
 

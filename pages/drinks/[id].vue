@@ -31,9 +31,11 @@
             li(
               v-for="(ingredient, index) in drink.ingredients"
               :key="index"
-              :class="{ 'available': isIngredientAvailable(ingredient.name) }"
+              :class="{ 'available': isIngredientAvailable(ingredient.name), 'optional': ingredient.optional }"
             )
-              span.ingredient-name {{ ingredient.name }}
+              span.ingredient-name 
+                | {{ ingredient.name }}
+                span.optional-label(v-if="ingredient.optional")  (optional)
               span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
 
         .drink-instructions
@@ -123,11 +125,12 @@
 
   const availableCount = computed(() => {
     if (!drink.value) return 0;
-    return drink.value.ingredients.filter((ing) => isIngredientInStock(ing.name)).length;
+    return drink.value.ingredients.filter((ing) => !ing.optional && isIngredientInStock(ing.name)).length;
   });
 
   const totalCount = computed(() => {
-    return drink.value?.ingredients.length || 0;
+    if (!drink.value) return 0;
+    return drink.value.ingredients.filter((ing) => !ing.optional).length;
   });
 
   const isFullyAvailable = computed(() => {
@@ -297,6 +300,21 @@
           font-weight: 600;
           border-radius: $border-radius-sm;
           margin-bottom: $spacing-xs;
+        }
+
+        &.optional {
+          opacity: 0.7;
+          font-style: italic;
+
+          &.available {
+            opacity: 1;
+            font-weight: normal;
+          }
+
+          .optional-label {
+            color: color.adjust($text-dark, $lightness: 30%);
+            font-size: 0.875rem;
+          }
         }
 
         .ingredient-name {
