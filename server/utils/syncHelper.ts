@@ -9,7 +9,8 @@ const execAsync = promisify(exec);
  */
 export async function syncInventoryData(): Promise<void> {
   try {
-    await execAsync("npm run sync-data", {
+    // Run tsx directly instead of npm run sync-data to avoid .env file requirement
+    await execAsync("npx tsx scripts/sync-data.ts", {
       cwd: process.cwd(),
     });
   } catch (error) {

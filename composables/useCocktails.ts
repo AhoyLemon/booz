@@ -163,6 +163,12 @@ export const useCocktails = () => {
   // Helper function to check for strict match (case-insensitive)
   const matchesStrict = (a: string, b: string): boolean => a.trim().toLowerCase() === b.trim().toLowerCase();
 
+  // Helper function to check if a term matches as a whole word in a string
+  const matchesAsWord = (text: string, term: string): boolean => {
+    const regex = new RegExp(`\\b${term}\\b`, 'i');
+    return regex.test(text);
+  };
+
   // Strict ingredient matching: only exact name, synonym, or hierarchy matches
   // Excludes bottles marked as "fingers" from being available for cocktails
   const isIngredientInStock = (ingredientName: string): boolean => {

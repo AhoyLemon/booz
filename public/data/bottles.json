@@ -306,11 +306,7 @@
       "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
-      "image": "/images/bottles/kahlua.webp",
-      "aka": [
-        "Kahlua",
-        "Coffee liqueur"
-      ]
+      "image": "/images/bottles/kahlua.webp"
     },
     {
       "id": "23",
@@ -341,10 +337,7 @@
       "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
-      "image": "/images/bottles/lazzaroni.webp",
-      "aka": [
-        "Maraschino liqueur"
-      ]
+      "image": "/images/bottles/lazzaroni.webp"
     },
     {
       "id": "25",
@@ -371,11 +364,7 @@
       "inStock": true,
       "isFinger": false,
       "bottleSize": "750ml",
-      "image": "/images/bottles/st-germain.webp",
-      "aka": [
-        "Elderflower cordial",
-        "Elderflower liqueur"
-      ]
+      "image": "/images/bottles/st-germain.webp"
     },
     {
       "id": "27",
@@ -735,11 +724,11 @@
         "american whiskey"
       ],
       "inStock": true,
-      "isFinger": false,
+      "isFinger": true,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/weller12.webp"
     }
   ],
-  "lastUpdated": "2026-02-03T18:40:10.227Z"
+  "lastUpdated": "2026-02-03T18:46:05.487Z"
 }
