@@ -58,7 +58,7 @@ The script will fetch data from Notion and merge it with your local CSV. **Notio
 npm run sync-data
 ```
 
-This will read from `data/inventory.csv` and `data/recipes.json` and generate normalized JSON files in `public/data/`.
+This will read from `data/inventory.csv` and `data/drinks.json` and generate normalized JSON files in `public/data/`.
 
 ### Development
 
@@ -87,16 +87,16 @@ Your `data/inventory.csv` should have these columns:
 
 - `id`, `name`, `category`, `tags`, `inStock`, `bottleSize`, `bottleState`, `image`
 
-### Recipes JSON
+### Drinks JSON
 
-Your `data/recipes.json` should follow this structure:
+Your `data/drinks.json` should follow this structure:
 
 ```json
 {
-  "recipes": [
+  "drinks": [
     {
       "id": "custom-1",
-      "name": "Recipe Name",
+      "name": "Drink Name",
       "ingredients": [{ "name": "Ingredient", "qty": "2 oz" }],
       "instructions": "Mix and serve",
       "category": "Category",

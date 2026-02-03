@@ -9,7 +9,7 @@ All inventory items belong to the bar and should be saved in JSON format on the 
 - **Bottles**: Individual spirits, liqueurs, wines, beers stored in `public/data/inventory.json`
 - **Essentials**: Ice, mixers, juices, syrups, and other non-bottled ingredients stored in `public/data/essentials.json`
 - **Garnishes**: Bitters, cherries, olives, and other garnish items
-- **Custom Recipes**: User-created cocktail recipes stored in `public/data/recipes.json`
+- **Custom Drinks**: User-created cocktail drinks stored in `public/data/drinks.json`
 
 These items should **NOT** use localStorage as they are part of the bar's inventory and need to persist across all users and browser sessions.
 
@@ -32,7 +32,7 @@ Currently, all bar inventory is stored in the `public/data` directory as JSON fi
 
 - `public/data/inventory.json` - Bottle inventory
 - `public/data/essentials.json` - Essential ingredients
-- `public/data/recipes.json` - Cocktail recipes
+- `public/data/drinks.json` - Cocktail drinks
 
 ### Future State
 

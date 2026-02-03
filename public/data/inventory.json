@@ -225,7 +225,7 @@
       "tags": [
         "whiskey",
         "bourbon",
-        "chocolate liqueur"
+        "chocolate"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -238,7 +238,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "creme de violette"
+        "violet"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -251,7 +251,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "cherry liqueur"
+        "cherry"
       ],
       "inStock": true,
       "bottleSize": "200ml",
@@ -264,9 +264,9 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "anise liqueur",
+        "anise",
         "schnapps",
-        "mint liqueur"
+        "mint"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -279,7 +279,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "coffee liqueur"
+        "coffee"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -298,7 +298,7 @@
         "rum",
         "liqueur",
         "dark rum",
-        "coffee liqueur"
+        "coffee"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -311,8 +311,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "cherry liqueur",
-        "maraschino"
+        "cherry"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -328,7 +327,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "melon liqueur"
+        "melon"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -370,7 +369,7 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "grapefruit liqueur"
+        "grapefruit"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -382,9 +381,8 @@
       "name": "Thatcher's Blood Orange",
       "category": "Liqueur",
       "tags": [
-        "liqueur",
-        "orange liqueur",
-        "blood orange liqueur"
+        "orange",
+        "blood orange"
       ],
       "inStock": true,
       "bottleSize": "750ml",
@@ -420,8 +418,7 @@
       "name": "El Guapo's Lemon Drop",
       "category": "Mixers",
       "tags": [
-        "lemon",
-        "mixer"
+        "lemon"
       ],
       "inStock": true,
       "bottleSize": "200ml",
@@ -459,7 +456,7 @@
       "category": "Special Occasion",
       "tags": [
         "absinthe",
-        "anise liqueur"
+        "anise"
       ],
       "inStock": true,
       "bottleState": "opened",
@@ -715,5 +712,5 @@
       "image": "/images/bottles/egbert_cherries.webp"
     }
   ],
-  "lastUpdated": "2026-02-02T21:47:29.981Z"
+  "lastUpdated": "2026-02-03T02:44:22.407Z"
 }

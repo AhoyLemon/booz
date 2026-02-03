@@ -67,7 +67,7 @@ export const useCocktails = () => {
   // Load local drinks from public data
   const loadLocalDrinks = async () => {
     try {
-      const data = await $fetch<DrinkData>('/data/recipes.json')
+      const data = await $fetch<DrinkData>('/data/drinks.json')
       localDrinks.value = data.drinks
     } catch (e) {
       console.error('Failed to load local drinks:', e)

@@ -1,7 +1,7 @@
 import { parse } from 'csv-parse/sync'
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { join } from 'path'
-import type { Bottle, Recipe, InventoryData, RecipeData } from '../types'
+import type { Bottle, Recipe, InventoryData, DrinkData } from '../types'
 
 // ⚠️ Notion Integration - Uncomment the line below to enable Notion sync
 // import { fetchFromNotion } from './notion-sync'
@@ -58,22 +58,22 @@ function parseCSV(): Bottle[] {
   }
 }
 
-function loadLocalRecipes(): Recipe[] {
-  const recipesPath = join(DATA_DIR, 'recipes.json')
+function loadLocalDrinks(): Recipe[] {
+  const drinksPath = join(DATA_DIR, 'drinks.json')
 
-  if (!existsSync(recipesPath)) {
-    console.log('⚠️  recipes.json not found, skipping local recipes')
+  if (!existsSync(drinksPath)) {
+    console.log('⚠️  drinks.json not found, skipping local drinks')
     return []
   }
 
   try {
-    console.log('📖 Loading local recipes...')
-    const recipesContent = readFileSync(recipesPath, 'utf-8')
-    const data = JSON.parse(recipesContent)
-    console.log(`✅ Loaded ${data.recipes.length} local recipes`)
-    return data.recipes
+    console.log('📖 Loading local drinks...')
+    const drinksContent = readFileSync(drinksPath, 'utf-8')
+    const data = JSON.parse(drinksContent)
+    console.log(`✅ Loaded ${data.drinks.length} local drinks`)
+    return data.drinks
   } catch (error) {
-    console.error('❌ Error loading recipes:', error)
+    console.error('❌ Error loading drinks:', error)
     return []
   }
 }
@@ -100,8 +100,8 @@ async function syncData() {
 
   const bottles = Array.from(bottlesMap.values())
 
-  // Load local recipes
-  const localRecipes = loadLocalRecipes()
+  // Load local drinks
+  const localDrinks = loadLocalDrinks()
 
   // Create inventory data
   const inventoryData: InventoryData = {
@@ -109,20 +109,20 @@ async function syncData() {
     lastUpdated: new Date().toISOString(),
   }
 
-  // Create recipes data
-  const recipesData: RecipeData = {
-    recipes: localRecipes,
+  // Create drinks data
+  const drinksData: DrinkData = {
+    drinks: localDrinks,
     lastUpdated: new Date().toISOString(),
   }
 
   // Write to public directory
   console.log('\n💾 Writing normalized data to public/data/...')
   writeFileSync(join(PUBLIC_DATA_DIR, 'inventory.json'), JSON.stringify(inventoryData, null, 2))
-  writeFileSync(join(PUBLIC_DATA_DIR, 'recipes.json'), JSON.stringify(recipesData, null, 2))
+  writeFileSync(join(PUBLIC_DATA_DIR, 'drinks.json'), JSON.stringify(drinksData, null, 2))
 
   console.log('✅ Inventory data written to public/data/inventory.json')
-  console.log('✅ Recipes data written to public/data/recipes.json')
-  console.log(`\n🎉 Sync complete! ${bottles.length} bottles, ${localRecipes.length} local recipes`)
+  console.log('✅ Drinks data written to public/data/drinks.json')
+  console.log(`\n🎉 Sync complete! ${bottles.length} bottles, ${localDrinks.length} local drinks`)
 }
 
 // Run the sync
