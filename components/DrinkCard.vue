@@ -4,21 +4,22 @@ NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isF
     span {{ starred ? '★' : '☆' }}
   .drink-card__image(v-if="drink.imageUrl")
     img(:src="drink.imageUrl" :alt="drink.name")
+    span.drink-card__category(v-if="drink.category") {{ drink.category }}
   .drink-card__image(v-else-if="drink.image")
     img(:src="`/images/drinks/${drink.image}`" :alt="drink.name")
+    span.drink-card__category(v-if="drink.category") {{ drink.category }}
   .drink-card__image.drink-card__image--placeholder(v-else)
     span 🍸
+    span.drink-card__category(v-if="drink.category") {{ drink.category }}
   .drink-card__content
     .drink-card__header
       h3.drink-card__name {{ drink.name }}
-      span.drink-card__category(v-if="drink.category") {{ drink.category }}
     .drink-card__availability(v-if="showAvailability")
       .availability-bar
         .availability-bar__fill(:style="{ width: availabilityPercentage + '%' }")
-      span.availability-text 
+      span.availability-text(v-if="availableCount < totalCount")
         | {{ availableCount }}/{{ totalCount }} ingredients available
     .drink-card__ingredients
-      h4 Ingredients:
       ul
         li(v-for="ingredient in drink.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
           span.ingredient-name {{ ingredient.name }}
@@ -98,6 +99,7 @@ NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isF
       height: 200px;
       overflow: hidden;
       background: $light-bg;
+      position: relative;
 
       &.drink-card__image--placeholder {
         background: rgba(0, 0, 0, 0.3);
@@ -140,27 +142,33 @@ NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isF
     }
 
     &__category {
-      background: $primary-color;
+      background: $dark-bg;
       color: white;
       padding: $spacing-xs $spacing-sm;
       border-radius: $border-radius-sm;
       font-size: 0.875rem;
       font-weight: 600;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
     }
 
     &__availability {
       margin-bottom: $spacing-md;
 
       .availability-bar {
-        height: 8px;
+        height: 10px;
         background: $light-bg;
         border-radius: $border-radius-sm;
         overflow: hidden;
         margin-bottom: $spacing-xs;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 
         &__fill {
           height: 100%;
-          background: linear-gradient(90deg, $secondary-color, $accent-color);
+          // background: linear-gradient(90deg, $secondary-color, $accent-color);
+          background-color: $dark-bg;
+
           transition: width 0.3s ease;
         }
       }
