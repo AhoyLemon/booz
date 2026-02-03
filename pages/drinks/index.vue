@@ -18,15 +18,16 @@
 
       .filters.mb-3
         button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ filteredAllDrinks.length }})
-        button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length + + availableFingerBottles.length }})
         button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
-        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
+        button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
 
       .loading(v-if="loading") Loading drinks...
       .error(v-if="error") {{ error }}
 
       // Finger bottles section
-      .fingers-section(v-if="availableFingerBottles.length > 0")
+      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic') ")
         h3.section-title 🥃 Special Fingers Available
         .fingers-grid
           .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
@@ -42,7 +43,17 @@
                   span  | 
                   NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
 
-      .drinks-grid
+      // Beer & Wine Section
+      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
+        h3.section-title 🍺🍷 Beer & Wine Available
+        .beer-wine-grid
+          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
+            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .beer-wine-info
+              .beer-wine-name {{ item.name }}
+              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
+
+      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine') ")
         DrinkCard(
           v-for="drink in filteredDrinks"
           :key="drink.id"
@@ -53,6 +64,8 @@
 
 <script setup lang="ts">
   import type { Bottle } from "~/types";
+
+  const { loadBeerWine, getInStockBeerWine } = useBeerWine();
 
   const {
     loadInventory,
@@ -73,7 +86,7 @@
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
 
   const searchTerm = ref("");
-  const filter = ref<"all" | "alcoholic" | "nonAlcoholic" | "available">("all");
+  const filter = ref<"all" | "alcoholic" | "nonAlcoholic" | "available" | "beerWine">("all");
 
   // Load data on mount
   onMounted(async () => {
@@ -81,6 +94,7 @@
     await loadEssentials();
     await loadLocalDrinks();
     loadStarredDrinks();
+    await loadBeerWine();
 
     // Fetch random cocktails to showcase variety
     await fetchRandomCocktails(8);
@@ -278,7 +292,7 @@
 
   .drinks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: $spacing-lg;
   }
 
@@ -363,6 +377,65 @@
 
       &:hover {
         text-decoration: underline;
+      }
+    }
+  }
+
+  // Beer & Wine Section
+  .beer-wine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+
+  .beer-wine-card {
+    background: white;
+    border-radius: $border-radius-lg;
+    padding: $spacing-lg;
+    box-shadow: $shadow-sm;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-4px);
+    }
+  }
+
+  .beer-wine-icon {
+    font-size: 2.5rem;
+  }
+
+  .beer-wine-info {
+    flex: 1;
+  }
+
+  .beer-wine-name {
+    font-weight: 600;
+    color: $dark-bg;
+    margin-bottom: $spacing-xs;
+  }
+
+  .beer-wine-type {
+    font-size: 0.875rem;
+    color: color.adjust($text-dark, $lightness: 20%);
+  }
+
+  @media (max-width: 1000px) {
+    .drinks-grid {
+      grid-template-columns: 1fr;
+      .drink-card {
+        display: flex;
+        flex-direction: row;
+        font-size: 12px;
+        .drink-card__image {
+          img {
+            opacity: 0.5;
+          }
+        }
       }
     }
   }

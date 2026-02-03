@@ -64,6 +64,14 @@ div
       }
     }
   }
+  @media (max-width: 920px) {
+    .app-header {
+      nav {
+        flex-wrap: wrap;
+        row-gap: 0;
+      }
+    }
+  }
 
   .app-footer {
     background: $dark-bg;

@@ -42,7 +42,7 @@ id,name,category,tags,inStock,isFinger,bottleSize,bottleState,image,company
 43,Lindores Single Malt,Special Occasion,"whiskey, scotch, single malt",true,false,50ml,unopened,/images/bottles/lindores_singlemalt.webp,Lindores
 44,McKenna Bottled-In-Bond,Staples,"whiskey, american whiskey",true,false,750ml,opened,/images/bottles/mckenna_10.webp,Henry McKenna
 45,Noble Corazon Coffee,Special Occasion,"liqueur, tequila, coffee liqueur",true,false,750ml,opened,/images/bottles/noble_coffee.webp,Noble Corazon
-46,Speyside 25,Special Occasion,"whiskey, scotch, single malt",true,false,750ml,unopened,/images/bottles/shieldaig_25.webp,Shieldaig
+46,Speyside 25,Special Occasion,"whiskey, scotch, single malt",true,true,750ml,unopened,/images/bottles/shieldaig_25.webp,Shieldaig
 47,Tres Generaciones Añejo,Special Occasion,"tequila, añejo",true,false,750ml,opened,/images/bottles/tres_anejo.webp,Casa Sauza
 48,Angostura Aromatic,Garnish,"garnish, bitters",true,false,50ml,opened,/images/bottles/angostura.webp,Angostura
 49,Blackstrap,Garnish,"garnish, bitters, molasses",true,false,50ml,opened,/images/bottles/bittercube_blackstrap.webp,Bittercube

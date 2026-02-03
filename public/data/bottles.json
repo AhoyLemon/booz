@@ -619,7 +619,7 @@
         "single malt"
       ],
       "inStock": true,
-      "isFinger": false,
+      "isFinger": true,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/shieldaig_25.webp"
@@ -730,5 +730,5 @@
       "image": "/images/bottles/weller12.webp"
     }
   ],
-  "lastUpdated": "2026-02-03T19:09:01.197Z"
+  "lastUpdated": "2026-02-03T19:54:22.274Z"
 }
