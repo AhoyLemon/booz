@@ -33,7 +33,7 @@ id,name,category,tags,inStock,isFinger,bottleSize,bottleState,image,company
 34,Tattersall Old Fashioned,Premix,"premix, old fashioned",true,false,750ml,unopened,/images/bottles/oldfashioned_tattersall.png,Tattersall
 35,Abstente,Special Occasion,"absinthe, anise liqueur",true,false,,opened,/images/bottles/absente.webp,
 36,Absinthe Montmartre,Special Occasion,"absinthe, anise liqueur",true,false,750ml,opened,/images/bottles/absinthe_montmartre.webp,Old Vienna Liqueur Museum
-37,Baller,Special Occasion,"whiskey, japanese whiskey",true,false,750ml,opened,/images/bottles/baller.webp,St. George
+37,Baller,Special Occasion,"whiskey, japanese whiskey",true,true,750ml,opened,/images/bottles/baller.webp,St. George
 38,Bourbon Cream,Special Occasion,"liqueur, whiskey, bourbon, bourbon cream",true,false,750ml,unopened,/images/bottles/bourboncream.webp,Buffalo Trace
 39,Dalwhinnie 15,Special Occasion,"whiskey, scotch, single malt",true,false,50ml,unopened,/images/bottles/dalwhinnie_15.webp,Scotland
 40,Glenmorangie 18,Special Occasion,"whiskey, scotch, single malt",true,false,750ml,opened,/images/bottles/glenmorangie_18.webp,Glenmorangie
