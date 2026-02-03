@@ -19,8 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrinks } =
-  useCocktails()
+const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrinks } = useCocktails()
 
 const { loadStarredDrinks } = useStarredDrinks()
 

@@ -2,7 +2,7 @@ import { writeFileSync, readFileSync } from 'fs'
 import { join } from 'path'
 import type { Essential, EssentialsData } from '~/types'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const body = await readBody<{ id: string; inStock: boolean }>(event)
 
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     const essentialsData = JSON.parse(readFileSync(essentialsPath, 'utf-8')) as EssentialsData
 
     // Find and update the essential
-    const essential = essentialsData.essentials.find((e) => e.id === body.id)
+    const essential = essentialsData.essentials.find(e => e.id === body.id)
     if (!essential) {
       throw createError({
         statusCode: 404,

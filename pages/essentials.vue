@@ -62,7 +62,7 @@ onMounted(async () => {
 })
 
 const getCategoryCheckedCount = (category: { name: string }) => {
-  return getItemsForCategory(category.name).filter((item) => item.inStock).length
+  return getItemsForCategory(category.name).filter(item => item.inStock).length
 }
 
 const getCategoryItemCount = (category: { name: string }) => {

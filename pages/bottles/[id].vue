@@ -70,12 +70,8 @@ import type { Bottle, Drink } from '~/types'
 const route = useRoute()
 const bottleId = route.params.id as string
 
-const {
-  loadInventory,
-  loadLocalDrinks,
-  fetchDrinksByIngredient,
-  getDrinksUsingBottle,
-} = useCocktails()
+const { loadInventory, loadLocalDrinks, fetchDrinksByIngredient, getDrinksUsingBottle } =
+  useCocktails()
 
 const bottle = ref<Bottle | null>(null)
 const loading = ref(true)
@@ -122,11 +118,7 @@ async function loadDrinks() {
     const localDrinks = getDrinksUsingBottle(bottle.value)
 
     // Fetch API drinks using the bottle name and tags
-    const searchTerms = [
-      bottle.value.name,
-      ...bottle.value.tags,
-      ...(bottle.value.aka || [])
-    ]
+    const searchTerms = [bottle.value.name, ...bottle.value.tags, ...(bottle.value.aka || [])]
 
     // Fetch drinks from API for each search term
     const apiDrinksPromises = searchTerms.slice(0, 3).map(term => fetchDrinksByIngredient(term))
@@ -135,8 +127,8 @@ async function loadDrinks() {
 
     // Combine and deduplicate drinks
     const allDrinks = [...localDrinks, ...apiDrinks]
-    const uniqueDrinks = allDrinks.filter((drink, index, self) => 
-      index === self.findIndex(d => d.id === drink.id)
+    const uniqueDrinks = allDrinks.filter(
+      (drink, index, self) => index === self.findIndex(d => d.id === drink.id)
     )
 
     drinksUsingBottle.value = uniqueDrinks

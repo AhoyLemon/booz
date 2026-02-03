@@ -34,7 +34,7 @@ export const useEssentials = () => {
 
   // Toggle essential stock status
   const toggleEssential = async (id: string) => {
-    const essential = essentials.value.find((e) => e.id === id)
+    const essential = essentials.value.find(e => e.id === id)
     if (!essential) return
 
     // Optimistic update
@@ -55,13 +55,13 @@ export const useEssentials = () => {
   }
 
   const isChecked = (itemName: string) => {
-    const essential = essentials.value.find((e) => e.name === itemName)
+    const essential = essentials.value.find(e => e.name === itemName)
     return essential?.inStock || false
   }
 
   const clearAll = async () => {
     // Update all essentials to false
-    const updates = essentials.value.map((essential) =>
+    const updates = essentials.value.map(essential =>
       $fetch(`/api/essentials/${essential.id}`, {
         method: 'PUT',
         body: { id: essential.id, inStock: false },
@@ -70,7 +70,7 @@ export const useEssentials = () => {
 
     try {
       await Promise.all(updates)
-      essentials.value.forEach((e) => (e.inStock = false))
+      essentials.value.forEach(e => (e.inStock = false))
     } catch (e: any) {
       error.value = e.message || 'Failed to clear all essentials'
       console.error('Failed to clear all:', e)
@@ -81,7 +81,7 @@ export const useEssentials = () => {
 
   const checkAll = async () => {
     // Update all essentials to true
-    const updates = essentials.value.map((essential) =>
+    const updates = essentials.value.map(essential =>
       $fetch(`/api/essentials/${essential.id}`, {
         method: 'PUT',
         body: { id: essential.id, inStock: true },
@@ -90,7 +90,7 @@ export const useEssentials = () => {
 
     try {
       await Promise.all(updates)
-      essentials.value.forEach((e) => (e.inStock = true))
+      essentials.value.forEach(e => (e.inStock = true))
     } catch (e: any) {
       error.value = e.message || 'Failed to check all essentials'
       console.error('Failed to check all:', e)
@@ -101,12 +101,12 @@ export const useEssentials = () => {
 
   // Get items for a category
   const getItemsForCategory = (categoryName: string) => {
-    return essentials.value.filter((e) => e.category === categoryName)
+    return essentials.value.filter(e => e.category === categoryName)
   }
 
   const totalEssentials = computed(() => essentials.value.length)
 
-  const checkedCount = computed(() => essentials.value.filter((e) => e.inStock).length)
+  const checkedCount = computed(() => essentials.value.filter(e => e.inStock).length)
 
   const completionPercentage = computed(() => {
     if (totalEssentials.value === 0) return 0

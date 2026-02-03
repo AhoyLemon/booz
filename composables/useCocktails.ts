@@ -411,22 +411,24 @@ export const useCocktails = () => {
   const fetchDrinksByIngredient = async (ingredient: string): Promise<Drink[]> => {
     try {
       const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ingredient)}`
-      const response = await $fetch<{ drinks: Array<{ idDrink: string; strDrink: string; strDrinkThumb: string }> | null }>(endpoint)
+      const response = await $fetch<{
+        drinks: Array<{ idDrink: string; strDrink: string; strDrinkThumb: string }> | null
+      }>(endpoint)
 
       if (response.drinks) {
         // The filter endpoint only returns basic info, we need to fetch full details for each drink
         const fullDrinks: Drink[] = []
-        
+
         // Limit to first 10 drinks to avoid too many requests
         const drinksToFetch = response.drinks.slice(0, 10)
-        
+
         for (const drink of drinksToFetch) {
           const fullDrink = await fetchCocktailDBDrinkById(drink.idDrink)
           if (fullDrink) {
             fullDrinks.push(fullDrink)
           }
         }
-        
+
         return fullDrinks
       }
 
@@ -441,23 +443,23 @@ export const useCocktails = () => {
   const getDrinksUsingBottle = (bottle: Bottle): Drink[] => {
     const allDrinks = safeGetAllDrinks()
     const bottleName = bottle.name.toLowerCase()
-    
+
     // Create list of search terms from bottle name, tags, and aka
     const searchTerms = [
       bottleName,
       ...bottle.tags.map(tag => tag.toLowerCase()),
-      ...(bottle.aka || []).map(aka => aka.toLowerCase())
+      ...(bottle.aka || []).map(aka => aka.toLowerCase()),
     ]
 
     return allDrinks.filter(drink => {
       return drink.ingredients.some(ingredient => {
         const ingredientLower = ingredient.name.toLowerCase()
-        
+
         // Check if any search term matches the ingredient
         return searchTerms.some(term => {
           // Direct match
           if (ingredientLower === term) return true
-          
+
           // Word boundary match
           return matchesAsWord(ingredientLower, term)
         })
