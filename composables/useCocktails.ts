@@ -1,4 +1,4 @@
-import type { Bottle, Recipe, InventoryData, RecipeData } from '~/types'
+import type { Bottle, Drink, InventoryData, DrinkData } from '~/types'
 
 interface CocktailDBDrink {
   idDrink: string
@@ -11,15 +11,15 @@ interface CocktailDBDrink {
 
 export const useCocktails = () => {
   const inventory = useState<Bottle[]>('inventory', () => [])
-  const localRecipes = useState<Recipe[]>('localRecipes', () => [])
-  const apiRecipes = useState<Recipe[]>('apiRecipes', () => [])
+  const localDrinks = useState<Drink[]>('localDrinks', () => [])
+  const apiDrinks = useState<Drink[]>('apiDrinks', () => [])
   const loading = useState<boolean>('loading', () => false)
   const error = useState<string | null>('error', () => null)
 
-  // Helper to safely get all recipes with defensive checks
-  const safeGetAllRecipes = () => {
-    const local = Array.isArray(localRecipes.value) ? localRecipes.value : []
-    const api = Array.isArray(apiRecipes.value) ? apiRecipes.value : []
+  // Helper to safely get all drinks with defensive checks
+  const safeGetAllDrinks = () => {
+    const local = Array.isArray(localDrinks.value) ? localDrinks.value : []
+    const api = Array.isArray(apiDrinks.value) ? apiDrinks.value : []
     return [...local, ...api]
   }
 
@@ -64,19 +64,19 @@ export const useCocktails = () => {
     }
   }
 
-  // Load local recipes from public data
-  const loadLocalRecipes = async () => {
+  // Load local drinks from public data
+  const loadLocalDrinks = async () => {
     try {
-      const data = await $fetch<RecipeData>('/data/recipes.json')
-      localRecipes.value = data.recipes
+      const data = await $fetch<DrinkData>('/data/recipes.json')
+      localDrinks.value = data.drinks
     } catch (e) {
-      console.error('Failed to load local recipes:', e)
-      error.value = 'Failed to load local recipes'
+      console.error('Failed to load local drinks:', e)
+      error.value = 'Failed to load local drinks'
     }
   }
 
-  // Helper to convert CocktailDB drink to Recipe format
-  const convertDrinkToRecipe = (drink: CocktailDBDrink): Recipe => {
+  // Helper to convert CocktailDB drink to Drink format
+  const convertCocktailDBDrinkToDrink = (drink: CocktailDBDrink): Drink => {
     const ingredients = []
     for (let i = 1; i <= 15; i++) {
       const ingredient = drink[`strIngredient${i}`]
@@ -115,25 +115,25 @@ export const useCocktails = () => {
       }
 
       const responses = await Promise.all(fetchPromises)
-      const recipes: Recipe[] = []
+      const drinks: Drink[] = []
 
       for (const response of responses) {
         if (response.drinks && response.drinks[0]) {
-          recipes.push(convertDrinkToRecipe(response.drinks[0]))
+          drinks.push(convertCocktailDBDrinkToDrink(response.drinks[0]))
         }
       }
 
-      apiRecipes.value = recipes
+      apiDrinks.value = drinks
     } catch (e) {
       console.error('Failed to fetch from CocktailDB:', e)
-      error.value = 'Failed to fetch cocktail recipes'
+      error.value = 'Failed to fetch cocktail drinks'
     } finally {
       loading.value = false
     }
   }
 
-  // Fetch recipes from TheCocktailDB API
-  const fetchCocktailDBRecipes = async (searchTerm: string = '') => {
+  // Fetch drinks from TheCocktailDB API
+  const fetchCocktailDBDrinks = async (searchTerm: string = '') => {
     loading.value = true
     error.value = null
 
@@ -142,38 +142,38 @@ export const useCocktails = () => {
       const response = await $fetch<{ drinks: CocktailDBDrink[] | null }>(endpoint)
 
       if (response.drinks) {
-        const recipes: Recipe[] = response.drinks.map(drink => convertDrinkToRecipe(drink))
-        apiRecipes.value = recipes
+        const drinks: Drink[] = response.drinks.map(drink => convertCocktailDBDrinkToDrink(drink))
+        apiDrinks.value = drinks
       }
     } catch (e) {
       console.error('Failed to fetch from CocktailDB:', e)
-      error.value = 'Failed to fetch cocktail recipes'
+      error.value = 'Failed to fetch cocktail drinks'
     } finally {
       loading.value = false
     }
   }
 
-  // Fetch a single recipe by CocktailDB ID
-  const fetchCocktailDBRecipeById = async (cocktailDbId: string): Promise<Recipe | null> => {
+  // Fetch a single drink by CocktailDB ID
+  const fetchCocktailDBDrinkById = async (cocktailDbId: string): Promise<Drink | null> => {
     try {
       const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${cocktailDbId}`
       const response = await $fetch<{ drinks: CocktailDBDrink[] | null }>(endpoint)
 
       if (response.drinks && response.drinks[0]) {
-        const recipe = convertDrinkToRecipe(response.drinks[0])
+        const drink = convertCocktailDBDrinkToDrink(response.drinks[0])
 
-        // Add to apiRecipes if not already there
-        const existingIndex = apiRecipes.value.findIndex(r => r.id === recipe.id)
+        // Add to apiDrinks if not already there
+        const existingIndex = apiDrinks.value.findIndex(d => d.id === drink.id)
         if (existingIndex === -1) {
-          apiRecipes.value = [...apiRecipes.value, recipe]
+          apiDrinks.value = [...apiDrinks.value, drink]
         }
 
-        return recipe
+        return drink
       }
 
       return null
     } catch (e) {
-      console.error('Failed to fetch recipe from CocktailDB:', e)
+      console.error('Failed to fetch drink from CocktailDB:', e)
       return null
     }
   }
@@ -349,34 +349,34 @@ export const useCocktails = () => {
     return false
   }
 
-  // Filter recipes where 100% of ingredients are in stock
-  const getAvailableRecipes = computed(() => {
-    const allRecipes = safeGetAllRecipes()
+  // Filter drinks where 100% of ingredients are in stock
+  const getAvailableDrinks = computed(() => {
+    const allDrinks = safeGetAllDrinks()
 
-    return allRecipes.filter(recipe => {
-      if (recipe.ingredients.length === 0) return false
+    return allDrinks.filter(drink => {
+      if (drink.ingredients.length === 0) return false
 
-      return recipe.ingredients.every(ingredient => isIngredientInStock(ingredient.name))
+      return drink.ingredients.every(ingredient => isIngredientInStock(ingredient.name))
     })
   })
 
-  // Get all recipes (including those with missing ingredients)
-  const getAllRecipes = computed(() => {
-    return safeGetAllRecipes()
+  // Get all drinks (including those with missing ingredients)
+  const getAllDrinks = computed(() => {
+    return safeGetAllDrinks()
   })
 
-  // Get recipes with missing ingredients count
-  const getRecipesWithAvailability = computed(() => {
-    const allRecipes = safeGetAllRecipes()
+  // Get drinks with missing ingredients count
+  const getDrinksWithAvailability = computed(() => {
+    const allDrinks = safeGetAllDrinks()
 
-    return allRecipes.map(recipe => {
-      const availableCount = recipe.ingredients.filter(ingredient =>
+    return allDrinks.map(drink => {
+      const availableCount = drink.ingredients.filter(ingredient =>
         isIngredientInStock(ingredient.name)
       ).length
-      const totalCount = recipe.ingredients.length
+      const totalCount = drink.ingredients.length
 
       return {
-        ...recipe,
+        ...drink,
         availableIngredients: availableCount,
         totalIngredients: totalCount,
         isFullyAvailable: availableCount === totalCount,
@@ -385,44 +385,104 @@ export const useCocktails = () => {
     })
   })
 
-  // Get non-alcoholic recipes
-  const getNonAlcoholicRecipes = computed(() => {
-    const allRecipes = safeGetAllRecipes()
-    return allRecipes.filter(
-      recipe =>
-        recipe.category?.toLowerCase().includes('non-alcoholic') ||
-        recipe.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) ||
-        recipe.tags?.some(tag => tag.toLowerCase().includes('mocktail'))
+  // Get non-alcoholic drinks
+  const getNonAlcoholicDrinks = computed(() => {
+    const allDrinks = safeGetAllDrinks()
+    return allDrinks.filter(
+      drink =>
+        drink.category?.toLowerCase().includes('non-alcoholic') ||
+        drink.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) ||
+        drink.tags?.some(tag => tag.toLowerCase().includes('mocktail'))
     )
   })
 
-  // Get alcoholic recipes
-  const getAlcoholicRecipes = computed(() => {
-    const allRecipes = safeGetAllRecipes()
-    return allRecipes.filter(
-      recipe =>
-        !recipe.category?.toLowerCase().includes('non-alcoholic') &&
-        !recipe.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) &&
-        !recipe.tags?.some(tag => tag.toLowerCase().includes('mocktail'))
+  // Get alcoholic drinks
+  const getAlcoholicDrinks = computed(() => {
+    const allDrinks = safeGetAllDrinks()
+    return allDrinks.filter(
+      drink =>
+        !drink.category?.toLowerCase().includes('non-alcoholic') &&
+        !drink.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) &&
+        !drink.tags?.some(tag => tag.toLowerCase().includes('mocktail'))
     )
   })
+
+  // Fetch drinks from CocktailDB that use a specific ingredient
+  const fetchDrinksByIngredient = async (ingredient: string): Promise<Drink[]> => {
+    try {
+      const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ingredient)}`
+      const response = await $fetch<{ drinks: Array<{ idDrink: string; strDrink: string; strDrinkThumb: string }> | null }>(endpoint)
+
+      if (response.drinks) {
+        // The filter endpoint only returns basic info, we need to fetch full details for each drink
+        const fullDrinks: Drink[] = []
+        
+        // Limit to first 10 drinks to avoid too many requests
+        const drinksToFetch = response.drinks.slice(0, 10)
+        
+        for (const drink of drinksToFetch) {
+          const fullDrink = await fetchCocktailDBDrinkById(drink.idDrink)
+          if (fullDrink) {
+            fullDrinks.push(fullDrink)
+          }
+        }
+        
+        return fullDrinks
+      }
+
+      return []
+    } catch (e) {
+      console.error('Failed to fetch drinks by ingredient:', e)
+      return []
+    }
+  }
+
+  // Get all drinks (local + API) that use a specific bottle
+  const getDrinksUsingBottle = (bottle: Bottle): Drink[] => {
+    const allDrinks = safeGetAllDrinks()
+    const bottleName = bottle.name.toLowerCase()
+    
+    // Create list of search terms from bottle name, tags, and aka
+    const searchTerms = [
+      bottleName,
+      ...bottle.tags.map(tag => tag.toLowerCase()),
+      ...(bottle.aka || []).map(aka => aka.toLowerCase())
+    ]
+
+    return allDrinks.filter(drink => {
+      return drink.ingredients.some(ingredient => {
+        const ingredientLower = ingredient.name.toLowerCase()
+        
+        // Check if any search term matches the ingredient
+        return searchTerms.some(term => {
+          // Direct match
+          if (ingredientLower === term) return true
+          
+          // Word boundary match
+          return matchesAsWord(ingredientLower, term)
+        })
+      })
+    })
+  }
 
   return {
     inventory,
-    localRecipes,
-    apiRecipes,
+    localDrinks,
+    apiDrinks,
     loading,
     error,
     loadInventory,
-    loadLocalRecipes,
-    fetchCocktailDBRecipes,
-    fetchCocktailDBRecipeById,
+    loadLocalDrinks,
+    fetchCocktailDBDrinks,
+    fetchCocktailDBDrinkById,
     fetchRandomCocktails,
-    getAvailableRecipes,
-    getAllRecipes,
-    getRecipesWithAvailability,
-    getNonAlcoholicRecipes,
-    getAlcoholicRecipes,
+    fetchDrinksByIngredient,
+    getDrinksUsingBottle,
+    getAvailableDrinks,
+    getAllDrinks,
+    getDrinksWithAvailability,
+    getNonAlcoholicDrinks,
+    getAlcoholicDrinks,
     isIngredientInStock,
   }
 }

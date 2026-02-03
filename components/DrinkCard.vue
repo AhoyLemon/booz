@@ -1,51 +1,51 @@
 <template lang="pug">
-NuxtLink.recipe-card(:to="`/recipes/${recipe.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
+NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
   button.star-button(@click.prevent="handleToggleStar" :class="{ 'starred': starred }" :title="starred ? 'Remove from favorites' : 'Add to favorites'")
     span {{ starred ? '★' : '☆' }}
-  .recipe-card__image(v-if="recipe.imageUrl")
-    img(:src="recipe.imageUrl" :alt="recipe.name")
-  .recipe-card__image(v-else-if="recipe.image")
-    img(:src="`/images/drinks/${recipe.image}`" :alt="recipe.name")
-  .recipe-card__content
-    .recipe-card__header
-      h3.recipe-card__name {{ recipe.name }}
-      span.recipe-card__category(v-if="recipe.category") {{ recipe.category }}
-    .recipe-card__availability(v-if="showAvailability")
+  .drink-card__image(v-if="drink.imageUrl")
+    img(:src="drink.imageUrl" :alt="drink.name")
+  .drink-card__image(v-else-if="drink.image")
+    img(:src="`/images/drinks/${drink.image}`" :alt="drink.name")
+  .drink-card__content
+    .drink-card__header
+      h3.drink-card__name {{ drink.name }}
+      span.drink-card__category(v-if="drink.category") {{ drink.category }}
+    .drink-card__availability(v-if="showAvailability")
       .availability-bar
         .availability-bar__fill(:style="{ width: availabilityPercentage + '%' }")
       span.availability-text 
         | {{ availableCount }}/{{ totalCount }} ingredients available
-    .recipe-card__ingredients
+    .drink-card__ingredients
       h4 Ingredients:
       ul
-        li(v-for="ingredient in recipe.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
+        li(v-for="ingredient in drink.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
           span.ingredient-name {{ ingredient.name }}
           span.ingredient-qty {{ ingredient.qty }}
 </template>
 
 <script setup lang="ts">
-import type { Recipe } from '~/types'
+import type { Drink } from '~/types'
 
 const props = defineProps<{
-  recipe: Recipe
+  drink: Drink
   showAvailability?: boolean
 }>()
 
 const { isIngredientInStock } = useCocktails()
-const { isStarred, toggleStar } = useStarredRecipes()
+const { isStarred, toggleStar } = useStarredDrinks()
 
-const starred = computed(() => isStarred(props.recipe.id))
+const starred = computed(() => isStarred(props.drink.id))
 
 const handleToggleStar = () => {
-  toggleStar(props.recipe.id)
+  toggleStar(props.drink.id)
 }
 
 const availableCount = computed(() => {
-  return props.recipe.ingredients.filter(ing => isIngredientInStock(ing.name)).length
+  return props.drink.ingredients.filter(ing => isIngredientInStock(ing.name)).length
 })
 
 const totalCount = computed(() => {
-  return props.recipe.ingredients.length
+  return props.drink.ingredients.length
 })
 
 const availabilityPercentage = computed(() => {
@@ -64,9 +64,9 @@ const isIngredientAvailable = (ingredientName: string) => {
 <style lang="scss" scoped>
 @use 'sass:color';
 @use '@/assets/styles/variables' as *;
-.recipe-card {
+.drink-card {
   container-type: inline-size;
-  container-name: recipe-card;
+  container-name: drink-card;
   background: white;
   border-radius: $border-radius-md;
   overflow: hidden;
@@ -198,10 +198,10 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 
   // Container query for larger cards
-  @container recipe-card (min-width: 500px) {
+  @container drink-card (min-width: 500px) {
     flex-direction: row;
 
-    .recipe-card__image {
+    .drink-card__image {
       width: 200px;
       height: auto;
     }

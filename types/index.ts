@@ -18,7 +18,7 @@ export interface Ingredient {
   qty?: string
 }
 
-export interface Recipe {
+export interface Drink {
   id: string
   name: string
   ingredients: Ingredient[]
@@ -36,7 +36,11 @@ export interface InventoryData {
   lastUpdated: string
 }
 
-export interface RecipeData {
-  recipes: Recipe[]
+export interface DrinkData {
+  drinks: Drink[]
   lastUpdated: string
 }
+
+// Legacy type alias for backwards compatibility
+export type Recipe = Drink
+export type RecipeData = DrinkData

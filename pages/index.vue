@@ -11,10 +11,10 @@
         h3 Bottles
         p View and manage your bottle collection
 
-      NuxtLink.nav-card(to="/recipes")
+      NuxtLink.nav-card(to="/drinks")
         .nav-card__icon 🍹
-        h3 Recipes
-        p Discover cocktails you can make
+        h3 Drinks
+        p Discover drinks you can make
 
       NuxtLink.nav-card(to="/essentials")
         .nav-card__icon 🥬
@@ -36,24 +36,24 @@
         p Bottles In Stock
 
       .stat-card
-        h3 {{ availableRecipesCount }}
+        h3 {{ availableDrinksCount }}
         p Drinks Available
 </template>
 
 <script setup lang="ts">
-const { loadInventory, loadLocalRecipes, fetchCocktailDBRecipes, inventory, getAvailableRecipes } =
+const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, inventory, getAvailableDrinks } =
   useCocktails()
 
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
-  await loadLocalRecipes()
-  await fetchCocktailDBRecipes('margarita')
+  await loadLocalDrinks()
+  await fetchCocktailDBDrinks('margarita')
 })
 
 const inventoryCount = computed(() => inventory.value.length)
 const inStockCount = computed(() => inventory.value.filter(b => b.inStock).length)
-const availableRecipesCount = computed(() => getAvailableRecipes.value.length)
+const availableDrinksCount = computed(() => getAvailableDrinks.value.length)
 </script>
 
 <style lang="scss" scoped>

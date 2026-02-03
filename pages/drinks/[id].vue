@@ -1,42 +1,42 @@
 <template lang="pug">
-.recipe-detail-page(v-if="isLoading")
+.drink-detail-page(v-if="isLoading")
   .container
     .loading-state
-      p Loading recipe...
+      p Loading drink...
 
-.recipe-detail-page(v-else-if="recipe")
+.drink-detail-page(v-else-if="drink")
   .container
       .back-navigation
-        NuxtLink.btn.btn-back(to="/recipes") ← Back to Recipes
-      .recipe-hero
-        .recipe-hero__image(v-if="recipeImageUrl")
-          img(:src="recipeImageUrl" :alt="recipe.name")
-        .recipe-hero__content
-          h1 {{ recipe.name }}
+        NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
+      .drink-hero
+        .drink-hero__image(v-if="drinkImageUrl")
+          img(:src="drinkImageUrl" :alt="recipe.name")
+        .drink-hero__content
+          h1 {{ drink.name }}
           .badge-row
-            span.source-badge(:class="isLocalRecipe ? 'local' : 'external'")
-              | {{ isLocalRecipe ? '🏠 Local Recipe' : '🌐 CocktailDB' }}
-            span.category-badge(v-if="recipe.category") {{ recipe.category }}
-            span.prep-badge(v-if="recipe.prep") {{ recipe.prep }}
-          .tags-row(v-if="recipe.tags && recipe.tags.length > 0")
-            span.tag(v-for="tag in recipe.tags" :key="tag") \#{{ tag }}
+            span.source-badge(:class="isLocalDrink ? 'local' : 'external'")
+              | {{ isLocalDrink ? '🏠 Local Drink' : '🌐 CocktailDB' }}
+            span.category-badge(v-if="drink.category") {{ drink.category }}
+            span.prep-badge(v-if="drink.prep") {{ drink.prep }}
+          .tags-row(v-if="drink.tags && recipe.tags.length > 0")
+            span.tag(v-for="tag in drink.tags" :key="tag") \#{{ tag }}
           .availability-info
             p(v-if="isFullyAvailable") ✅ All ingredients available!
             p(v-else) ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
 
-      .recipe-content
-        .recipe-ingredients
+      .drink-content
+        .drink-ingredients
           h2 Ingredients
           ul.ingredients-list
             li(
-              v-for="(ingredient, index) in recipe.ingredients"
+              v-for="(ingredient, index) in drink.ingredients"
               :key="index"
               :class="{ 'available': isIngredientAvailable(ingredient.name) }"
             )
               span.ingredient-name {{ ingredient.name }}
               span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
 
-        .recipe-instructions
+        .drink-instructions
           h2 Instructions
           .instructions-container
             .instruction-step(
@@ -49,90 +49,90 @@
 
 .not-found(v-else-if="!isLoading")
   .container
-    h2 Recipe Not Found
-    p The recipe you're looking for doesn't exist.
-    NuxtLink.btn.btn-primary(to="/recipes") Back to Recipes
+    h2 Drink Not Found
+    p The drink you're looking for doesn't exist.
+    NuxtLink.btn.btn-primary(to="/drinks") Back to Drinks
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
 const {
   loadInventory,
-  loadLocalRecipes,
-  fetchCocktailDBRecipeById,
-  getAllRecipes,
+  loadLocalDrinks,
+  fetchCocktailDBDrinkById,
+  getAllDrinks,
   isIngredientInStock,
 } = useCocktails()
 
-const { loadStarredRecipes } = useStarredRecipes()
+const { loadStarredDrinks } = useStarredDrinks()
 
 const isLoading = ref(false)
 
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
-  await loadLocalRecipes()
-  loadStarredRecipes()
+  await loadLocalDrinks()
+  loadStarredDrinks()
 
-  // Check if this is a CocktailDB recipe that needs to be fetched
-  const recipeId = route.params.id as string
-  if (recipeId.startsWith('cocktaildb-')) {
-    const cocktailDbId = recipeId.replace('cocktaildb-', '')
+  // Check if this is a CocktailDB drink that needs to be fetched
+  const drinkId = route.params.id as string
+  if (drinkId.startsWith('cocktaildb-')) {
+    const cocktailDbId = drinkId.replace('cocktaildb-', '')
 
-    // Check if we already have this recipe
-    const existingRecipe = getAllRecipes.value.find(r => r.id === recipeId)
+    // Check if we already have this drink
+    const existingDrink = getAllDrinks.value.find(r => r.id === drinkId)
 
-    if (!existingRecipe) {
-      // Fetch the specific recipe from CocktailDB
+    if (!existingDrink) {
+      // Fetch the specific drink from CocktailDB
       isLoading.value = true
-      await fetchCocktailDBRecipeById(cocktailDbId)
+      await fetchCocktailDBDrinkById(cocktailDbId)
       isLoading.value = false
     }
   }
 })
 
-// Find the recipe by ID
-const recipe = computed(() => {
-  return getAllRecipes.value.find(r => r.id === route.params.id)
+// Find the drink by ID
+const drink = computed(() => {
+  return getAllDrinks.value.find(r => r.id === route.params.id)
 })
 
-// Check if this is a local recipe or from CocktailDB
-const isLocalRecipe = computed(() => {
-  if (!recipe.value) return false
-  return !recipe.value.id.startsWith('cocktaildb-')
+// Check if this is a local drink or from CocktailDB
+const isLocalDrink = computed(() => {
+  if (!drink.value) return false
+  return !drink.value.id.startsWith('cocktaildb-')
 })
 
 // Get image URL (support both 'image' and 'imageUrl' fields)
-const recipeImageUrl = computed(() => {
-  if (!recipe.value) return ''
-  if (recipe.value.imageUrl) return recipe.value.imageUrl
-  if (recipe.value.image) return `/images/drinks/${recipe.value.image}`
+const drinkImageUrl = computed(() => {
+  if (!drink.value) return ''
+  if (drink.value.imageUrl) return drink.value.imageUrl
+  if (drink.value.image) return `/images/drinks/${drink.value.image}`
   return ''
 })
 
 // Split instructions into steps
 const instructionSteps = computed(() => {
-  if (!recipe.value) return []
+  if (!drink.value) return []
 
   // Handle array of instruction steps (new format)
-  if (Array.isArray(recipe.value.instructions)) {
-    return recipe.value.instructions.map(step => step.trim())
+  if (Array.isArray(drink.value.instructions)) {
+    return drink.value.instructions.map(step => step.trim())
   }
 
   // Handle string instructions (old format from API)
-  return recipe.value.instructions
+  return drink.value.instructions
     .split(/\.\s+/)
     .filter(step => step.trim().length > 0)
     .map(step => step.trim() + (step.endsWith('.') ? '' : '.'))
 })
 
 const availableCount = computed(() => {
-  if (!recipe.value) return 0
-  return recipe.value.ingredients.filter(ing => isIngredientInStock(ing.name)).length
+  if (!drink.value) return 0
+  return drink.value.ingredients.filter(ing => isIngredientInStock(ing.name)).length
 })
 
 const totalCount = computed(() => {
-  return recipe.value?.ingredients.length || 0
+  return drink.value?.ingredients.length || 0
 })
 
 const isFullyAvailable = computed(() => {
@@ -147,7 +147,7 @@ const isIngredientAvailable = (ingredientName: string) => {
 <style lang="scss" scoped>
 @use 'sass:color';
 @use '@/assets/styles/variables' as *;
-.recipe-detail-page {
+.drink-detail-page {
   min-height: 60vh;
 }
 
@@ -155,7 +155,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   margin-bottom: $spacing-lg;
 }
 
-.recipe-hero {
+.drink-hero {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-xl;
@@ -262,7 +262,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-content {
+.drink-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-xxl;
@@ -272,7 +272,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-ingredients {
+.drink-ingredients {
   background: white;
   padding: $spacing-xl;
   border-radius: $border-radius-lg;
@@ -317,7 +317,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-instructions {
+.drink-instructions {
   h2 {
     color: $dark-bg;
     margin-bottom: $spacing-lg;

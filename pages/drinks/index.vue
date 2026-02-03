@@ -1,7 +1,7 @@
 <template lang="pug">
-.recipes-page
+.drinks-page
   .container
-      h2 All Recipes
+      h2 All Drinks
       p.mb-3 Explore cocktails from TheCocktailDB and custom recipes
 
       .search-bar.mb-3
@@ -14,19 +14,19 @@
         button.search-btn(@click="handleSearch") Search
 
       .filters.mb-3
-        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ filteredAllRecipes.length }})
-        button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicRecipes.length }})
-        button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicRecipes.length }})
-        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableRecipes.length }})
+        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ filteredAllDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length }})
 
-      .loading(v-if="loading") Loading recipes...
+      .loading(v-if="loading") Loading drinks...
       .error(v-if="error") {{ error }}
 
-      .recipes-grid
-        RecipeCard(
-          v-for="recipe in filteredRecipes"
-          :key="recipe.id"
-          :recipe="recipe"
+      .drinks-grid
+        DrinkCard(
+          v-for="drink in filteredDrinks"
+          :key="drink.id"
+          :drink="drink"
           :show-availability="true"
         )
 </template>
@@ -34,18 +34,18 @@
 <script setup lang="ts">
 const {
   loadInventory,
-  loadLocalRecipes,
-  fetchCocktailDBRecipes,
+  loadLocalDrinks,
+  fetchCocktailDBDrinks,
   fetchRandomCocktails,
-  getAllRecipes,
-  getAlcoholicRecipes,
-  getNonAlcoholicRecipes,
-  getAvailableRecipes,
+  getAllDrinks,
+  getAlcoholicDrinks,
+  getNonAlcoholicDrinks,
+  getAvailableDrinks,
   loading,
   error,
 } = useCocktails()
 
-const { loadStarredRecipes, isStarred } = useStarredRecipes()
+const { loadStarredDrinks, isStarred } = useStarredDrinks()
 
 const searchTerm = ref('')
 const filter = ref<'all' | 'alcoholic' | 'nonAlcoholic' | 'available'>('all')
@@ -53,8 +53,8 @@ const filter = ref<'all' | 'alcoholic' | 'nonAlcoholic' | 'available'>('all')
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
-  await loadLocalRecipes()
-  loadStarredRecipes()
+  await loadLocalDrinks()
+  loadStarredDrinks()
 
   // Fetch random cocktails to showcase variety
   await fetchRandomCocktails(8)
@@ -62,19 +62,19 @@ onMounted(async () => {
 
 const handleSearch = async () => {
   if (searchTerm.value.trim()) {
-    await fetchCocktailDBRecipes(searchTerm.value)
+    await fetchCocktailDBDrinks(searchTerm.value)
   }
 }
 
-// Helper to filter recipes by search term
-const applySearchFilter = (recipes: any[]) => {
-  if (!searchTerm.value.trim()) return recipes
+// Helper to filter drinks by search term
+const applySearchFilter = (drinks: any[]) => {
+  if (!searchTerm.value.trim()) return drinks
 
   const term = searchTerm.value.toLowerCase()
-  return recipes.filter(recipe => {
-    const nameMatch = recipe.name.toLowerCase().includes(term)
-    const categoryMatch = recipe.category?.toLowerCase().includes(term)
-    const ingredientMatch = recipe.ingredients.some((ing: { name: string }) =>
+  return drinks.filter(drink => {
+    const nameMatch = drink.name.toLowerCase().includes(term)
+    const categoryMatch = drink.category?.toLowerCase().includes(term)
+    const ingredientMatch = drink.ingredients.some((ing: { name: string }) =>
       ing.name.toLowerCase().includes(term)
     )
     return nameMatch || categoryMatch || ingredientMatch
@@ -82,25 +82,25 @@ const applySearchFilter = (recipes: any[]) => {
 }
 
 // Computed properties that apply search filter
-const filteredAllRecipes = computed(() => applySearchFilter(getAllRecipes.value))
-const filteredAlcoholicRecipes = computed(() => applySearchFilter(getAlcoholicRecipes.value))
-const filteredNonAlcoholicRecipes = computed(() => applySearchFilter(getNonAlcoholicRecipes.value))
-const filteredAvailableRecipes = computed(() => applySearchFilter(getAvailableRecipes.value))
+const filteredAllDrinks = computed(() => applySearchFilter(getAllDrinks.value))
+const filteredAlcoholicDrinks = computed(() => applySearchFilter(getAlcoholicDrinks.value))
+const filteredNonAlcoholicDrinks = computed(() => applySearchFilter(getNonAlcoholicDrinks.value))
+const filteredAvailableDrinks = computed(() => applySearchFilter(getAvailableDrinks.value))
 
-const filteredRecipes = computed(() => {
-  let recipes
+const filteredDrinks = computed(() => {
+  let drinks
   switch (filter.value) {
     case 'alcoholic':
-      recipes = filteredAlcoholicRecipes.value
+      drinks = filteredAlcoholicDrinks.value
       break
     case 'nonAlcoholic':
-      recipes = filteredNonAlcoholicRecipes.value
+      drinks = filteredNonAlcoholicDrinks.value
       break
     case 'available':
-      recipes = filteredAvailableRecipes.value
+      drinks = filteredAvailableDrinks.value
       break
     default:
-      recipes = filteredAllRecipes.value
+      drinks = filteredAllDrinks.value
   }
 
   // If there's a search term, sort by relevance
@@ -108,7 +108,7 @@ const filteredRecipes = computed(() => {
     const term = searchTerm.value.toLowerCase()
 
     // Sort by relevance: exact name matches first, then partial name matches, then others
-    return [...recipes].sort((a, b) => {
+    return [...drinks].sort((a, b) => {
       const aNameLower = a.name.toLowerCase()
       const bNameLower = b.name.toLowerCase()
 
@@ -126,7 +126,7 @@ const filteredRecipes = computed(() => {
   }
 
   // No search term: sort starred recipes first
-  return recipes.slice().sort((a, b) => {
+  return drinks.slice().sort((a, b) => {
     const aStarred = isStarred(a.id)
     const bStarred = isStarred(b.id)
 
@@ -140,7 +140,7 @@ const filteredRecipes = computed(() => {
 <style lang="scss" scoped>
 @use 'sass:color';
 @use '@/assets/styles/variables' as *;
-.recipes-page {
+.drinks-page {
   min-height: 60vh;
 
   h2 {
@@ -225,7 +225,7 @@ const filteredRecipes = computed(() => {
   color: $secondary-color;
 }
 
-.recipes-grid {
+.drinks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: $spacing-lg;

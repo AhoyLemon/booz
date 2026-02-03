@@ -47,26 +47,45 @@
           button.btn.btn-mark-empty(v-if="bottle.inStock" @click="toggleInStock") ⚠️ Mark Empty
           button.btn.btn-mark-in-stock(v-else @click="toggleInStock") ✅ Mark In Stock
       
-      .recipes-section
-        h3 Recipes Using This Bottle
-        p.coming-soon Coming soon: View recipes that use this bottle
+      .drinks-section
+        h3 Drinks Using This Bottle
+        .loading(v-if="drinksLoading") Loading drinks...
+        .drinks-list(v-else-if="drinksUsingBottle.length > 0")
+          .drink-list-item(v-for="drink in drinksUsingBottle" :key="drink.id")
+            .drink-thumbnail
+              img(v-if="drink.imageUrl" :src="drink.imageUrl" :alt="drink.name")
+              img(v-else-if="drink.image" :src="`/images/drinks/${drink.image}`" :alt="drink.name")
+              .no-image(v-else) 🍹
+            .drink-name {{ drink.name }}
+            NuxtLink.drink-view-btn(:to="`/drinks/${drink.id}`") View
+        p.no-drinks(v-else) No drinks found using this bottle yet.
     
     .loading(v-else-if="loading") Loading bottle details...
     .error(v-else-if="error") {{ error }}
 </template>
 
 <script setup lang="ts">
-import type { Bottle } from '~/types'
+import type { Bottle, Drink } from '~/types'
 
 const route = useRoute()
 const bottleId = route.params.id as string
 
+const {
+  loadInventory,
+  loadLocalDrinks,
+  fetchDrinksByIngredient,
+  getDrinksUsingBottle,
+} = useCocktails()
+
 const bottle = ref<Bottle | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+const drinksLoading = ref(false)
+const drinksUsingBottle = ref<Drink[]>([])
 
 onMounted(async () => {
   await loadBottle()
+  await loadDrinks()
 })
 
 async function loadBottle() {
@@ -87,6 +106,44 @@ async function loadBottle() {
     console.error(e)
   } finally {
     loading.value = false
+  }
+}
+
+async function loadDrinks() {
+  if (!bottle.value) return
+
+  try {
+    drinksLoading.value = true
+
+    // Load inventory and local drinks first
+    await Promise.all([loadInventory(), loadLocalDrinks()])
+
+    // Get local drinks that use this bottle
+    const localDrinks = getDrinksUsingBottle(bottle.value)
+
+    // Fetch API drinks using the bottle name and tags
+    const searchTerms = [
+      bottle.value.name,
+      ...bottle.value.tags,
+      ...(bottle.value.aka || [])
+    ]
+
+    // Fetch drinks from API for each search term
+    const apiDrinksPromises = searchTerms.slice(0, 3).map(term => fetchDrinksByIngredient(term))
+    const apiDrinksResults = await Promise.all(apiDrinksPromises)
+    const apiDrinks = apiDrinksResults.flat()
+
+    // Combine and deduplicate drinks
+    const allDrinks = [...localDrinks, ...apiDrinks]
+    const uniqueDrinks = allDrinks.filter((drink, index, self) => 
+      index === self.findIndex(d => d.id === drink.id)
+    )
+
+    drinksUsingBottle.value = uniqueDrinks
+  } catch (e) {
+    console.error('Failed to load drinks:', e)
+  } finally {
+    drinksLoading.value = false
   }
 }
 
@@ -293,7 +350,7 @@ async function toggleInStock() {
   }
 }
 
-.recipes-section {
+.drinks-section {
   background: white;
   padding: $spacing-xl;
   border-radius: $border-radius-lg;
@@ -307,6 +364,75 @@ async function toggleInStock() {
   .coming-soon {
     color: color.adjust($text-dark, $lightness: 30%);
     font-style: italic;
+  }
+
+  .no-drinks {
+    color: color.adjust($text-dark, $lightness: 30%);
+    font-style: italic;
+  }
+
+  .drinks-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  .drink-list-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $light-bg;
+      border-color: $primary-color;
+    }
+  }
+
+  .drink-thumbnail {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+    background: $light-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .no-image {
+      font-size: 1.5rem;
+    }
+  }
+
+  .drink-name {
+    flex: 1;
+    font-weight: 600;
+    color: $text-dark;
+  }
+
+  .drink-view-btn {
+    padding: $spacing-xs $spacing-md;
+    background: $primary-color;
+    color: white;
+    text-decoration: none;
+    border-radius: $border-radius-sm;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: -10%);
+    }
   }
 }
 

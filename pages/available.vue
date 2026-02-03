@@ -4,32 +4,32 @@
       h2 🎯 Available Now
       p.mb-3 Cocktails you can make with 100% of ingredients in stock
 
-      .recipes-grid(v-if="getAvailableRecipes.length > 0")
-        RecipeCard(
-          v-for="recipe in getAvailableRecipes"
-          :key="recipe.id"
-          :recipe="recipe"
+      .drinks-grid(v-if="getAvailableDrinks.length > 0")
+        DrinkCard(
+          v-for="drink in getAvailableDrinks"
+          :key="drink.id"
+          :drink="drink"
         )
 
       .empty-state(v-else)
         .empty-state__icon 🔍
-        h3 No Fully Available Recipes
+        h3 No Fully Available Drinks
         p Try adding more items to your bottles or essentials, or search for different cocktails
         NuxtLink.btn.btn-primary(to="/bottles") View Bottles
 </template>
 
 <script setup lang="ts">
-const { loadInventory, loadLocalRecipes, fetchCocktailDBRecipes, getAvailableRecipes } =
+const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrinks } =
   useCocktails()
 
-const { loadStarredRecipes } = useStarredRecipes()
+const { loadStarredDrinks } = useStarredDrinks()
 
 // Load data on mount
 onMounted(async () => {
   await loadInventory()
-  await loadLocalRecipes()
-  loadStarredRecipes()
-  await fetchCocktailDBRecipes('margarita')
+  await loadLocalDrinks()
+  loadStarredDrinks()
+  await fetchCocktailDBDrinks('margarita')
 })
 </script>
 
@@ -49,7 +49,7 @@ onMounted(async () => {
   }
 }
 
-.recipes-grid {
+.drinks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: $spacing-lg;
