@@ -24,9 +24,9 @@
 
       .drinks-grid
         DrinkCard(
-          v-for="recipe in filteredDrinks"
-          :key="recipe.id"
-          :recipe="recipe"
+          v-for="drink in filteredDrinks"
+          :key="drink.id"
+          :drink="drink"
           :show-availability="true"
         )
 </template>

@@ -389,7 +389,7 @@ export const useCocktails = () => {
   const getNonAlcoholicDrinks = computed(() => {
     const allDrinks = safeGetAllDrinks()
     return allDrinks.filter(
-      recipe =>
+      drink =>
         drink.category?.toLowerCase().includes('non-alcoholic') ||
         drink.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) ||
         drink.tags?.some(tag => tag.toLowerCase().includes('mocktail'))
@@ -400,7 +400,7 @@ export const useCocktails = () => {
   const getAlcoholicDrinks = computed(() => {
     const allDrinks = safeGetAllDrinks()
     return allDrinks.filter(
-      recipe =>
+      drink =>
         !drink.category?.toLowerCase().includes('non-alcoholic') &&
         !drink.tags?.some(tag => tag.toLowerCase().includes('non-alcoholic')) &&
         !drink.tags?.some(tag => tag.toLowerCase().includes('mocktail'))

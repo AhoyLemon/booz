@@ -52,9 +52,9 @@
         .loading(v-if="drinksLoading") Loading drinks...
         .drinks-grid(v-else-if="drinksUsingBottle.length > 0")
           DrinkCard(
-            v-for="recipe in drinksUsingBottle"
-            :key="recipe.id"
-            :recipe="recipe"
+            v-for="drink in drinksUsingBottle"
+            :key="drink.id"
+            :drink="drink"
             :show-availability="true"
           )
         p.no-drinks(v-else) No drinks found using this bottle yet.

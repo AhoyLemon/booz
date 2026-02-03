@@ -1,15 +1,15 @@
 <template lang="pug">
-NuxtLink.drink-card(:to="`/drinks/${recipe.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
+NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
   button.star-button(@click.prevent="handleToggleStar" :class="{ 'starred': starred }" :title="starred ? 'Remove from favorites' : 'Add to favorites'")
     span {{ starred ? '★' : '☆' }}
-  .drink-card__image(v-if="recipe.imageUrl")
-    img(:src="recipe.imageUrl" :alt="recipe.name")
-  .drink-card__image(v-else-if="recipe.image")
-    img(:src="`/images/drinks/${recipe.image}`" :alt="recipe.name")
+  .drink-card__image(v-if="drink.imageUrl")
+    img(:src="drink.imageUrl" :alt="drink.name")
+  .drink-card__image(v-else-if="drink.image")
+    img(:src="`/images/drinks/${drink.image}`" :alt="drink.name")
   .drink-card__content
     .drink-card__header
-      h3.drink-card__name {{ recipe.name }}
-      span.drink-card__category(v-if="recipe.category") {{ recipe.category }}
+      h3.drink-card__name {{ drink.name }}
+      span.drink-card__category(v-if="drink.category") {{ drink.category }}
     .drink-card__availability(v-if="showAvailability")
       .availability-bar
         .availability-bar__fill(:style="{ width: availabilityPercentage + '%' }")
@@ -18,7 +18,7 @@ NuxtLink.drink-card(:to="`/drinks/${recipe.id}`" :class="{ 'fully-available': is
     .drink-card__ingredients
       h4 Ingredients:
       ul
-        li(v-for="ingredient in recipe.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
+        li(v-for="ingredient in drink.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
           span.ingredient-name {{ ingredient.name }}
           span.ingredient-qty {{ ingredient.qty }}
 </template>
