@@ -290,7 +290,54 @@
         "violet",
         "classic"
       ]
+    },
+    {
+      "id": "minnesota-vice",
+      "name": "Minnesota Vice",
+      "ingredients": [
+        {
+          "name": "Ice"
+        },
+        {
+          "name": "Minnesota Rye",
+          "qty": "1.5 oz"
+        },
+        {
+          "name": "Crooked Water El Dorado",
+          "qty": ".75 oz"
+        },
+        {
+          "name": "Yuzu",
+          "qty": "1/8 oz"
+        },
+        {
+          "name": "orange",
+          "qty": "1"
+        },
+        {
+          "name": "bitters"
+        },
+        {
+          "name": "soda water"
+        }
+      ],
+      "instructions": [
+        "load the shaker with ice, then add the rye, the orange liqueur and the Yuza",
+        "shake shake shake",
+        "peel off an orange twist, express oil on the rim, then drop twist in the glass",
+        "add two ice cubes to the glass",
+        "pour contents of cocktail shaker into the glass",
+        "fill remainder of glass with soda water",
+        "finish with bitters"
+      ],
+      "prep": "Shaker",
+      "category": "Fizzy",
+      "tags": [
+        "minnesota",
+        "local",
+        "boozy"
+      ]
     }
   ],
-  "lastUpdated": "2026-02-03T04:22:01.091Z"
+  "lastUpdated": "2026-02-03T18:05:05.196Z"
 }
