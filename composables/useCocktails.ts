@@ -163,7 +163,7 @@ export const useCocktails = () => {
         const drink = convertCocktailDBDrinkToDrink(response.drinks[0])
 
         // Add to apiDrinks if not already there
-        const existingIndex = apiDrinks.value.findIndex(r => r.id === drink.id)
+        const existingIndex = apiDrinks.value.findIndex(d => d.id === drink.id)
         if (existingIndex === -1) {
           apiDrinks.value = [...apiDrinks.value, drink]
         }

@@ -114,7 +114,7 @@ async function loadDrinks() {
   try {
     drinksLoading.value = true
 
-    // Load inventory and local recipes first
+    // Load inventory and local drinks first
     await Promise.all([loadInventory(), loadLocalDrinks()])
 
     // Get local drinks that use this bottle

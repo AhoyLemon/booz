@@ -12,14 +12,14 @@
         .drink-hero__image(v-if="drinkImageUrl")
           img(:src="drinkImageUrl" :alt="recipe.name")
         .drink-hero__content
-          h1 {{ recipe.name }}
+          h1 {{ drink.name }}
           .badge-row
             span.source-badge(:class="isLocalDrink ? 'local' : 'external'")
               | {{ isLocalDrink ? '🏠 Local Drink' : '🌐 CocktailDB' }}
-            span.category-badge(v-if="recipe.category") {{ recipe.category }}
-            span.prep-badge(v-if="recipe.prep") {{ recipe.prep }}
-          .tags-row(v-if="recipe.tags && recipe.tags.length > 0")
-            span.tag(v-for="tag in recipe.tags" :key="tag") \#{{ tag }}
+            span.category-badge(v-if="drink.category") {{ drink.category }}
+            span.prep-badge(v-if="drink.prep") {{ drink.prep }}
+          .tags-row(v-if="drink.tags && recipe.tags.length > 0")
+            span.tag(v-for="tag in drink.tags" :key="tag") \#{{ tag }}
           .availability-info
             p(v-if="isFullyAvailable") ✅ All ingredients available!
             p(v-else) ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
@@ -29,7 +29,7 @@
           h2 Ingredients
           ul.ingredients-list
             li(
-              v-for="(ingredient, index) in recipe.ingredients"
+              v-for="(ingredient, index) in drink.ingredients"
               :key="index"
               :class="{ 'available': isIngredientAvailable(ingredient.name) }"
             )
@@ -79,7 +79,7 @@ onMounted(async () => {
   if (drinkId.startsWith('cocktaildb-')) {
     const cocktailDbId = drinkId.replace('cocktaildb-', '')
 
-    // Check if we already have this recipe
+    // Check if we already have this drink
     const existingDrink = getAllDrinks.value.find(r => r.id === drinkId)
 
     if (!existingDrink) {
