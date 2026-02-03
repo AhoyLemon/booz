@@ -4,67 +4,69 @@
       h2 🥬 Essential Ingredients
       p.mb-3 Check off the basic ingredients and mixers you have on hand
 
-      .stats.mb-3
-        .stat-card
-          h3 {{ checkedCount }} / {{ totalEssentials }}
-          p Items Checked
+      .loading(v-if="loading") Loading essentials...
+      .error(v-if="error") {{ error }}
 
-        .stat-card
-          h3 {{ completionPercentage }}%
-          p Stocked
+      template(v-else)
+        .stats.mb-3
+          .stat-card
+            h3 {{ checkedCount }} / {{ totalEssentials }}
+            p Items Checked
 
-        .stat-card.actions
-          button.btn-secondary(@click="checkAll") Check All
-          button.btn-secondary(@click="clearAll") Clear All
+          .stat-card
+            h3 {{ completionPercentage }}%
+            p Stocked
 
-      .essentials-grid
-        .category-section(v-for="category in essentialCategories" :key="category.name")
-          h3.category-header
-            span.category-icon {{ category.icon }}
-            span {{ category.name }}
-            span.category-count ({{ getCategoryCheckedCount(category) }}/{{ category.items.length }})
-          
-          .items-list
-            .item-checkbox(
-              v-for="item in category.items"
-              :key="item"
-              @click="toggleEssential(item)"
-              :class="{ checked: isChecked(item) }"
-            )
-              .checkbox-box
-                span.checkmark(v-if="isChecked(item)") ✓
-              .item-label {{ item }}
+          .stat-card.actions
+            button.btn-secondary(@click="checkAll") Check All
+            button.btn-secondary(@click="clearAll") Clear All
+
+        .essentials-grid
+          .category-section(v-for="category in essentialCategories" :key="category.name")
+            h3.category-header
+              span.category-icon {{ category.icon }}
+              span {{ category.name }}
+              span.category-count ({{ getCategoryCheckedCount(category) }}/{{ getCategoryItemCount(category) }})
+            
+            .items-list
+              .item-checkbox(
+                v-for="item in getItemsForCategory(category.name)"
+                :key="item.id"
+                @click="toggleEssential(item.id)"
+                :class="{ checked: item.inStock }"
+              )
+                .checkbox-box
+                  span.checkmark(v-if="item.inStock") ✓
+                .item-label {{ item.name }}
 </template>
 
 <script setup lang="ts">
 const {
+  essentials,
   essentialCategories,
-  checkedEssentials,
+  loading,
+  error,
+  fetchEssentials,
   toggleEssential,
-  isChecked,
   clearAll,
   checkAll,
+  getItemsForCategory,
   totalEssentials,
   checkedCount,
   completionPercentage,
 } = useEssentials()
 
-// Load from localStorage on mount
-onMounted(() => {
-  if (process.client) {
-    const saved = localStorage.getItem('checkedEssentials')
-    if (saved) {
-      try {
-        checkedEssentials.value = JSON.parse(saved)
-      } catch (e) {
-        console.error('Failed to parse saved essentials:', e)
-      }
-    }
-  }
+// Fetch essentials on mount
+onMounted(async () => {
+  await fetchEssentials()
 })
 
-const getCategoryCheckedCount = (category: { items: string[] }) => {
-  return category.items.filter(item => isChecked(item)).length
+const getCategoryCheckedCount = (category: { name: string }) => {
+  return getItemsForCategory(category.name).filter((item) => item.inStock).length
+}
+
+const getCategoryItemCount = (category: { name: string }) => {
+  return getItemsForCategory(category.name).length
 }
 </script>
 
@@ -82,6 +84,20 @@ const getCategoryCheckedCount = (category: { items: string[] }) => {
 
   p {
     color: color.adjust($text-dark, $lightness: 20%);
+  }
+
+  .loading,
+  .error {
+    text-align: center;
+    padding: $spacing-xl;
+    font-size: 1.2rem;
+  }
+
+  .error {
+    color: #dc3545;
+    background: #f8d7da;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-lg;
   }
 }
 

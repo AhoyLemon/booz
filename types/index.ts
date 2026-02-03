@@ -13,6 +13,13 @@ export interface Bottle {
   aka?: string[]
 }
 
+export interface Essential {
+  id: string
+  name: string
+  category: string
+  inStock: boolean
+}
+
 export interface Ingredient {
   name: string
   qty?: string
@@ -33,6 +40,11 @@ export interface Drink {
 
 export interface InventoryData {
   bottles: Bottle[]
+  lastUpdated: string
+}
+
+export interface EssentialsData {
+  essentials: Essential[]
   lastUpdated: string
 }
 
