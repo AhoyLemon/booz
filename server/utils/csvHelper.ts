@@ -13,6 +13,7 @@ export interface CSVBottle {
   category: string;
   tags: string;
   inStock: string;
+  isFinger: string;
   bottleSize: string;
   bottleState: string;
   image: string;
@@ -37,6 +38,7 @@ export function readInventoryCSV(): Bottle[] {
       category: record.category,
       tags: record.tags.split(",").map((tag) => tag.trim()),
       inStock: record.inStock === "true",
+      isFinger: record.isFinger === "true",
       bottleSize: record.bottleSize || undefined,
       bottleState: (record.bottleState as "unopened" | "opened" | "empty") || undefined,
       image: record.image || undefined,
@@ -56,6 +58,7 @@ export function writeInventoryCSV(bottles: Bottle[]): void {
       category: bottle.category,
       tags: bottle.tags.join(", "),
       inStock: String(bottle.inStock),
+      isFinger: String(bottle.isFinger || false),
       bottleSize: bottle.bottleSize || "",
       bottleState: bottle.bottleState || "",
       image: bottle.image || "",
@@ -64,7 +67,7 @@ export function writeInventoryCSV(bottles: Bottle[]): void {
 
     const csv = stringify(records, {
       header: true,
-      columns: ["id", "name", "category", "tags", "inStock", "bottleSize", "bottleState", "image", "company"],
+      columns: ["id", "name", "category", "tags", "inStock", "isFinger", "bottleSize", "bottleState", "image", "company"],
     });
 
     writeFileSync(CSV_PATH, csv, "utf-8");

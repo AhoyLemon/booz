@@ -1,52 +1,52 @@
-id,name,category,tags,inStock,bottleSize,bottleState,image,company,aka
-1,3 Amigos Reposado,Staples,"tequila, reposado",true,750ml,opened,/images/bottles/3amigos_reposado.webp,,
-2,Beefeater,Staples,"gin, london dry",true,750ml,opened,/images/bottles/beefeater.webp,,
-3,Bib & Tucker,Special Occasion,"bourbon, whiskey",true,750ml,unopened,/images/bottles/bibandtucker.webp,,
-4,Blue Run Chosen,Staples,"whiskey, bourbon",true,750ml,unopened,/images/bottles/bluerun_chosen.webp,,
-5,Bombay Sapphire East,Staples,"gin, london dry",true,750ml,opened,/images/bottles/bombay_east.webp,,
-6,Camarena Reposado,Staples,"tequila, reposado",true,airplane,unopened,/images/bottles/camarena_airplane.webp,,
-7,Castle & Key Restoration,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/restoration.webp,,
-8,Castle & Key Roots of Ruin,Staples,gin,true,750ml,unopened,/images/bottles/roots_of_ruin.webp,,
-9,J Wray Silver Rum,Staples,"rum, white rum",true,750ml,,/images/bottles/jwray_silver.webp,,
-10,Jefferson's Reserve,Staples,"whiskey, bourbon",true,750ml,,/images/bottles/jeffersons_reserve.webp,,
-11,Kirkland Reposado,Staples,"tequila, reposado",true,1 liter,opened,/images/bottles/kirkland_reposado.webp,,
-12,Kraken 94,Staples,"rum, dark rum, spiced rum",true,1 liter,opened,/images/bottles/kraken_94.webp,,
-13,Lawless Rum,Staples,"rum, white rum",true,750ml,opened,/images/bottles/lawless_rum.webp,,
-14,Michter's Straight Bourbon,Staples,"whiskey, bourbon",true,750ml,opened,/images/bottles/michters_bourbon.webp,,
-15,New Amsterdam Vodka,Staples,vodka,true,750ml,opened,/images/bottles/newamsterdam_vodka.webp,,
-16,Tincup Rye,Staples,"whiskey, rye",true,750ml,opened,/images/bottles/tincup_rye.webp,,
-17,Tullibardine Artisan,Staples,"whiskey, scotch",true,750ml,opened,/images/bottles/tullibardine_artisan.webp,,
-18,Ballotin Bourbon Ball,Liqueur,"whiskey, bourbon, chocolate",true,750ml,opened,/images/bottles/ballotin_bourbonball.webp,Ballotin,
-19,Creme de Violette,Liqueur,"liqueur, violet liqueur",true,750ml,opened,/images/bottles/cremedeviolette.webp,Rothman & Winter,
-20,Dijana Wisnia,Liqueur,"liqueur, cherry vodka",true,200ml,opened,/images/bottles/dijanawisnia.webp,Dijana,
-21,Fisk (The Classic),Liqueur,"liqueur, anise liqueur, schnapps, mint liqueur",true,750ml,opened,/images/bottles/fisk_original.webp,Fisk,
-22,Kahlúa,Liqueur,"liqueur, coffee liqueur",true,750ml,unopened,/images/bottles/kahlua.webp,Kahlua,"Kahlua, Coffee liqueur"
-23,Kraken Black Roast,Liqueur,"rum, liqueur, dark rum, coffee liqueur",true,750ml,opened,/images/bottles/kraken_blackroast.webp,Kraken,
-24,Lazzaroni Maraschino,Liqueur,"liqueur, cherry liqueur, maraschino liqueur",true,750ml,opened,/images/bottles/lazzaroni.webp,Lazzaroni,"Maraschino liqueur"
-25,Midori,Liqueur,"liqueur, melon liqueur",true,750ml,opened,/images/bottles/midori.png,,
-26,St-Germain,Liqueur,"liqueur, elderflower liqueur",true,750ml,,/images/bottles/st-germain.webp,,"Elderflower cordial, Elderflower liqueur"
-27,Tattersall Aquavit,Liqueur,"liqueur, aquavit",true,750ml,opened,/images/bottles/aquavit_tattersall.webp,Tattersall,
-28,Tattersall Grapefruit Crema,Liqueur,"liqueur, grapefruit liqueur",true,750ml,opened,/images/bottles/grapefruit_tattersall.webp,Tattersall,
-29,Thatcher's Blood Orange,Liqueur,"orange liqueur, blood orange liqueur",true,750ml,,/images/bottles/bloodorange_thatcher.webp,Thatcher's,
-31,Bella Sun Luci Bloody Mary,Mixers,"tomato, bloody mary, premix, bloody mary mix",true,750ml,,/images/bottles/bloody_bellasun.jpg,Bella Sun Luci,
-32,El Guapo's Lemon Drop,Mixers,"lemon syrup",true,200ml,,/images/bottles/elguapo_lemon.webp,El Guapo,
-34,Tattersall Old Fashioned,Premix,"premix, old fashioned",true,750ml,unopened,/images/bottles/oldfashioned_tattersall.png,Tattersall,
-35,Abstente,Special Occasion,"absinthe, anise liqueur",true,,opened,/images/bottles/absente.webp,,
-36,Absinthe Montmartre,Special Occasion,"absinthe, anise liqueur",true,750ml,opened,/images/bottles/absinthe_montmartre.webp,Old Vienna Liqueur Museum,
-37,Baller,Special Occasion,"whiskey, japanese whiskey",true,750ml,opened,/images/bottles/baller.webp,St. George,
-38,Bourbon Cream,Special Occasion,"liqueur, whiskey, bourbon, bourbon cream",true,750ml,unopened,/images/bottles/bourboncream.webp,Buffalo Trace,
-39,Dalwhinnie 15,Special Occasion,"whiskey, scotch, single malt",true,50ml,unopened,/images/bottles/dalwhinnie_15.webp,Scotland,
-40,Glenmorangie 18,Special Occasion,"whiskey, scotch, single malt",true,750ml,opened,/images/bottles/glenmorangie_18.webp,Glenmorangie,
-41,Peanut Brittle Bourbon Cream,Special Occasion,"whiskey, bourbon, bourbon cream, peanut brittle liqueur",true,750ml,,/images/bottles/hardtruth_brittle.webp,Hard Truth,
-42,Triskelion,Special Occasion,"whiskey, scotch, single malt",true,50ml,unopened,/images/bottles/triskelion.webp,Highland Park,
-43,Lindores Single Malt,Special Occasion,"whiskey, scotch, single malt",true,50ml,unopened,/images/bottles/lindores_singlemalt.webp,Lindores,
-44,McKenna Bottled-In-Bond,Staples,"whiskey, american whiskey",true,750ml,opened,/images/bottles/mckenna_10.webp,Henry McKenna,
-45,Noble Corazon Coffee,Special Occasion,"liqueur, tequila, coffee liqueur",true,750ml,opened,/images/bottles/noble_coffee.webp,Noble Corazon,
-46,Speyside 25,Special Occasion,"whiskey, scotch, single malt",true,750ml,unopened,/images/bottles/shieldaig_25.webp,Shieldaig,
-47,Tres Generaciones Añejo,Special Occasion,"tequila, añejo",true,750ml,opened,/images/bottles/tres_anejo.webp,Casa Sauza,
-48,Angostura Aromatic,Garnish,"garnish, bitters",true,50ml,opened,/images/bottles/angostura.webp,Angostura,
-49,Blackstrap,Garnish,"garnish, bitters, molasses",true,50ml,opened,/images/bottles/bittercube_blackstrap.webp,Bittercube,
-50,Jamaican #1,Garnish,"garnish, bitters, ginger, allspice",true,50ml,opened,/images/bottles/bittercube_jamaican1.webp,Bittercube,
-51,Dashfire Lavender,Garnish,"garnish, bitters, lavender",true,200ml,opened,/images/bottles/dashfire_lavender.webp,Dashfire,
-52,Mountain Creek Ginger Lemon,Liqueur,"ginger, lemon, sparkly, gin",true,200ml,unopened,/images/bottles/gingerlemon_gin.webp,Mountain Creek,
-54,Weller 12,Special Occasion,"whiskey, bourbon, american whiskey",true,750ml,unopened,/images/bottles/weller12.webp,Buffalo Trace,
+id,name,category,tags,inStock,isFinger,bottleSize,bottleState,image,company
+1,3 Amigos Reposado,Staples,"tequila, reposado",true,false,750ml,opened,/images/bottles/3amigos_reposado.webp,
+2,Beefeater,Staples,"gin, london dry",true,false,750ml,opened,/images/bottles/beefeater.webp,
+3,Bib & Tucker,Special Occasion,"bourbon, whiskey",true,false,750ml,unopened,/images/bottles/bibandtucker.webp,
+4,Blue Run Chosen,Staples,"whiskey, bourbon",true,false,750ml,unopened,/images/bottles/bluerun_chosen.webp,
+5,Bombay Sapphire East,Staples,"gin, london dry",true,false,750ml,opened,/images/bottles/bombay_east.webp,
+6,Camarena Reposado,Staples,"tequila, reposado",true,false,airplane,unopened,/images/bottles/camarena_airplane.webp,
+7,Castle & Key Restoration,Staples,"whiskey, rye",true,false,750ml,opened,/images/bottles/restoration.webp,
+8,Castle & Key Roots of Ruin,Staples,gin,true,false,750ml,unopened,/images/bottles/roots_of_ruin.webp,
+9,J Wray Silver Rum,Staples,"rum, white rum",true,false,750ml,,/images/bottles/jwray_silver.webp,
+10,Jefferson's Reserve,Staples,"whiskey, bourbon",true,false,750ml,,/images/bottles/jeffersons_reserve.webp,
+11,Kirkland Reposado,Staples,"tequila, reposado",true,false,1 liter,opened,/images/bottles/kirkland_reposado.webp,
+12,Kraken 94,Staples,"rum, dark rum, spiced rum",true,false,1 liter,opened,/images/bottles/kraken_94.webp,
+13,Lawless Rum,Staples,"rum, white rum",true,false,750ml,opened,/images/bottles/lawless_rum.webp,
+14,Michter's Straight Bourbon,Staples,"whiskey, bourbon",true,false,750ml,opened,/images/bottles/michters_bourbon.webp,
+15,New Amsterdam Vodka,Staples,vodka,true,false,750ml,opened,/images/bottles/newamsterdam_vodka.webp,
+16,Tincup Rye,Staples,"whiskey, rye",true,false,750ml,opened,/images/bottles/tincup_rye.webp,
+17,Tullibardine Artisan,Staples,"whiskey, scotch",true,false,750ml,opened,/images/bottles/tullibardine_artisan.webp,
+18,Ballotin Bourbon Ball,Liqueur,"whiskey, bourbon, chocolate",true,false,750ml,opened,/images/bottles/ballotin_bourbonball.webp,Ballotin
+19,Creme de Violette,Liqueur,"liqueur, violet liqueur",true,false,750ml,opened,/images/bottles/cremedeviolette.webp,Rothman & Winter
+20,Dijana Wisnia,Liqueur,"liqueur, cherry vodka",true,false,200ml,opened,/images/bottles/dijanawisnia.webp,Dijana
+21,Fisk (The Classic),Liqueur,"liqueur, anise liqueur, schnapps, mint liqueur",true,false,750ml,opened,/images/bottles/fisk_original.webp,Fisk
+22,Kahlúa,Liqueur,"liqueur, coffee liqueur",true,false,750ml,unopened,/images/bottles/kahlua.webp,Kahlua
+23,Kraken Black Roast,Liqueur,"rum, liqueur, dark rum, coffee liqueur",true,false,750ml,opened,/images/bottles/kraken_blackroast.webp,Kraken
+24,Lazzaroni Maraschino,Liqueur,"liqueur, cherry liqueur, maraschino liqueur",true,false,750ml,opened,/images/bottles/lazzaroni.webp,Lazzaroni
+25,Midori,Liqueur,"liqueur, melon liqueur",true,false,750ml,opened,/images/bottles/midori.png,
+26,St-Germain,Liqueur,"liqueur, elderflower liqueur",true,false,750ml,,/images/bottles/st-germain.webp,
+27,Tattersall Aquavit,Liqueur,"liqueur, aquavit",true,false,750ml,opened,/images/bottles/aquavit_tattersall.webp,Tattersall
+28,Tattersall Grapefruit Crema,Liqueur,"liqueur, grapefruit liqueur",true,false,750ml,opened,/images/bottles/grapefruit_tattersall.webp,Tattersall
+29,Thatcher's Blood Orange,Liqueur,"orange liqueur, blood orange liqueur",true,false,750ml,,/images/bottles/bloodorange_thatcher.webp,Thatcher's
+31,Bella Sun Luci Bloody Mary,Mixers,"tomato, bloody mary, premix, bloody mary mix",true,false,750ml,,/images/bottles/bloody_bellasun.jpg,Bella Sun Luci
+32,El Guapo's Lemon Drop,Mixers,lemon syrup,true,false,200ml,,/images/bottles/elguapo_lemon.webp,El Guapo
+34,Tattersall Old Fashioned,Premix,"premix, old fashioned",true,false,750ml,unopened,/images/bottles/oldfashioned_tattersall.png,Tattersall
+35,Abstente,Special Occasion,"absinthe, anise liqueur",true,false,,opened,/images/bottles/absente.webp,
+36,Absinthe Montmartre,Special Occasion,"absinthe, anise liqueur",true,false,750ml,opened,/images/bottles/absinthe_montmartre.webp,Old Vienna Liqueur Museum
+37,Baller,Special Occasion,"whiskey, japanese whiskey",true,false,750ml,opened,/images/bottles/baller.webp,St. George
+38,Bourbon Cream,Special Occasion,"liqueur, whiskey, bourbon, bourbon cream",true,false,750ml,unopened,/images/bottles/bourboncream.webp,Buffalo Trace
+39,Dalwhinnie 15,Special Occasion,"whiskey, scotch, single malt",true,false,50ml,unopened,/images/bottles/dalwhinnie_15.webp,Scotland
+40,Glenmorangie 18,Special Occasion,"whiskey, scotch, single malt",true,false,750ml,opened,/images/bottles/glenmorangie_18.webp,Glenmorangie
+41,Peanut Brittle Bourbon Cream,Special Occasion,"whiskey, bourbon, bourbon cream, peanut brittle liqueur",true,false,750ml,,/images/bottles/hardtruth_brittle.webp,Hard Truth
+42,Triskelion,Special Occasion,"whiskey, scotch, single malt",true,false,50ml,unopened,/images/bottles/triskelion.webp,Highland Park
+43,Lindores Single Malt,Special Occasion,"whiskey, scotch, single malt",true,false,50ml,unopened,/images/bottles/lindores_singlemalt.webp,Lindores
+44,McKenna Bottled-In-Bond,Staples,"whiskey, american whiskey",true,false,750ml,opened,/images/bottles/mckenna_10.webp,Henry McKenna
+45,Noble Corazon Coffee,Special Occasion,"liqueur, tequila, coffee liqueur",true,false,750ml,opened,/images/bottles/noble_coffee.webp,Noble Corazon
+46,Speyside 25,Special Occasion,"whiskey, scotch, single malt",true,false,750ml,unopened,/images/bottles/shieldaig_25.webp,Shieldaig
+47,Tres Generaciones Añejo,Special Occasion,"tequila, añejo",true,false,750ml,opened,/images/bottles/tres_anejo.webp,Casa Sauza
+48,Angostura Aromatic,Garnish,"garnish, bitters",true,false,50ml,opened,/images/bottles/angostura.webp,Angostura
+49,Blackstrap,Garnish,"garnish, bitters, molasses",true,false,50ml,opened,/images/bottles/bittercube_blackstrap.webp,Bittercube
+50,Jamaican #1,Garnish,"garnish, bitters, ginger, allspice",true,false,50ml,opened,/images/bottles/bittercube_jamaican1.webp,Bittercube
+51,Dashfire Lavender,Garnish,"garnish, bitters, lavender",true,false,200ml,opened,/images/bottles/dashfire_lavender.webp,Dashfire
+52,Mountain Creek Ginger Lemon,Liqueur,"ginger, lemon, sparkly, gin",true,false,200ml,unopened,/images/bottles/gingerlemon_gin.webp,Mountain Creek
+54,Weller 12,Special Occasion,"whiskey, bourbon, american whiskey",true,true,750ml,unopened,/images/bottles/weller12.webp,Buffalo Trace

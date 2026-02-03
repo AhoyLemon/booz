@@ -9,6 +9,7 @@
         "reposado"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/3amigos_reposado.webp"
@@ -22,6 +23,7 @@
         "london dry"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/beefeater.webp"
@@ -35,6 +37,7 @@
         "whiskey"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/bibandtucker.webp"
@@ -48,6 +51,7 @@
         "bourbon"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/bluerun_chosen.webp"
@@ -61,6 +65,7 @@
         "london dry"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/bombay_east.webp"
@@ -74,6 +79,7 @@
         "reposado"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "airplane",
       "bottleState": "unopened",
       "image": "/images/bottles/camarena_airplane.webp"
@@ -87,6 +93,7 @@
         "rye"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/restoration.webp"
@@ -99,6 +106,7 @@
         "gin"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/roots_of_ruin.webp"
@@ -112,6 +120,7 @@
         "white rum"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/jwray_silver.webp"
     },
@@ -124,6 +133,7 @@
         "bourbon"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/jeffersons_reserve.webp"
     },
@@ -136,6 +146,7 @@
         "reposado"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "1 liter",
       "bottleState": "opened",
       "image": "/images/bottles/kirkland_reposado.webp"
@@ -150,6 +161,7 @@
         "spiced rum"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "1 liter",
       "bottleState": "opened",
       "image": "/images/bottles/kraken_94.webp"
@@ -163,6 +175,7 @@
         "white rum"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/lawless_rum.webp"
@@ -176,6 +189,7 @@
         "bourbon"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/michters_bourbon.webp"
@@ -188,6 +202,7 @@
         "vodka"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/newamsterdam_vodka.webp"
@@ -201,6 +216,7 @@
         "rye"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/tincup_rye.webp"
@@ -214,6 +230,7 @@
         "scotch"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/tullibardine_artisan.webp"
@@ -228,6 +245,7 @@
         "chocolate"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/ballotin_bourbonball.webp"
@@ -238,9 +256,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "violet"
+        "violet liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/cremedeviolette.webp"
@@ -251,9 +270,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "cherry"
+        "cherry vodka"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "200ml",
       "bottleState": "opened",
       "image": "/images/bottles/dijanawisnia.webp"
@@ -264,11 +284,12 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "anise",
+        "anise liqueur",
         "schnapps",
-        "mint"
+        "mint liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/fisk_original.webp"
@@ -279,9 +300,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "coffee"
+        "coffee liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/kahlua.webp",
@@ -298,9 +320,10 @@
         "rum",
         "liqueur",
         "dark rum",
-        "coffee"
+        "coffee liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/kraken_blackroast.webp"
@@ -311,9 +334,11 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "cherry"
+        "cherry liqueur",
+        "maraschino liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/lazzaroni.webp",
@@ -327,9 +352,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "melon"
+        "melon liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/midori.png"
@@ -340,9 +366,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "elderflower"
+        "elderflower liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/st-germain.webp",
       "aka": [
@@ -359,6 +386,7 @@
         "aquavit"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/aquavit_tattersall.webp"
@@ -369,9 +397,10 @@
       "category": "Liqueur",
       "tags": [
         "liqueur",
-        "grapefruit"
+        "grapefruit liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/grapefruit_tattersall.webp"
@@ -381,9 +410,11 @@
       "name": "Thatcher's Blood Orange",
       "category": "Liqueur",
       "tags": [
-        "orange liqueur"
+        "orange liqueur",
+        "blood orange liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/bloodorange_thatcher.webp"
     },
@@ -393,9 +424,12 @@
       "category": "Mixers",
       "tags": [
         "tomato",
-        "bloody mary"
+        "bloody mary",
+        "premix",
+        "bloody mary mix"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/bloody_bellasun.jpg"
     },
@@ -404,9 +438,10 @@
       "name": "El Guapo's Lemon Drop",
       "category": "Mixers",
       "tags": [
-        "lemon"
+        "lemon syrup"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "200ml",
       "image": "/images/bottles/elguapo_lemon.webp"
     },
@@ -419,6 +454,7 @@
         "old fashioned"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/oldfashioned_tattersall.png"
@@ -429,9 +465,10 @@
       "category": "Special Occasion",
       "tags": [
         "absinthe",
-        "anise"
+        "anise liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleState": "opened",
       "image": "/images/bottles/absente.webp"
     },
@@ -441,9 +478,10 @@
       "category": "Special Occasion",
       "tags": [
         "absinthe",
-        "anise"
+        "anise liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/absinthe_montmartre.webp"
@@ -457,6 +495,7 @@
         "japanese whiskey"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/baller.webp"
@@ -469,9 +508,10 @@
         "liqueur",
         "whiskey",
         "bourbon",
-        "cream"
+        "bourbon cream"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/bourboncream.webp"
@@ -486,6 +526,7 @@
         "single malt"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "unopened",
       "image": "/images/bottles/dalwhinnie_15.webp"
@@ -500,6 +541,7 @@
         "single malt"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/glenmorangie_18.webp"
@@ -511,10 +553,11 @@
       "tags": [
         "whiskey",
         "bourbon",
-        "cream",
-        "peanut brittle"
+        "bourbon cream",
+        "peanut brittle liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "image": "/images/bottles/hardtruth_brittle.webp"
     },
@@ -528,6 +571,7 @@
         "single malt"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "unopened",
       "image": "/images/bottles/triskelion.webp"
@@ -542,6 +586,7 @@
         "single malt"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "unopened",
       "image": "/images/bottles/lindores_singlemalt.webp"
@@ -555,6 +600,7 @@
         "american whiskey"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/mckenna_10.webp"
@@ -566,9 +612,10 @@
       "tags": [
         "liqueur",
         "tequila",
-        "coffee"
+        "coffee liqueur"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/noble_coffee.webp"
@@ -583,6 +630,7 @@
         "single malt"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/shieldaig_25.webp"
@@ -596,6 +644,7 @@
         "añejo"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "opened",
       "image": "/images/bottles/tres_anejo.webp"
@@ -609,6 +658,7 @@
         "bitters"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "opened",
       "image": "/images/bottles/angostura.webp"
@@ -623,6 +673,7 @@
         "molasses"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "opened",
       "image": "/images/bottles/bittercube_blackstrap.webp"
@@ -638,6 +689,7 @@
         "allspice"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "50ml",
       "bottleState": "opened",
       "image": "/images/bottles/bittercube_jamaican1.webp"
@@ -652,6 +704,7 @@
         "lavender"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "200ml",
       "bottleState": "opened",
       "image": "/images/bottles/dashfire_lavender.webp"
@@ -667,6 +720,7 @@
         "gin"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "200ml",
       "bottleState": "unopened",
       "image": "/images/bottles/gingerlemon_gin.webp"
@@ -681,10 +735,11 @@
         "american whiskey"
       ],
       "inStock": true,
+      "isFinger": false,
       "bottleSize": "750ml",
       "bottleState": "unopened",
       "image": "/images/bottles/weller12.webp"
     }
   ],
-  "lastUpdated": "2026-02-03T04:22:01.090Z"
+  "lastUpdated": "2026-02-03T18:40:10.227Z"
 }
