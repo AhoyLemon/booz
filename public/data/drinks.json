@@ -270,7 +270,7 @@
         },
         {
           "name": "Cocktail Cherry",
-          "qty": "2 oz"
+          "qty": "2"
         }
       ],
       "instructions": [
@@ -281,6 +281,7 @@
         "strain into a glass",
         "garnish with cocktail cherry"
       ],
+      "image": "aviation.webp",
       "prep": "Shaker",
       "category": "Boozy",
       "tags": [
@@ -291,5 +292,5 @@
       ]
     }
   ],
-  "lastUpdated": "2026-02-03T02:48:28.574Z"
+  "lastUpdated": "2026-02-03T02:55:21.664Z"
 }

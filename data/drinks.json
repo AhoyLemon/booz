@@ -130,7 +130,7 @@
         { "name": "Maraschino Liqueur", "qty": ".5 oz" },
         { "name": "Creme De Violette", "qty": ".5 oz" },
         { "name": "Lemon", "qty": "1" },
-        { "name": "Cocktail Cherry", "qty": "2 oz" }
+        { "name": "Cocktail Cherry", "qty": "2" }
       ],
       "instructions": [
         "ice in the shaker",
@@ -140,6 +140,7 @@
         "strain into a glass",
         "garnish with cocktail cherry"
       ],
+      "image": "aviation.webp",
       "prep": "Shaker",
       "category": "Boozy",
       "tags": ["gin", "maraschino", "violet", "classic"]
