@@ -10,7 +10,7 @@
         NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
       .drink-hero
         .drink-hero__image(v-if="drinkImageUrl")
-          img(:src="drinkImageUrl" :alt="recipe.name")
+          img(:src="drinkImageUrl" :alt="drink.name")
         .drink-hero__content
           h1 {{ drink.name }}
           .badge-row
@@ -18,7 +18,7 @@
               | {{ isLocalDrink ? '🏠 Local Drink' : '🌐 CocktailDB' }}
             span.category-badge(v-if="drink.category") {{ drink.category }}
             span.prep-badge(v-if="drink.prep") {{ drink.prep }}
-          .tags-row(v-if="drink.tags && recipe.tags.length > 0")
+          .tags-row(v-if="drink.tags && drink.tags.length > 0")
             span.tag(v-for="tag in drink.tags" :key="tag") \#{{ tag }}
           .availability-info
             p(v-if="isFullyAvailable") ✅ All ingredients available!
