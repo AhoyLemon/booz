@@ -108,7 +108,7 @@ const filteredDrinks = computed(() => {
     const term = searchTerm.value.toLowerCase()
 
     // Sort by relevance: exact name matches first, then partial name matches, then others
-    return [...recipes].sort((a, b) => {
+    return [...drinks].sort((a, b) => {
       const aNameLower = a.name.toLowerCase()
       const bNameLower = b.name.toLowerCase()
 

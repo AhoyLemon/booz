@@ -8,14 +8,14 @@
   .container
       .back-navigation
         NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
-      .recipe-hero
-        .recipe-hero__image(v-if="recipeImageUrl")
-          img(:src="recipeImageUrl" :alt="recipe.name")
-        .recipe-hero__content
+      .drink-hero
+        .drink-hero__image(v-if="drinkImageUrl")
+          img(:src="drinkImageUrl" :alt="recipe.name")
+        .drink-hero__content
           h1 {{ recipe.name }}
           .badge-row
-            span.source-badge(:class="isLocalRecipe ? 'local' : 'external'")
-              | {{ isLocalRecipe ? '🏠 Local Drink' : '🌐 CocktailDB' }}
+            span.source-badge(:class="isLocalDrink ? 'local' : 'external'")
+              | {{ isLocalDrink ? '🏠 Local Drink' : '🌐 CocktailDB' }}
             span.category-badge(v-if="recipe.category") {{ recipe.category }}
             span.prep-badge(v-if="recipe.prep") {{ recipe.prep }}
           .tags-row(v-if="recipe.tags && recipe.tags.length > 0")
@@ -24,8 +24,8 @@
             p(v-if="isFullyAvailable") ✅ All ingredients available!
             p(v-else) ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
 
-      .recipe-content
-        .recipe-ingredients
+      .drink-content
+        .drink-ingredients
           h2 Ingredients
           ul.ingredients-list
             li(
@@ -36,7 +36,7 @@
               span.ingredient-name {{ ingredient.name }}
               span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
 
-        .recipe-instructions
+        .drink-instructions
           h2 Instructions
           .instructions-container
             .instruction-step(
@@ -74,16 +74,16 @@ onMounted(async () => {
   await loadLocalDrinks()
   loadStarredDrinks()
 
-  // Check if this is a CocktailDB recipe that needs to be fetched
-  const recipeId = route.params.id as string
-  if (recipeId.startsWith('cocktaildb-')) {
-    const cocktailDbId = recipeId.replace('cocktaildb-', '')
+  // Check if this is a CocktailDB drink that needs to be fetched
+  const drinkId = route.params.id as string
+  if (drinkId.startsWith('cocktaildb-')) {
+    const cocktailDbId = drinkId.replace('cocktaildb-', '')
 
     // Check if we already have this recipe
-    const existingRecipe = getAllDrinks.value.find(r => r.id === recipeId)
+    const existingDrink = getAllDrinks.value.find(r => r.id === drinkId)
 
-    if (!existingRecipe) {
-      // Fetch the specific recipe from CocktailDB
+    if (!existingDrink) {
+      // Fetch the specific drink from CocktailDB
       isLoading.value = true
       await fetchCocktailDBDrinkById(cocktailDbId)
       isLoading.value = false
@@ -91,19 +91,19 @@ onMounted(async () => {
   }
 })
 
-// Find the recipe by ID
+// Find the drink by ID
 const drink = computed(() => {
   return getAllDrinks.value.find(r => r.id === route.params.id)
 })
 
-// Check if this is a local recipe or from CocktailDB
-const isLocalRecipe = computed(() => {
+// Check if this is a local drink or from CocktailDB
+const isLocalDrink = computed(() => {
   if (!drink.value) return false
   return !drink.value.id.startsWith('cocktaildb-')
 })
 
 // Get image URL (support both 'image' and 'imageUrl' fields)
-const recipeImageUrl = computed(() => {
+const drinkImageUrl = computed(() => {
   if (!drink.value) return ''
   if (drink.value.imageUrl) return drink.value.imageUrl
   if (drink.value.image) return `/images/drinks/${drink.value.image}`
@@ -155,7 +155,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   margin-bottom: $spacing-lg;
 }
 
-.recipe-hero {
+.drink-hero {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-xl;
@@ -262,7 +262,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-content {
+.drink-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-xxl;
@@ -272,7 +272,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-ingredients {
+.drink-ingredients {
   background: white;
   padding: $spacing-xl;
   border-radius: $border-radius-lg;
@@ -317,7 +317,7 @@ const isIngredientAvailable = (ingredientName: string) => {
   }
 }
 
-.recipe-instructions {
+.drink-instructions {
   h2 {
     color: $dark-bg;
     margin-bottom: $spacing-lg;
