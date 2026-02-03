@@ -43,6 +43,7 @@ function parseCSV(): Bottle[] {
         category: record.category,
         tags: record.tags.split(",").map((tag: string) => tag.trim()),
         inStock: record.inStock === "true",
+        isFinger: record.isFinger === "true",
         bottleSize: record.bottleSize || undefined,
         bottleState: (record.bottleState as "unopened" | "opened" | "empty") || undefined,
         image: imagePath,

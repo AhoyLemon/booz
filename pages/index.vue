@@ -21,6 +21,11 @@
         h3 Essentials
         p Track basic ingredients and mixers
 
+      NuxtLink.nav-card(to="/fingers")
+        .nav-card__icon 🫰
+        h3 Fingers
+        p Identify special bottles that should only be served straight up or on the rocks.
+
       NuxtLink.nav-card(to="/available")
         .nav-card__icon ✨
         h3 Available Now

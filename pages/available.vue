@@ -4,6 +4,23 @@
       h2 🎯 Available Now
       p.mb-3 Cocktails you can make with 100% of ingredients in stock
       
+      // Finger bottles section
+      .fingers-section(v-if="availableFingerBottles.length > 0")
+        h3.section-title 🥃 Special Fingers Available
+        .fingers-grid
+          .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
+            NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")
+              .finger-image(v-if="bottle.image")
+                img(:src="bottle.image" :alt="bottle.name")
+              .finger-image.placeholder(v-else)
+                span 🥃
+              .finger-info
+                .finger-name {{ bottle.name }}
+                .finger-options
+                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
+                  span  | 
+                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
+      
       // Beer & Wine Section
       .beer-wine-section(v-if="getInStockBeerWine.length > 0")
         h3.section-title 🍺🍷 Beer & Wine Available
@@ -21,7 +38,7 @@
           :drink="drink"
         )
 
-      .empty-state(v-else-if="getInStockBeerWine.length === 0")
+      .empty-state(v-else-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0")
         .empty-state__icon 🔍
         h3 No Fully Available Drinks
         p Try adding more items to your bottles or essentials, or search for different cocktails
@@ -29,7 +46,9 @@
 </template>
 
 <script setup lang="ts">
-  const { loadInventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrinks } = useCocktails();
+  import type { Bottle } from "~/types";
+  
+  const { loadInventory, inventory, loadLocalDrinks, fetchCocktailDBDrinks, getAvailableDrinks } = useCocktails();
 
   const { loadStarredDrinks } = useStarredDrinks();
 
@@ -42,6 +61,11 @@
     loadStarredDrinks();
     await fetchCocktailDBDrinks("margarita");
     await loadBeerWine();
+  });
+
+  // Get available finger bottles
+  const availableFingerBottles = computed(() => {
+    return inventory.value.filter((b) => b.inStock && b.isFinger);
   });
 </script>
 
@@ -65,10 +89,86 @@
     margin-bottom: $spacing-xxl;
   }
 
+  .fingers-section {
+    margin-bottom: $spacing-xxl;
+  }
+
   .section-title {
     color: $dark-bg;
     font-size: 1.5rem;
     margin-bottom: $spacing-lg;
+  }
+
+  .fingers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+
+  .finger-card {
+    background: white;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-4px);
+    }
+  }
+
+  .finger-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .finger-image {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $light-bg;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    &.placeholder {
+      font-size: 4rem;
+      color: color.adjust($text-dark, $lightness: 40%);
+    }
+  }
+
+  .finger-info {
+    padding: $spacing-md;
+  }
+
+  .finger-name {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: $dark-bg;
+    margin-bottom: $spacing-sm;
+  }
+
+  .finger-options {
+    font-size: 0.875rem;
+    color: color.adjust($text-dark, $lightness: 20%);
+
+    .option-link {
+      color: $accent-color;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .beer-wine-grid {

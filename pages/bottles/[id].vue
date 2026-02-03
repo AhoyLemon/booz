@@ -46,26 +46,50 @@
           NuxtLink.btn.btn-edit(:to="`/bottles/manage?id=${bottle.id}`") ✏️ Edit Bottle
           button.btn.btn-mark-empty(v-if="bottle.inStock" @click="toggleInStock") ⚠️ Mark Empty
           button.btn.btn-mark-in-stock(v-else @click="toggleInStock") ✅ Mark In Stock
+          button.btn.btn-toggle-finger(@click="toggleFingerStatus" :class="{ 'is-finger': isFinger(bottle) }") 
+            | {{ isFinger(bottle) ? '🥃 Remove from Fingers' : '🥃 Make Finger' }}
       
       .drinks-section
-        h3 Drinks Using This Bottle
-        .loading(v-if="drinksLoading") Loading drinks...
-        .drinks-list(v-else-if="sortedDrinksUsingBottle.length > 0")
-          .drink-list-item(
-            v-for="drink in sortedDrinksUsingBottle" 
-            :key="drink.id"
-            :class="{ 'has-missing-ingredients': !drinkHasAllIngredients(drink), 'fully-available': drinkHasAllIngredients(drink) }"
-          )
+        h3 {{ isFinger(bottle) ? 'Serving Options' : 'Drinks Using This Bottle' }}
+        
+        // Show finger options if this is a finger bottle
+        .drinks-list(v-if="isFinger(bottle)")
+          .drink-list-item.fully-available
             .drink-thumbnail
-              img(v-if="drink.imageUrl" :src="drink.imageUrl" :alt="drink.name")
-              img(v-else-if="drink.image" :src="`/images/drinks/${drink.image}`" :alt="drink.name")
-              .no-image(v-else) 🍹
+              .no-image 🥃
             .drink-info
-              .drink-name {{ drink.name }}
+              .drink-name {{ bottle.name }}, Straight Up
               .drink-availability
-                span.availability-label(:class="{ 'fully-available': drinkHasAllIngredients(drink) }") {{ getAvailabilityLabel(drink) }}
-            NuxtLink.drink-view-btn(:to="`/drinks/${drink.id}`") View
-        p.no-drinks(v-else) No drinks found using this bottle yet.
+                span.availability-label.fully-available Available
+            NuxtLink.drink-view-btn(:to="`/drinks/finger-${bottle.id}-straight`") View
+          .drink-list-item.fully-available
+            .drink-thumbnail
+              .no-image 🧊
+            .drink-info
+              .drink-name {{ bottle.name }} On The Rocks
+              .drink-availability
+                span.availability-label.fully-available Available
+            NuxtLink.drink-view-btn(:to="`/drinks/finger-${bottle.id}-rocks`") View
+        
+        // Show regular drinks if not a finger bottle
+        template(v-else)
+          .loading(v-if="drinksLoading") Loading drinks...
+          .drinks-list(v-else-if="sortedDrinksUsingBottle.length > 0")
+            .drink-list-item(
+              v-for="drink in sortedDrinksUsingBottle" 
+              :key="drink.id"
+              :class="{ 'has-missing-ingredients': !drinkHasAllIngredients(drink), 'fully-available': drinkHasAllIngredients(drink) }"
+            )
+              .drink-thumbnail
+                img(v-if="drink.imageUrl" :src="drink.imageUrl" :alt="drink.name")
+                img(v-else-if="drink.image" :src="`/images/drinks/${drink.image}`" :alt="drink.name")
+                .no-image(v-else) 🍹
+              .drink-info
+                .drink-name {{ drink.name }}
+                .drink-availability
+                  span.availability-label(:class="{ 'fully-available': drinkHasAllIngredients(drink) }") {{ getAvailabilityLabel(drink) }}
+              NuxtLink.drink-view-btn(:to="`/drinks/${drink.id}`") View
+          p.no-drinks(v-else) No drinks found using this bottle yet.
     
     .loading(v-else-if="loading") Loading bottle details...
     .error(v-else-if="error") {{ error }}
@@ -90,6 +114,7 @@
   } = useCocktails();
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
+  const { isFinger } = useFingers();
 
   const bottle = ref<Bottle | null>(null);
   const loading = ref(true);
@@ -209,6 +234,27 @@
       error.value = "Failed to update bottle status";
       console.error(e);
     }
+  }
+
+  function toggleFingerStatus() {
+    if (!bottle.value) return;
+    
+    const updatedData = {
+      ...bottle.value,
+      isFinger: !bottle.value.isFinger,
+    };
+
+    $fetch(`/api/inventory/${bottle.value.id}`, {
+      method: "PUT",
+      body: updatedData,
+    })
+      .then(() => {
+        bottle.value = updatedData;
+      })
+      .catch((e) => {
+        error.value = "Failed to update finger status";
+        console.error(e);
+      });
   }
 </script>
 
@@ -381,6 +427,25 @@
     &:hover {
       background: green;
       color: white;
+    }
+  }
+
+  .btn-toggle-finger {
+    background: color.adjust($accent-color, $lightness: 40%);
+    color: color.adjust($accent-color, $lightness: -30%);
+
+    &:hover {
+      background: $accent-color;
+      color: white;
+    }
+
+    &.is-finger {
+      background: $accent-color;
+      color: white;
+
+      &:hover {
+        background: color.adjust($accent-color, $lightness: -10%);
+      }
     }
   }
 

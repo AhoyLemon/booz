@@ -39,6 +39,13 @@
               input(type="checkbox" v-model="form.inStock")
               span In Stock
 
+          .form-group.special-fingers-group
+            label
+              input(type="checkbox" v-model="form.isFinger")
+              span Mark as Special Fingers 🥃
+            small.help-text.finger-explanation
+              | Checking this will exclude this bottle from drink recipes and only present it as being served straight up or on the rocks.
+
           .form-group
             label(for="bottleSize") Bottle Size
             select#bottleSize(v-model="form.bottleSize")
@@ -101,6 +108,7 @@
                 span.badge {{ bottle.category }}
                 span.badge(v-if="bottle.inStock" class="in-stock") In Stock
                 span.badge(v-else class="out-of-stock") Out of Stock
+                span.badge(v-if="bottle.isFinger" class="finger-badge") 🥃 Special Finger
                 span.size(v-if="bottle.bottleSize") {{ bottle.bottleSize }}
                 span.abv(v-if="bottle.abv") {{ bottle.abv }}% ABV
                 span.origin(v-if="bottle.origin") {{ bottle.origin }}
@@ -128,6 +136,7 @@
     category: "",
     tags: [] as string[],
     inStock: true,
+    isFinger: false,
     bottleSize: "",
     bottleState: "",
     image: "",
@@ -165,6 +174,7 @@
       category: "",
       tags: [],
       inStock: true,
+      isFinger: false,
       bottleSize: "",
       bottleState: "",
       image: "",
@@ -184,6 +194,7 @@
       category: bottle.category,
       tags: [...bottle.tags],
       inStock: bottle.inStock,
+      isFinger: bottle.isFinger || false,
       bottleSize: bottle.bottleSize || "",
       bottleState: bottle.bottleState || "",
       image: bottle.image || "",
@@ -212,6 +223,7 @@
         category: form.value.category,
         tags: form.value.tags,
         inStock: form.value.inStock,
+        isFinger: form.value.isFinger,
         bottleSize: form.value.bottleSize || undefined,
         bottleState: (form.value.bottleState as "unopened" | "opened" | "empty") || undefined,
         image: form.value.image || undefined,
@@ -386,6 +398,19 @@
 
       input[type="checkbox"] {
         margin-right: $spacing-xs;
+      }
+    }
+
+    &.special-fingers-group {
+      background: color.adjust($accent-color, $lightness: 48%);
+      border: 2px solid $accent-color;
+      border-radius: $border-radius-md;
+      padding: $spacing-md;
+
+      .finger-explanation {
+        color: color.adjust($text-dark, $lightness: 10%);
+        font-style: italic;
+        line-height: 1.5;
       }
     }
 
@@ -574,6 +599,12 @@
     &.out-of-stock {
       background: color.adjust(red, $lightness: 40%);
       color: color.adjust(red, $lightness: -20%);
+    }
+
+    &.finger-badge {
+      background: color.adjust($accent-color, $lightness: 40%);
+      color: color.adjust($accent-color, $lightness: -30%);
+      border: 1px solid $accent-color;
     }
   }
 

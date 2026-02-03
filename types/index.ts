@@ -4,6 +4,7 @@ export interface Bottle {
   category: string;
   tags: string[];
   inStock: boolean;
+  isFinger?: boolean;
   bottleSize?: string;
   bottleState?: "unopened" | "opened" | "empty";
   image?: string;

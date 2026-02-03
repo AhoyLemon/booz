@@ -4,6 +4,51 @@
     .loading-state
       p Loading drink...
 
+// Finger drink display
+.drink-detail-page(v-else-if="isFingerDrink && fingerBottle")
+  .container
+      .back-navigation
+        NuxtLink.btn.btn-back(:to="`/bottles/${fingerBottle.id}`") ← Back to Bottle
+      .drink-hero
+        .drink-hero__image(v-if="fingerBottle.image")
+          img(:src="fingerBottle.image" :alt="fingerBottle.name")
+        .drink-hero__content
+          h1 {{ fingerBottle.name }}{{ servingStyle === 'rocks' ? ' On The Rocks' : ', Straight Up' }}
+          .badge-row
+            span.source-badge.local 🥃 Special Finger
+            span.category-badge {{ fingerBottle.category }}
+          .availability-info
+            p(v-if="fingerBottle.inStock") ✅ Available now!
+            p(v-else) ⚠️ Currently out of stock
+
+      .drink-content
+        .drink-ingredients
+          h2 What You'll Need
+          ul.ingredients-list
+            li.available
+              span.ingredient-name {{ fingerBottle.name }}
+              span.ingredient-qty 2 oz
+            li.available(v-if="servingStyle === 'rocks'")
+              span.ingredient-name Ice
+              span.ingredient-qty As needed
+
+        .drink-instructions
+          h2 Instructions
+          .instructions-container
+            .instruction-step.scroll-animated(v-if="servingStyle === 'straight'")
+              .step-number 1
+              p Pour 2 ounces of {{ fingerBottle.name }} into a rocks glass.
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'rocks'")
+              .step-number 1
+              p Fill a rocks glass with ice.
+            .instruction-step.scroll-animated(v-if="servingStyle === 'rocks'")
+              .step-number 2
+              p Pour 2 ounces of {{ fingerBottle.name }} over the ice.
+            .instruction-step.scroll-animated
+              .step-number {{ servingStyle === 'rocks' ? '3' : '2' }}
+              p Serve and enjoy this special occasion spirit on its own, without any mixers.
+
+// Regular drink display
 .drink-detail-page(v-else-if="drink")
   .container
       .back-navigation
@@ -57,12 +102,16 @@
 </template>
 
 <script setup lang="ts">
+  import type { Bottle } from "~/types";
+  
   const route = useRoute();
-  const { loadInventory, loadEssentials, loadLocalDrinks, fetchCocktailDBDrinkById, getAllDrinks, isIngredientInStock } = useCocktails();
-
+  const { loadInventory, inventory, loadEssentials, loadLocalDrinks, fetchCocktailDBDrinkById, getAllDrinks, isIngredientInStock } = useCocktails();
   const { loadStarredDrinks } = useStarredDrinks();
 
   const isLoading = ref(false);
+  const isFingerDrink = ref(false);
+  const fingerBottle = ref<Bottle | null>(null);
+  const servingStyle = ref<"straight" | "rocks">("straight");
 
   // Load data on mount
   onMounted(async () => {
@@ -71,9 +120,18 @@
     await loadLocalDrinks();
     loadStarredDrinks();
 
-    // Check if this is a CocktailDB drink that needs to be fetched
+    // Check if this is a finger drink
     const drinkId = route.params.id as string;
-    if (drinkId.startsWith("cocktaildb-")) {
+    if (drinkId.startsWith("finger-")) {
+      isFingerDrink.value = true;
+      const parts = drinkId.split("-");
+      const bottleId = parts[1];
+      servingStyle.value = parts[2] as "straight" | "rocks";
+      
+      // Find the bottle
+      fingerBottle.value = inventory.value.find((b) => b.id === bottleId) || null;
+    } else if (drinkId.startsWith("cocktaildb-")) {
+      // Check if this is a CocktailDB drink that needs to be fetched
       const cocktailDbId = drinkId.replace("cocktaildb-", "");
 
       // Check if we already have this drink
