@@ -27,7 +27,7 @@
         
         // Wine Section
         .section-card
-          h3.section-title �� Wine
+          h3.section-title 🍷 Wine
           
           .items-list(v-if="getWines.length > 0")
             h4 Current Wines ({{ getWines.length }})

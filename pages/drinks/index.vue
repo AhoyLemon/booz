@@ -17,17 +17,19 @@
         button.search-btn(@click="handleSearch") Search
 
       .filters.mb-3
-        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ filteredAllDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ allDrinksCount }})
+        button.filter-btn(:class="{ active: filter === 'cocktails' }" @click="filter = 'cocktails'") Cocktails ({{ filteredDrinks.length }})
+        button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
+        button.filter-btn(:class="{ active: filter === 'fingers' }" @click="filter = 'fingers'") Fingers ({{ availableFingerBottles.length }})
+        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
         button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length + + availableFingerBottles.length }})
         button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
-        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
-        button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
 
       .loading(v-if="loading") Loading drinks...
       .error(v-if="error") {{ error }}
 
       // Finger bottles section
-      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic') ")
+      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
         h3.section-title 🥃 Special Fingers Available
         .fingers-grid
           .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
@@ -53,7 +55,7 @@
               .beer-wine-name {{ item.name }}
               .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
 
-      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine') ")
+      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
         DrinkCard(
           v-for="drink in filteredDrinks"
           :key="drink.id"
@@ -170,6 +172,11 @@
 
     // No search term: sort by ingredient availability, then by favorited status
     return sortDrinksByAvailability(drinks, isStarred);
+  });
+
+  // New computed for all drinks count
+  const allDrinksCount = computed(() => {
+    return filteredDrinks.value.length + getInStockBeerWine.value.length + availableFingerBottles.value.length;
   });
 </script>
 
