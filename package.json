@@ -30,6 +30,7 @@
     "@types/node": "^20.11.30",
     "@vue/test-utils": "^2.4.4",
     "chokidar-cli": "^3.0.0",
+    "dotenv": "^17.2.3",
     "happy-dom": "^20.0.0",
     "prettier": "^3.2.5",
     "pug": "^3.0.2",
