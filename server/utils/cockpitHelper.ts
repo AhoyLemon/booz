@@ -154,12 +154,25 @@ export async function fetchBottlesFromCockpit(): Promise<Bottle[]> {
 // Transform Cockpit drink data to app format
 interface CockpitDrink {
   _id: string;
-  name: string;
-  ingredients?: Array<{ name: string; qty?: string; optional?: boolean }>;
-  instructions?: string | string[];
-  image?: string;
+  cocktailName?: string; // Cockpit uses cocktailName
+  name?: string; // Fallback
+  ingredients?: Array<{ 
+    "Ingredient Name"?: string; // Cockpit format
+    name?: string; // Fallback
+    Quantity?: string;
+    qty?: string; // Fallback
+    Optional?: boolean;
+    optional?: boolean; // Fallback
+  }>;
+  steps?: Array<{ Step?: string }>; // Cockpit format
+  instructions?: string | string[]; // Fallback
+  image?: {
+    path?: string;
+    [key: string]: any;
+  };
   imageUrl?: string;
-  prep?: string;
+  "Preparation Method"?: string; // Cockpit format
+  prep?: string; // Fallback
   category?: string;
   tags?: string[];
 }
@@ -168,19 +181,45 @@ export async function fetchDrinksFromCockpit(): Promise<Drink[]> {
   try {
     const data = await fetchFromCockpit<CockpitDrink[]>("/content/items/drinks");
 
-    return data.map((item) => ({
-      id: item._id,
-      name: item.name || "",
-      ingredients: Array.isArray(item.ingredients) 
-        ? item.ingredients.filter(ing => ing.name && ing.name.trim()) // Filter out ingredients without names
-        : [],
-      instructions: item.instructions || "",
-      image: item.image,
-      imageUrl: item.imageUrl,
-      prep: item.prep,
-      category: item.category,
-      tags: Array.isArray(item.tags) ? item.tags : undefined,
-    }));
+    return data.map((item) => {
+      // Handle ingredients - Cockpit uses "Ingredient Name", "Quantity", "Optional"
+      const ingredients = Array.isArray(item.ingredients) 
+        ? item.ingredients
+            .map(ing => {
+              const name = ing["Ingredient Name"] || ing.name;
+              const qty = ing.Quantity || ing.qty;
+              const optional = ing.Optional ?? ing.optional ?? false;
+              return name && name.trim() ? { name, qty, optional } : null;
+            })
+            .filter(Boolean) as Array<{ name: string; qty?: string; optional?: boolean }>
+        : [];
+
+      // Handle instructions - Cockpit uses "steps" array with "Step" property
+      let instructions: string | string[] = "";
+      if (Array.isArray(item.steps)) {
+        const stepTexts = item.steps.map(s => s.Step).filter(Boolean) as string[];
+        instructions = stepTexts.length > 0 ? stepTexts : "";
+      } else if (item.instructions) {
+        instructions = item.instructions;
+      }
+
+      // Handle image - Cockpit uses object with path
+      const imageUrl = item.image?.path 
+        ? `https://hirelemon.com/bar/storage/uploads${item.image.path}` 
+        : item.imageUrl;
+
+      return {
+        id: item._id,
+        name: item.cocktailName || item.name || "",
+        ingredients,
+        instructions,
+        image: imageUrl,
+        imageUrl,
+        prep: item["Preparation Method"] || item.prep,
+        category: item.category,
+        tags: Array.isArray(item.tags) ? item.tags : undefined,
+      };
+    });
   } catch (error) {
     console.error("Error fetching drinks from Cockpit, falling back to local data:", error);
     return loadLocalDrinks();
@@ -289,12 +328,14 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
     };
 
     for (const [key, value] of Object.entries(data)) {
-      if (typeof value === "boolean" && nameMap[key]) {
+      // Include all items that have a name mapping, regardless of stock status
+      // value can be true (in stock), false (out of stock), or null (out of stock)
+      if (nameMap[key]) {
         essentials.push({
           id: key.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, ""),
           name: nameMap[key],
           category: categoryMap[key] || "Other",
-          inStock: value,
+          inStock: value === true, // Only true means in stock, false/null means out of stock
         });
       }
     }
