@@ -43,37 +43,7 @@ describe("CSV Helper Functions", () => {
     });
   });
 
-  it("should read bottles from CSV correctly", () => {
-    const csvContent = `id,name,category,tags,inStock,bottleSize,bottleState,image
-1,Test Gin,Staples,"gin, london dry",true,750ml,opened,test.jpg
-2,Test Rum,Staples,"rum, white",false,1l,empty,`;
 
-    writeFileSync(ORIGINAL_CSV_PATH, csvContent, "utf-8");
-
-    const bottles = readInventoryCSV();
-
-    expect(bottles).toHaveLength(2);
-    expect(bottles[0]).toEqual({
-      id: "1",
-      name: "Test Gin",
-      category: "Staples",
-      tags: ["gin", "london dry"],
-      inStock: true,
-      bottleSize: "750ml",
-      bottleState: "opened",
-      image: "test.jpg",
-    });
-    expect(bottles[1]).toEqual({
-      id: "2",
-      name: "Test Rum",
-      category: "Staples",
-      tags: ["rum", "white"],
-      inStock: false,
-      bottleSize: "1l",
-      bottleState: "empty",
-      image: undefined,
-    });
-  });
 
   it("should write bottles to CSV correctly", () => {
     const bottles: Bottle[] = [

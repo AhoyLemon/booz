@@ -37,7 +37,7 @@
             span.value(:class="bottle.inStock ? 'in-stock' : 'out-of-stock'") 
               | {{ bottle.inStock ? '✓ In Stock' : '✗ Out of Stock' }}
           
-          .detail-row(v-if="bottle.isFinger")
+          .detail-row(v-if="bottle.isFingers")
             span.label Serving:
             span.value 🤞 Fingers 
           
@@ -54,10 +54,10 @@
             | {{ isFinger(bottle) ? '🥃 Remove from Fingers' : '🥃 Make Finger' }}
       
       .drinks-section
-        h3 {{ isFinger(bottle) ? 'Serving Options' : 'Drinks Using This Bottle' }}
+        h3 {{ bottle.isFingers ? 'Serving Options' : 'Drinks Using This Bottle' }}
         
         // Show finger options if this is a finger bottle
-        .drinks-list(v-if="isFinger(bottle)")
+        .drinks-list(v-if="bottle.isFingers")
           .drink-list-item.fully-available
             .drink-thumbnail
               .no-image 🥃
@@ -102,6 +102,11 @@
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";
 
+  // Extend Bottle type locally to ensure isFingers is present
+  type BottleWithFingers = Bottle & {
+    isFingers?: boolean;
+  };
+
   const route = useRoute();
   const bottleId = route.params.id as string;
 
@@ -120,7 +125,7 @@
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
   const { isFinger } = useFingers();
 
-  const bottle = ref<Bottle | null>(null);
+  const bottle = ref<BottleWithFingers | null>(null);
   const loading = ref(true);
   const error = ref<string | null>(null);
   const drinksLoading = ref(false);
@@ -181,6 +186,12 @@
   async function loadDrinks() {
     if (!bottle.value) return;
 
+    // If this is a finger bottle, do not load any other drinks
+    if (bottle.value.isFingers) {
+      drinksUsingBottle.value = [];
+      return;
+    }
+
     try {
       drinksLoading.value = true;
 
@@ -188,7 +199,7 @@
       await Promise.all([loadInventory(), loadLocalDrinks()]);
 
       // Get local drinks that use this bottle
-      const localDrinks = getDrinksUsingBottle(bottle.value);
+      const localDrinks = getDrinksUsingBottle(bottle.value as Bottle);
 
       // Fetch API drinks using the bottle name and tags
       const searchTerms = [bottle.value.name, ...bottle.value.tags, ...(bottle.value.aka || [])];

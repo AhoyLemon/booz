@@ -87,7 +87,7 @@ interface CockpitBottle {
   _id: string;
   name: string;
   category: string;
-  baseSpirits?: string[];
+  baseSpirits?: string[] | string;
   whiskeyTypes?: string[] | null;
   tequilaTypes?: string[] | null;
   ginTypes?: string[] | null;
@@ -103,6 +103,7 @@ interface CockpitBottle {
   };
   isFingers?: boolean | null;
   inStock?: boolean;
+  additionalTags?: string[] | string;
 }
 
 export async function fetchBottlesFromCockpit(): Promise<Bottle[]> {
@@ -110,13 +111,28 @@ export async function fetchBottlesFromCockpit(): Promise<Bottle[]> {
     const data = await fetchFromCockpit<CockpitBottle[]>("/content/items/bottles");
 
     return data.map((item) => {
-      // Combine all spirit types into tags array
+      // Combine all spirit types into tags array, ensuring all are arrays
       const tags: string[] = [];
-      if (item.baseSpirits) tags.push(...item.baseSpirits);
+      // baseSpirits can be string or array
+      if (item.baseSpirits) {
+        if (Array.isArray(item.baseSpirits)) {
+          tags.push(...item.baseSpirits);
+        } else if (typeof item.baseSpirits === "string") {
+          tags.push(item.baseSpirits);
+        }
+      }
       if (item.whiskeyTypes) tags.push(...item.whiskeyTypes);
       if (item.tequilaTypes) tags.push(...item.tequilaTypes);
       if (item.ginTypes) tags.push(...item.ginTypes);
       if (item.rumTypes) tags.push(...item.rumTypes);
+      // Append additionalTags if present
+      if (item.additionalTags) {
+        if (Array.isArray(item.additionalTags)) {
+          tags.push(...item.additionalTags);
+        } else if (typeof item.additionalTags === "string") {
+          tags.push(item.additionalTags);
+        }
+      }
 
       // Map bottle state from Cockpit format to app format
       let bottleState: "unopened" | "opened" | "empty" = "opened";
