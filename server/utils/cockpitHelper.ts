@@ -262,7 +262,7 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
     for (const [key, value] of Object.entries(data)) {
       if (typeof value === "boolean" && nameMap[key]) {
         essentials.push({
-          id: key.replace(/([A-Z])/g, "-$1").toLowerCase(),
+          id: key.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, ""),
           name: nameMap[key],
           category: categoryMap[key] || "Other",
           inStock: value,
