@@ -4,24 +4,17 @@
       .header-section.mb-3
         div
           h2 🥃 Special Fingers
-          p Select special occasion bottles to serve as "two fingers" - these won't be used in cocktails
+          p View special occasion bottles served as "two fingers" - these aren't used in cocktails (managed in Cockpit)
       
       .info-card.mb-3
         p.info-text 
           | <strong>What are Fingers?</strong> Special occasion bottles that are too nice to mix in cocktails. 
-          | They'll be served on their own - either straight up or on the rocks.
-      
-      .save-section.mb-3(v-if="hasUnsavedChanges")
-        .unsaved-changes-notice
-          span.icon ⚠️
-          span.text You have unsaved changes
-        button.save-btn(@click="saveChanges" :disabled="saving") 
-          | {{ saving ? 'Saving...' : 'Save Changes' }}
+          | They're served on their own - either straight up or on the rocks.
       
       .filters.mb-3
         button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ bottles.length }})
-        button.filter-btn(:class="{ active: filter === 'selected' }" @click="filter = 'selected'") Selected ({{ pendingSelectedCount }})
-        button.filter-btn(:class="{ active: filter === 'unselected' }" @click="filter = 'unselected'") Not Selected ({{ pendingUnselectedCount }})
+        button.filter-btn(:class="{ active: filter === 'selected' }" @click="filter = 'selected'") Fingers ({{ fingerBottles.length }})
+        button.filter-btn(:class="{ active: filter === 'unselected' }" @click="filter = 'unselected'") Not Fingers ({{ nonFingerBottles.length }})
       
       .category-filters.mb-3
         button.category-btn(:class="{ active: categoryFilter === 'all' }" @click="categoryFilter = 'all'") All Categories
@@ -33,10 +26,9 @@
         .bottle-card(
           v-for="bottle in filteredBottles" 
           :key="bottle.id"
-          :class="{ 'selected': isBottleSelected(bottle.id), 'out-of-stock': !bottle.inStock }"
-          @click="toggleFingerStatus(bottle)"
+          :class="{ 'is-finger': bottle.isFinger, 'out-of-stock': !bottle.inStock }"
         )
-          .bottle-selected-indicator(v-if="isBottleSelected(bottle.id)") ✓
+          .bottle-finger-badge(v-if="bottle.isFinger") 🥃 Finger
           .bottle-image(v-if="bottle.image")
             img(:src="bottle.image" :alt="bottle.name")
           .bottle-image.placeholder(v-else)
@@ -49,89 +41,28 @@
 </template>
 
 <script setup lang="ts">
-  import type { Bottle } from "~/types";
-
   const { loadInventory, inventory } = useCocktails();
 
-  const filter = ref<"all" | "selected" | "unselected">("all");
-  const categoryFilter = ref<string>("Special Occasion");
-  const saving = ref(false);
-  const successMessage = ref<string | null>(null);
-  
-  // Track pending changes (bottle IDs that should be marked as fingers)
-  const pendingFingerIds = ref<Set<string>>(new Set());
-  const hasLoadedInitialState = ref(false);
+  const filter = ref<"all" | "selected" | "unselected">("selected");
+  const categoryFilter = ref<string>("all");
 
   // Load data on mount
   onMounted(async () => {
     await loadInventory();
-    // Initialize pending state from current inventory
-    initializePendingState();
-    hasLoadedInitialState.value = true;
   });
 
-  // Initialize pending state from current bottle data
-  function initializePendingState() {
-    pendingFingerIds.value = new Set(
-      inventory.value.filter((b) => b.isFinger).map((b) => b.id)
-    );
-  }
-
-  // Check if there are unsaved changes
-  const hasUnsavedChanges = computed(() => {
-    if (!hasLoadedInitialState.value) return false;
-    
-    const currentFingerIds = new Set(
-      inventory.value.filter((b) => b.isFinger).map((b) => b.id)
-    );
-    
-    // Check if the sets are different
-    if (currentFingerIds.size !== pendingFingerIds.value.size) return true;
-    
-    for (const id of currentFingerIds) {
-      if (!pendingFingerIds.value.has(id)) return true;
-    }
-    
-    for (const id of pendingFingerIds.value) {
-      if (!currentFingerIds.has(id)) return true;
-    }
-    
-    return false;
-  });
-
-  // Get only in-stock bottles for selection
-  const bottles = computed(() => inventory.value.filter((b) => b.inStock));
-
-  // Check if a bottle is selected in pending state
-  function isBottleSelected(bottleId: string): boolean {
-    return pendingFingerIds.value.has(bottleId);
-  }
-
-  // Count selected/unselected based on pending state
-  const pendingSelectedCount = computed(() => {
-    return bottles.value.filter((b) => pendingFingerIds.value.has(b.id)).length;
-  });
-
-  const pendingUnselectedCount = computed(() => {
-    return bottles.value.filter((b) => !pendingFingerIds.value.has(b.id)).length;
-  });
-
-  const selectedBottles = computed(() => 
-    bottles.value.filter((b) => pendingFingerIds.value.has(b.id))
-  );
-  
-  const unselectedBottles = computed(() => 
-    bottles.value.filter((b) => !pendingFingerIds.value.has(b.id))
-  );
+  const bottles = computed(() => inventory.value || []);
+  const fingerBottles = computed(() => bottles.value.filter((b) => b.isFinger));
+  const nonFingerBottles = computed(() => bottles.value.filter((b) => !b.isFinger));
 
   const filteredBottles = computed(() => {
     let result = bottles.value;
 
-    // Apply selection filter based on pending state
+    // Apply finger filter
     if (filter.value === "selected") {
-      result = selectedBottles.value;
+      result = fingerBottles.value;
     } else if (filter.value === "unselected") {
-      result = unselectedBottles.value;
+      result = nonFingerBottles.value;
     }
 
     // Apply category filter
@@ -141,70 +72,12 @@
 
     return result;
   });
-
-  // Toggle finger status in pending state (doesn't save immediately)
-  function toggleFingerStatus(bottle: Bottle) {
-    if (pendingFingerIds.value.has(bottle.id)) {
-      pendingFingerIds.value.delete(bottle.id);
-    } else {
-      pendingFingerIds.value.add(bottle.id);
-    }
-    // Force reactivity update
-    pendingFingerIds.value = new Set(pendingFingerIds.value);
-  }
-
-  // Save all pending changes to the server
-  async function saveChanges() {
-    saving.value = true;
-    successMessage.value = null;
-
-    try {
-      // Get all bottles that need to be updated
-      const bottlesToUpdate = inventory.value.filter((bottle) => {
-        const isPendingFinger = pendingFingerIds.value.has(bottle.id);
-        const isCurrentlyFinger = bottle.isFinger;
-        return isPendingFinger !== isCurrentlyFinger;
-      });
-
-      // Update each bottle
-      const updatePromises = bottlesToUpdate.map(async (bottle) => {
-        const updatedData = {
-          ...bottle,
-          isFinger: pendingFingerIds.value.has(bottle.id),
-        };
-
-        await $fetch(`/api/inventory/${bottle.id}`, {
-          method: "PUT",
-          body: updatedData,
-        });
-
-        // Update local state
-        const index = inventory.value.findIndex((b) => b.id === bottle.id);
-        if (index !== -1) {
-          inventory.value[index] = updatedData;
-        }
-      });
-
-      await Promise.all(updatePromises);
-
-      // Show success message briefly
-      successMessage.value = `Successfully saved ${bottlesToUpdate.length} change${bottlesToUpdate.length !== 1 ? 's' : ''}!`;
-      setTimeout(() => {
-        successMessage.value = null;
-      }, 3000);
-    } catch (e) {
-      console.error("Failed to save finger bottle changes:", e);
-      alert("Failed to save changes. Please try again.");
-    } finally {
-      saving.value = false;
-    }
-  }
 </script>
 
 <style lang="scss" scoped>
   @use "sass:color";
   @use "@/assets/styles/variables" as *;
-  
+
   .fingers-page {
     min-height: 60vh;
 
@@ -218,62 +91,24 @@
     }
   }
 
-  .info-card {
-    background: color.adjust($accent-color, $lightness: 45%);
-    border: 2px solid $accent-color;
-    border-radius: $border-radius-lg;
-    padding: $spacing-lg;
-    
-    .info-text {
-      margin: 0;
-      color: $text-dark;
-      line-height: 1.6;
-    }
+  .header-section {
+    margin-bottom: $spacing-lg;
   }
 
-  .save-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: color.adjust(orange, $lightness: 45%);
-    border: 2px solid orange;
-    border-radius: $border-radius-lg;
+  .info-card {
+    background: linear-gradient(135deg, $accent-color 0%, color.adjust($accent-color, $lightness: -10%) 100%);
+    color: white;
     padding: $spacing-lg;
-    gap: $spacing-lg;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-md;
 
-    .unsaved-changes-notice {
-      display: flex;
-      align-items: center;
-      gap: $spacing-sm;
-      font-weight: 600;
-      color: color.adjust(orange, $lightness: -30%);
-
-      .icon {
-        font-size: 1.5rem;
-      }
-    }
-
-    .save-btn {
-      padding: $spacing-sm $spacing-xl;
-      border-radius: $border-radius-md;
-      background: $accent-color;
-      color: white;
-      border: none;
-      font-weight: 600;
+    .info-text {
+      margin: 0;
+      line-height: 1.6;
       font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
 
-      &:hover:not(:disabled) {
-        background: color.adjust($accent-color, $lightness: -10%);
-        transform: translateY(-2px);
-        box-shadow: $shadow-md;
-      }
-
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
+      strong {
+        font-weight: 700;
       }
     }
   }
@@ -281,23 +116,24 @@
   .filters,
   .category-filters {
     display: flex;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     flex-wrap: wrap;
   }
 
   .filter-btn,
   .category-btn {
     padding: $spacing-sm $spacing-lg;
-    border-radius: $border-radius-md;
     background: white;
     border: 2px solid $border-color;
+    border-radius: $border-radius-md;
     font-weight: 600;
-    transition: all 0.3s ease;
+    color: $text-dark;
     cursor: pointer;
+    transition: all 0.3s ease;
 
     &:hover {
-      border-color: $accent-color;
       background: color.adjust($accent-color, $lightness: 45%);
+      border-color: $accent-color;
     }
 
     &.active {
@@ -307,40 +143,23 @@
     }
   }
 
-  .category-btn {
-    font-size: 0.875rem;
-    padding: $spacing-xs $spacing-md;
-
-    &.active {
-      background: $primary-color;
-      border-color: $primary-color;
-    }
-  }
-
   .bottle-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: $spacing-lg;
   }
 
   .bottle-card {
     background: white;
     border-radius: $border-radius-lg;
+    box-shadow: $shadow-md;
     overflow: hidden;
-    box-shadow: $shadow-sm;
-    cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    border: 3px solid transparent;
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: $shadow-lg;
-    }
-
-    &.selected {
-      border-color: $accent-color;
-      background: color.adjust($accent-color, $lightness: 48%);
+    &.is-finger {
+      border: 3px solid $accent-color;
+      box-shadow: 0 4px 12px rgba($accent-color, 0.3);
     }
 
     &.out-of-stock {
@@ -348,41 +167,36 @@
     }
   }
 
-  .bottle-selected-indicator {
+  .bottle-finger-badge {
     position: absolute;
     top: $spacing-sm;
     right: $spacing-sm;
-    width: 35px;
-    height: 35px;
     background: $accent-color;
     color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    z-index: 10;
-    box-shadow: $shadow-md;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 1;
+    box-shadow: $shadow-sm;
   }
 
   .bottle-image {
     width: 100%;
-    height: 180px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $light-bg;
+    background: color.adjust($border-color, $lightness: 15%);
 
     img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     &.placeholder {
       font-size: 4rem;
-      color: color.adjust($text-dark, $lightness: 40%);
     }
   }
 
@@ -391,28 +205,34 @@
   }
 
   .bottle-name {
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 1.125rem;
     color: $dark-bg;
     margin-bottom: $spacing-xs;
   }
 
   .bottle-category {
-    font-size: 0.875rem;
     color: color.adjust($text-dark, $lightness: 20%);
+    font-size: 0.875rem;
     margin-bottom: $spacing-xs;
   }
 
   .bottle-status {
+    display: inline-block;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
     font-size: 0.75rem;
     font-weight: 600;
-    
+    margin-top: $spacing-xs;
+
     &.in-stock {
-      color: green;
+      background: color.adjust(green, $lightness: 40%);
+      color: color.adjust(green, $lightness: -30%);
     }
 
     &.out-of-stock {
-      color: red;
+      background: color.adjust(red, $lightness: 40%);
+      color: color.adjust(red, $lightness: -20%);
     }
   }
 </style>
