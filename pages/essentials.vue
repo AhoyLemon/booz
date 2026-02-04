@@ -2,7 +2,7 @@
 .essentials-page
   .container
       h2 🥬 Essential Ingredients
-      p.mb-3 Check off the basic ingredients and mixers you have on hand
+      p.mb-3 View the basic ingredients and mixers currently in stock (managed in Cockpit)
 
       .loading(v-if="loading") Loading essentials...
       .error(v-if="error") {{ error }}
@@ -11,22 +11,11 @@
         .stats.mb-3
           .stat-card
             h3 {{ checkedCount }} / {{ totalEssentials }}
-            p Items Checked
+            p Items In Stock
 
           .stat-card
             h3 {{ completionPercentage }}%
             p Stocked
-
-          .stat-card.actions
-            button.btn-secondary(@click="checkAll") Check All
-            button.btn-secondary(@click="clearAll") Clear All
-            button.btn-primary(
-              @click="saveChanges"
-              :disabled="!hasUnsavedChanges || saving"
-              :class="{ 'has-changes': hasUnsavedChanges }"
-            )
-              span(v-if="saving") Saving...
-              span(v-else) {{ hasUnsavedChanges ? 'Save Changes' : 'Saved' }}
 
         .essentials-grid
           .category-section(v-for="category in essentialCategories" :key="category.name")
@@ -36,14 +25,14 @@
               span.category-count ({{ getCategoryCheckedCount(category) }}/{{ getCategoryItemCount(category) }})
             
             .items-list
-              .item-checkbox(
+              .item-display(
                 v-for="item in getItemsForCategory(category.name)"
                 :key="item.id"
-                @click="toggleEssential(item.id)"
-                :class="{ checked: item.inStock }"
+                :class="{ 'in-stock': item.inStock, 'out-of-stock': !item.inStock }"
               )
-                .checkbox-box
+                .status-indicator
                   span.checkmark(v-if="item.inStock") ✓
+                  span.cross(v-else) ✗
                 .item-label {{ item.name }}
 </template>
 
@@ -52,14 +41,8 @@
     essentials,
     essentialCategories,
     loading,
-    saving,
     error,
     fetchEssentials,
-    toggleEssential,
-    hasUnsavedChanges,
-    saveChanges,
-    clearAll,
-    checkAll,
     getItemsForCategory,
     totalEssentials,
     checkedCount,
@@ -113,7 +96,7 @@
 
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: $spacing-lg;
   }
 
@@ -135,73 +118,6 @@
       opacity: 0.9;
       font-size: 1rem;
       color: white;
-    }
-
-    &.actions {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: $spacing-sm;
-      background: linear-gradient(135deg, $dark-bg 0%, color.adjust($dark-bg, $lightness: -10%) 100%);
-
-      h3,
-      p {
-        display: none;
-      }
-    }
-  }
-
-  .btn-secondary {
-    padding: $spacing-sm $spacing-lg;
-    background: white;
-    color: $dark-bg;
-    border: none;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-
-    &:hover {
-      background: color.adjust(white, $lightness: -10%);
-      transform: translateY(-2px);
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-  }
-
-  .btn-primary {
-    padding: $spacing-sm $spacing-lg;
-    background: white;
-    color: $dark-bg;
-    border: none;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-
-    &.has-changes {
-      background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-      color: white;
-      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-
-      &:hover {
-        background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
-      }
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
   }
 
@@ -246,24 +162,19 @@
     gap: $spacing-xs;
   }
 
-  .item-checkbox {
+  .item-display {
     display: flex;
     align-items: center;
     gap: $spacing-md;
     padding: $spacing-sm $spacing-md;
     border-radius: $border-radius-md;
-    cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
 
-    &:hover {
-      background: color.adjust($accent-color, $lightness: 48%);
-    }
-
-    &.checked {
+    &.in-stock {
       background: color.adjust($primary-color, $lightness: 45%);
 
-      .checkbox-box {
+      .status-indicator {
         background: $primary-color;
         border-color: $primary-color;
       }
@@ -273,9 +184,23 @@
         font-weight: 600;
       }
     }
+
+    &.out-of-stock {
+      background: color.adjust($border-color, $lightness: 10%);
+      opacity: 0.7;
+
+      .status-indicator {
+        background: color.adjust($border-color, $lightness: -10%);
+        border-color: color.adjust($border-color, $lightness: -10%);
+      }
+
+      .item-label {
+        color: color.adjust($text-dark, $lightness: 20%);
+      }
+    }
   }
 
-  .checkbox-box {
+  .status-indicator {
     width: 24px;
     height: 24px;
     border: 2px solid $border-color;
@@ -287,7 +212,8 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
 
-    .checkmark {
+    .checkmark,
+    .cross {
       color: white;
       font-size: 1rem;
       font-weight: bold;

@@ -28,10 +28,10 @@ export const useCocktails = () => {
 
   // Centralized ingredient synonym mapping (imported at top)
 
-  // Load inventory from public data
+  // Load inventory from API
   const loadInventory = async () => {
     try {
-      const data = await $fetch<InventoryData>("/data/bottles.json");
+      const data = await $fetch<InventoryData>("/api/inventory");
       inventory.value = data.bottles;
     } catch (e) {
       console.error("Failed to load inventory:", e);
@@ -50,10 +50,10 @@ export const useCocktails = () => {
     }
   };
 
-  // Load local drinks from public data
+  // Load local drinks from API
   const loadLocalDrinks = async () => {
     try {
-      const data = await $fetch<DrinkData>("/data/drinks.json");
+      const data = await $fetch<DrinkData>("/api/drinks");
       localDrinks.value = data.drinks;
     } catch (e) {
       console.error("Failed to load local drinks:", e);
@@ -172,6 +172,8 @@ export const useCocktails = () => {
   // Strict ingredient matching: only exact name, synonym, or hierarchy matches
   // Excludes bottles marked as "fingers" from being available for cocktails
   const isIngredientInStock = (ingredientName: string): boolean => {
+    // Guard against undefined or null ingredient names
+    if (!ingredientName || typeof ingredientName !== 'string') return false;
     if (!Array.isArray(inventory.value)) return false;
     
     // Exclude bottles marked as fingers from being available for cocktails

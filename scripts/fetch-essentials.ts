@@ -1,11 +1,21 @@
 import fetch from "node-fetch";
+import * as dotenv from "dotenv";
 
-const API_URL = "https://hirelemon.com/bar/api/content/item/essentials";
-const API_KEY = "API-319b8ffd3422b8c4e491e9e46356f39bd831dc56";
+// Load environment variables
+dotenv.config();
+
+const API_URL = process.env.COCKPIT_API_URL || "https://hirelemon.com/bar/api";
+const API_KEY = process.env.COCKPIT_API_KEY;
+
+if (!API_KEY) {
+  console.error("Error: COCKPIT_API_KEY not found in environment variables");
+  console.error("Please set COCKPIT_API_KEY in your .env file");
+  process.exit(1);
+}
 
 async function fetchEssentials() {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}/content/item/essentials`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

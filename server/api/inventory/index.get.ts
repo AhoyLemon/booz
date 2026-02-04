@@ -1,16 +1,18 @@
-import { readInventoryCSV } from "~/server/utils/csvHelper";
+import { fetchBottlesFromCockpit } from "~/server/utils/cockpitHelper";
+import type { InventoryData } from "~/types";
 
-export default defineEventHandler(() => {
+export default defineEventHandler(async (): Promise<InventoryData> => {
   try {
-    const bottles = readInventoryCSV();
+    const bottles = await fetchBottlesFromCockpit();
     return {
-      success: true,
       bottles,
+      lastUpdated: new Date().toISOString(),
     };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     throw createError({
       statusCode: 500,
-      statusMessage: "Failed to read inventory",
+      statusMessage: `Failed to read inventory: ${errorMessage}`,
     });
   }
 });
