@@ -172,6 +172,8 @@ export const useCocktails = () => {
   // Strict ingredient matching: only exact name, synonym, or hierarchy matches
   // Excludes bottles marked as "fingers" from being available for cocktails
   const isIngredientInStock = (ingredientName: string): boolean => {
+    // Guard against undefined or null ingredient names
+    if (!ingredientName || typeof ingredientName !== 'string') return false;
     if (!Array.isArray(inventory.value)) return false;
     
     // Exclude bottles marked as fingers from being available for cocktails

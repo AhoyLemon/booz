@@ -171,7 +171,9 @@ export async function fetchDrinksFromCockpit(): Promise<Drink[]> {
     return data.map((item) => ({
       id: item._id,
       name: item.name || "",
-      ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
+      ingredients: Array.isArray(item.ingredients) 
+        ? item.ingredients.filter(ing => ing.name && ing.name.trim()) // Filter out ingredients without names
+        : [],
       instructions: item.instructions || "",
       image: item.image,
       imageUrl: item.imageUrl,
