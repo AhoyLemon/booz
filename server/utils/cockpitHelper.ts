@@ -1,4 +1,6 @@
 import type { Bottle, Drink, Essential, BeerWine } from "~/types";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 interface CockpitConfig {
   apiUrl: string;
@@ -33,6 +35,51 @@ async function fetchFromCockpit<T>(endpoint: string): Promise<T> {
   }
 
   return await response.json();
+}
+
+// Fallback to local JSON files when API fails (development mode)
+function loadLocalBottles(): Bottle[] {
+  try {
+    const path = join(process.cwd(), "public", "data", "bottles.json");
+    const data = JSON.parse(readFileSync(path, "utf-8"));
+    return data.bottles || [];
+  } catch (error) {
+    console.error("Failed to load local bottles fallback:", error);
+    return [];
+  }
+}
+
+function loadLocalDrinks(): Drink[] {
+  try {
+    const path = join(process.cwd(), "public", "data", "drinks.json");
+    const data = JSON.parse(readFileSync(path, "utf-8"));
+    return data.drinks || [];
+  } catch (error) {
+    console.error("Failed to load local drinks fallback:", error);
+    return [];
+  }
+}
+
+function loadLocalEssentials(): Essential[] {
+  try {
+    const path = join(process.cwd(), "public", "data", "essentials.json");
+    const data = JSON.parse(readFileSync(path, "utf-8"));
+    return data.essentials || [];
+  } catch (error) {
+    console.error("Failed to load local essentials fallback:", error);
+    return [];
+  }
+}
+
+function loadLocalBeerWine(): BeerWine[] {
+  try {
+    const path = join(process.cwd(), "public", "data", "beer-wine.json");
+    const data = JSON.parse(readFileSync(path, "utf-8"));
+    return data.items || [];
+  } catch (error) {
+    console.error("Failed to load local beer-wine fallback:", error);
+    return [];
+  }
 }
 
 // Transform Cockpit bottle data to app format
@@ -72,8 +119,8 @@ export async function fetchBottlesFromCockpit(): Promise<Bottle[]> {
       aka: Array.isArray(item.aka) ? item.aka : undefined,
     }));
   } catch (error) {
-    console.error("Error fetching bottles from Cockpit:", error);
-    throw error;
+    console.error("Error fetching bottles from Cockpit, falling back to local data:", error);
+    return loadLocalBottles();
   }
 }
 
@@ -106,8 +153,8 @@ export async function fetchDrinksFromCockpit(): Promise<Drink[]> {
       tags: Array.isArray(item.tags) ? item.tags : undefined,
     }));
   } catch (error) {
-    console.error("Error fetching drinks from Cockpit:", error);
-    throw error;
+    console.error("Error fetching drinks from Cockpit, falling back to local data:", error);
+    return loadLocalDrinks();
   }
 }
 
@@ -225,8 +272,8 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
 
     return essentials;
   } catch (error) {
-    console.error("Error fetching essentials from Cockpit:", error);
-    throw error;
+    console.error("Error fetching essentials from Cockpit, falling back to local data:", error);
+    return loadLocalEssentials();
   }
 }
 
@@ -272,7 +319,7 @@ export async function fetchBeerWineFromCockpit(): Promise<BeerWine[]> {
 
     return items;
   } catch (error) {
-    console.error("Error fetching beer/wine from Cockpit:", error);
-    throw error;
+    console.error("Error fetching beer/wine from Cockpit, falling back to local data:", error);
+    return loadLocalBeerWine();
   }
 }
