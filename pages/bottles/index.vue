@@ -13,11 +13,6 @@
           p {{ error }}
           p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
 
-      .filters.mb-3
-        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ inventory.length }})
-        button.filter-btn(:class="{ active: filter === 'inStock' }" @click="filter = 'inStock'") In Stock ({{ inStockBottles.length }})
-        button.filter-btn(:class="{ active: filter === 'outOfStock' }" @click="filter = 'outOfStock'") Out of Stock ({{ outOfStockBottles.length }})
-
       .category-filters.mb-3
         button.category-btn(:class="{ active: categoryFilter === 'all' }" @click="categoryFilter = 'all'") All Categories
         button.category-btn(:class="{ active: categoryFilter === 'Staples' }" @click="categoryFilter = 'Staples'") Staples
