@@ -14,6 +14,39 @@ export interface Bottle {
   aka?: string[];
 }
 
+// New essentials data structure from Cockpit
+export interface BitterItem {
+  name: string;
+  flavors: string[];
+  company?: string;
+  image?: {
+    path: string;
+    title: string;
+    mime: string;
+    altText?: string;
+    [key: string]: any;
+  };
+}
+
+export interface EssentialsRawData {
+  basics: string[];
+  bitters: BitterItem[];
+  carbonatedMixers: string[];
+  fruitsBerries: string[];
+  sweeteners: string[];
+  dairyCream: string[];
+  juices: string[];
+  other: string[];
+  _model?: string;
+  _modified?: number;
+  _mby?: string;
+  _created?: number;
+  _state?: number;
+  _cby?: string;
+  _id?: string;
+}
+
+// Processed essential item for display
 export interface Essential {
   id: string;
   name: string;

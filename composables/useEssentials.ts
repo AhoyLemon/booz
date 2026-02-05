@@ -1,23 +1,88 @@
 // Composable for managing essential ingredients checklist
-import type { Essential, EssentialsData } from "~/types";
+import type { Essential, EssentialsRawData } from "~/types";
 
 export const useEssentials = () => {
   const essentials = useState<Essential[]>("essentials", () => []);
-  const originalEssentials = useState<Essential[]>("originalEssentials", () => []);
   const loading = useState<boolean>("essentialsLoading", () => false);
-  const saving = useState<boolean>("essentialsSaving", () => false);
   const error = useState<string | null>("essentialsError", () => null);
 
-  // Category configuration
+  // Category configuration matching the new Cockpit structure
   const essentialCategories = [
-    { name: "Basics", icon: "🧊" },
-    { name: "Carbonated & Mixers", icon: "🥤" },
-    { name: "Citrus & Fruit", icon: "🍋" },
-    { name: "Sweeteners", icon: "🍯" },
-    { name: "Bitters & Aromatics", icon: "🌿" },
-    { name: "Dairy & Cream", icon: "🥛" },
-    { name: "Garnishes", icon: "🍒" },
+    { name: "Basics", icon: "🧊", key: "basics" },
+    { name: "Bitters & Aromatics", icon: "🌿", key: "bitters" },
+    { name: "Carbonated & Mixers", icon: "🥤", key: "carbonatedMixers" },
+    { name: "Fruits & Berries", icon: "🍋", key: "fruitsBerries" },
+    { name: "Sweeteners", icon: "🍯", key: "sweeteners" },
+    { name: "Dairy & Cream", icon: "🥛", key: "dairyCream" },
+    { name: "Juices", icon: "🥤", key: "juices" },
+    { name: "Other", icon: "📦", key: "other" },
   ];
+
+  // Process raw Cockpit data into Essential items
+  const processEssentialsData = (data: EssentialsRawData): Essential[] => {
+    const processed: Essential[] = [];
+
+    if (!data) {
+      console.error("No data provided to processEssentialsData");
+      return processed;
+    }
+
+    // Process string arrays (basics, carbonatedMixers, etc.)
+    const stringArrayCategories = [
+      { key: "basics", category: "Basics" },
+      { key: "carbonatedMixers", category: "Carbonated & Mixers" },
+      { key: "fruitsBerries", category: "Fruits & Berries" },
+      { key: "sweeteners", category: "Sweeteners" },
+      { key: "dairyCream", category: "Dairy & Cream" },
+      { key: "juices", category: "Juices" },
+      { key: "other", category: "Other" },
+    ];
+
+    stringArrayCategories.forEach(({ key, category }) => {
+      const items = data[key as keyof EssentialsRawData] as string[] | undefined;
+      if (Array.isArray(items) && items.length > 0) {
+        items.forEach((item, index) => {
+          if (item && typeof item === "string") {
+            processed.push({
+              id: `${key}-${index}`,
+              name: item,
+              category,
+              inStock: true, // All items in the data are in stock
+            });
+          }
+        });
+      }
+    });
+
+    // Process bitters array (array of objects)
+    if (Array.isArray(data.bitters) && data.bitters.length > 0) {
+      // Add a general "bitters" item if any bitters exist
+      processed.push({
+        id: "bitters-general",
+        name: "Bitters",
+        category: "Bitters & Aromatics",
+        inStock: true,
+      });
+
+      // Add each specific flavor
+      data.bitters.forEach((bitter, bitterIndex) => {
+        if (bitter && Array.isArray(bitter.flavors)) {
+          bitter.flavors.forEach((flavor, flavorIndex) => {
+            if (flavor && typeof flavor === "string") {
+              processed.push({
+                id: `bitters-${bitterIndex}-${flavorIndex}`,
+                name: `${flavor} bitters`,
+                category: "Bitters & Aromatics",
+                inStock: true,
+              });
+            }
+          });
+        }
+      });
+    }
+
+    return processed;
+  };
 
   // Fetch essentials from server
   const fetchEssentials = async () => {
@@ -25,66 +90,16 @@ export const useEssentials = () => {
     error.value = null;
     try {
       const cockpitAPI = useCockpitAPI();
-      const data = await cockpitAPI.fetchEssentials();
-      essentials.value = JSON.parse(JSON.stringify(data));
-      originalEssentials.value = JSON.parse(JSON.stringify(data));
+      const rawData = await cockpitAPI.fetchEssentials();
+      console.log("Raw essentials data from Cockpit:", rawData);
+      essentials.value = processEssentialsData(rawData as EssentialsRawData);
+      console.log("Processed essentials:", essentials.value);
     } catch (e: any) {
       error.value = e.message || "Failed to load essentials";
       console.error("Failed to fetch essentials:", e);
     } finally {
       loading.value = false;
     }
-  };
-
-  // Toggle essential stock status (local only)
-  const toggleEssential = (id: string) => {
-    const essential = essentials.value.find((e) => e.id === id);
-    if (!essential) return;
-    essential.inStock = !essential.inStock;
-  };
-
-  // Check if there are unsaved changes
-  const hasUnsavedChanges = computed(() => {
-    return JSON.stringify(essentials.value) !== JSON.stringify(originalEssentials.value);
-  });
-
-  // Save changes to server
-  const saveChanges = async () => {
-    saving.value = true;
-    error.value = null;
-    try {
-      // Find which essentials have changed
-      const changedEssentials = essentials.value.filter((essential, index) => {
-        const original = originalEssentials.value[index];
-        return essential.inStock !== original.inStock;
-      });
-
-      // Update each changed essential
-      const updates = changedEssentials.map((essential) =>
-        $fetch(`/api/essentials/${essential.id}`, {
-          method: "PUT",
-          body: { id: essential.id, inStock: essential.inStock },
-        }),
-      );
-
-      await Promise.all(updates);
-
-      // Update the original state to match current state
-      originalEssentials.value = JSON.parse(JSON.stringify(essentials.value));
-    } catch (e: any) {
-      error.value = e.message || "Failed to save changes";
-      console.error("Failed to save changes:", e);
-    } finally {
-      saving.value = false;
-    }
-  };
-
-  const clearAll = () => {
-    essentials.value.forEach((e) => (e.inStock = false));
-  };
-
-  const checkAll = () => {
-    essentials.value.forEach((e) => (e.inStock = true));
   };
 
   // Get items for a category
@@ -105,14 +120,8 @@ export const useEssentials = () => {
     essentials,
     essentialCategories,
     loading,
-    saving,
     error,
     fetchEssentials,
-    toggleEssential,
-    hasUnsavedChanges,
-    saveChanges,
-    clearAll,
-    checkAll,
     getItemsForCategory,
     totalEssentials,
     checkedCount,

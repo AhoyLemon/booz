@@ -1,4 +1,4 @@
-import type { Bottle, Drink, Essential, BeerWine } from "~/types";
+import type { Bottle, Drink, Essential, BeerWine, EssentialsRawData } from "~/types";
 import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
 
 interface CockpitBottle {
@@ -187,86 +187,10 @@ export const useCockpitAPI = () => {
     }
   };
 
-  const fetchEssentials = async (): Promise<Essential[]> => {
+  const fetchEssentials = async (): Promise<EssentialsRawData> => {
     try {
-      const data = await fetchFromCockpit<CockpitEssentials>("/content/item/essentials");
-
-      const groupCategoryMap: { [key: string]: string } = {
-        basics: "Basics",
-        carbonatedMixers: "Carbonated & Mixers",
-        citrusFruit: "Citrus & Fruit",
-        sweeteners: "Sweeteners",
-        bittersAromatics: "Bitters & Aromatics",
-        dairyCream: "Dairy & Cream",
-        garnishes: "Garnishes",
-      };
-
-      const nameMap: { [key: string]: string } = {
-        ice: "Ice",
-        water: "Water",
-        salt: "Salt",
-        blackPepper: "Black Pepper",
-        clubSoda: "Club Soda",
-        tonicWater: "Tonic Water",
-        gingerBeer: "Ginger Beer",
-        gingerAle: "Ginger Ale",
-        sparklingWater: "Sparkling Water",
-        cola: "Cola",
-        lemonLimeSoda: "Lemon-Lime Soda",
-        limes: "Limes",
-        lemons: "Lemons",
-        oranges: "Oranges",
-        grapefruits: "Grapefruits",
-        lemonJuice: "Lemon Juice",
-        limeJuice: "Lime Juice",
-        orangeJuice: "Orange Juice",
-        grapefruitJuice: "Grapefruit Juice",
-        pineappleJuice: "Pineapple Juice",
-        cranberryJuice: "Cranberry Juice",
-        agaveNectar: "Agave Nectar",
-        grenadine: "Grenadine",
-        honey: "Honey",
-        mapleSyrup: "Maple Syrup",
-        sugar: "Sugar",
-        simpleSyrup: "Simple Syrup",
-        basil: "Basil",
-        mint: "Mint",
-        hotSauce: "Hot Sauce",
-        worcestershireSauce: "Worcestershire Sauce",
-        eggs: "Eggs",
-        heavyCream: "Heavy Cream",
-        milk: "Milk",
-        halfAndHalf: "Half and Half",
-        coconutCream: "Coconut Cream",
-        cocktailCherries: "Cocktail Cherries",
-        gingerCandy: "Ginger Candy",
-        olives: "Olives",
-        cocktailOnions: "Cocktail Onions",
-        celery: "Celery",
-        cucumber: "Cucumber",
-      };
-
-      const essentials: Essential[] = [];
-      for (const [groupKey, groupValue] of Object.entries(data)) {
-        if (typeof groupValue === "object" && groupValue !== null && !Array.isArray(groupValue)) {
-          const category = groupCategoryMap[groupKey] || groupKey;
-          for (const [fieldKey, fieldValue] of Object.entries(groupValue)) {
-            if (nameMap[fieldKey]) {
-              essentials.push({
-                id: fieldKey
-                  .replace(/([A-Z])/g, "-$1")
-                  .toLowerCase()
-                  .replace(/^-/, ""),
-                name: nameMap[fieldKey],
-                category,
-                inStock: fieldValue === true,
-              });
-            }
-          }
-        }
-      }
-
-      return essentials;
+      const data = await fetchFromCockpit<EssentialsRawData>("/content/item/essentials");
+      return data;
     } catch (error) {
       console.error("Error fetching essentials from Cockpit:", error);
       throw error;

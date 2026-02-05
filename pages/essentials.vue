@@ -2,7 +2,7 @@
 .essentials-page
   .container
       h2 🥬 Essential Ingredients
-      p.mb-3 View the basic ingredients and mixers currently in stock (managed in Cockpit)
+      p.mb-3 Viewing the basic ingredients and mixers currently in stock (managed in Cockpit CMS)
 
       .loading(v-if="loading") Loading essentials...
       
@@ -16,30 +16,25 @@
       template(v-else-if="!loading")
         .stats.mb-3
           .stat-card
-            h3 {{ checkedCount }} / {{ totalEssentials }}
+            h3 {{ totalEssentials }}
             p Items In Stock
 
-          .stat-card
-            h3 {{ completionPercentage }}%
-            p Stocked
-
         .essentials-grid
-          .category-section(v-for="category in essentialCategories" :key="category.name")
-            h3.category-header
-              span.category-icon {{ category.icon }}
-              span {{ category.name }}
-              span.category-count ({{ getCategoryCheckedCount(category) }}/{{ getCategoryItemCount(category) }})
-            
-            .items-list
-              .item-display(
-                v-for="item in getItemsForCategory(category.name)"
-                :key="item.id"
-                :class="{ 'in-stock': item.inStock, 'out-of-stock': !item.inStock }"
-              )
-                .status-indicator
-                  span.checkmark(v-if="item.inStock") ✓
-                  span.cross(v-else) ✗
-                .item-label {{ item.name }}
+          template(v-for="category in essentialCategories" :key="category.name")
+            .category-section(v-if="getCategoryItemCount(category) > 0")
+              h3.category-header
+                span.category-icon {{ category.icon }}
+                span {{ category.name }}
+                span.category-count ({{ getCategoryItemCount(category) }})
+              
+              .items-list
+                .item-display(
+                  v-for="item in getItemsForCategory(category.name)"
+                  :key="item.id"
+                )
+                  .status-indicator
+                    span.checkmark ✓
+                  .item-label {{ item.name }}
 </template>
 
 <script setup lang="ts">
@@ -51,18 +46,10 @@
     fetchEssentials,
     getItemsForCategory,
     totalEssentials,
-    checkedCount,
-    completionPercentage,
   } = useEssentials();
 
-  // Fetch essentials on mount
-  onMounted(async () => {
-    await fetchEssentials();
-  });
-
-  const getCategoryCheckedCount = (category: { name: string }) => {
-    return getItemsForCategory(category.name).filter((item) => item.inStock).length;
-  };
+  // Fetch essentials - runs on every navigation to this page
+  await fetchEssentials();
 
   const getCategoryItemCount = (category: { name: string }) => {
     return getItemsForCategory(category.name).length;
@@ -176,33 +163,16 @@
     border-radius: $border-radius-md;
     transition: all 0.2s ease;
     user-select: none;
+    background: color.adjust($primary-color, $lightness: 45%);
 
-    &.in-stock {
-      background: color.adjust($primary-color, $lightness: 45%);
-
-      .status-indicator {
-        background: $primary-color;
-        border-color: $primary-color;
-      }
-
-      .item-label {
-        color: color.adjust($dark-bg, $lightness: -10%);
-        font-weight: 600;
-      }
+    .status-indicator {
+      background: $primary-color;
+      border-color: $primary-color;
     }
 
-    &.out-of-stock {
-      background: color.adjust($border-color, $lightness: 10%);
-      opacity: 0.7;
-
-      .status-indicator {
-        background: color.adjust($border-color, $lightness: -10%);
-        border-color: color.adjust($border-color, $lightness: -10%);
-      }
-
-      .item-label {
-        color: color.adjust($text-dark, $lightness: 20%);
-      }
+    .item-label {
+      color: color.adjust($dark-bg, $lightness: -10%);
+      font-weight: 600;
     }
   }
 
@@ -218,8 +188,7 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
 
-    .checkmark,
-    .cross {
+    .checkmark {
       color: white;
       font-size: 1rem;
       font-weight: bold;
