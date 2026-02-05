@@ -101,6 +101,9 @@
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";
 
+  // Import Cockpit config for API URL and Key
+  import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
+
   // Extend Bottle type locally to ensure isFingers is present
   type BottleWithFingers = Bottle & {
     isFingers?: boolean;
@@ -171,8 +174,7 @@
       const isGithubPages = typeof window !== "undefined" && window.location.hostname.endsWith("github.io");
       if (isGithubPages) {
         // Fetch directly from Cockpit API
-        const cockpitUrl = "https://hirelemon.com/bar/api/content/items/bottles";
-        const COCKPIT_API_KEY = "API-319b8ffd3422b8c4e491e9e46356f39bd831dc56";
+        const cockpitUrl = `${COCKPIT_API_URL}/content/items/bottles`;
         const response = await fetch(cockpitUrl, {
           headers: {
             "Content-Type": "application/json",

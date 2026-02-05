@@ -34,6 +34,24 @@
       .loading(v-if="loading") Loading drinks...
       .error(v-if="error") {{ error }}
 
+      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
+        DrinkCard(
+          v-for="drink in filteredDrinks"
+          :key="drink.id"
+          :drink="drink"
+          :show-availability="true"
+        )
+
+      // Beer & Wine Section
+      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
+        h3.section-title 🍺🍷 Beer & Wine Available
+        .beer-wine-grid
+          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
+            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .beer-wine-info
+              .beer-wine-name {{ item.name }}
+              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
+      
       // Finger bottles section
       .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
         h3.section-title 🥃 Special Fingers Available
@@ -50,24 +68,6 @@
                   NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
                   span  | 
                   NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
-
-      // Beer & Wine Section
-      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
-        h3.section-title 🍺🍷 Beer & Wine Available
-        .beer-wine-grid
-          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
-            .beer-wine-info
-              .beer-wine-name {{ item.name }}
-              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
-
-      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
-        DrinkCard(
-          v-for="drink in filteredDrinks"
-          :key="drink.id"
-          :drink="drink"
-          :show-availability="true"
-        )
 </template>
 
 <script setup lang="ts">
@@ -307,6 +307,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: $spacing-lg;
+    padding-bottom: $spacing-xl;
   }
 
   .fingers-section {

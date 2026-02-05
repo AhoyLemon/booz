@@ -66,7 +66,7 @@
 <script setup lang="ts">
   import type { Bottle } from "~/types";
 
-    const { loadInventory, inventory, loadLocalDrinks, loadEssentials, fetchCocktailDBDrinks, getAvailableDrinks, error } = useCocktails();
+  const { loadInventory, inventory, loadLocalDrinks, loadEssentials, fetchCocktailDBDrinks, getAvailableDrinks, error } = useCocktails();
   const { loadStarredDrinks } = useStarredDrinks();
   const { loadBeerWine, getInStockBeerWine } = useBeerWine();
 
@@ -74,13 +74,13 @@
   const filter = ref<"all" | "fingers" | "beerWine" | "cocktails">("all");
 
   // Load data on mount
-    onMounted(async () => {
-      await loadInventory();
-      await loadEssentials();
-      await loadLocalDrinks();
-      loadStarredDrinks();
-      await fetchCocktailDBDrinks("margarita");
-      await loadBeerWine();
+  onMounted(async () => {
+    await loadInventory();
+    await loadEssentials();
+    await loadLocalDrinks();
+    loadStarredDrinks();
+    await fetchCocktailDBDrinks("margarita");
+    await loadBeerWine();
   });
 
   // Get available finger bottles

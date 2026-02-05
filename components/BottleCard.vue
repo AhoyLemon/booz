@@ -1,5 +1,5 @@
 <template lang="pug">
-.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }")
+NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="`/bottles/${bottle.id}`")
   .bottle-card__image(v-if="bottle.image")
     img(:src="bottle.image" :alt="bottle.name")
     span.bottle-card__category {{ bottle.category }}
@@ -22,7 +22,7 @@
         | {{ bottle.inStock ? 'In Stock' : 'Out of Stock' }}
       span.status-fingers(v-if="bottle.isFingers") 
         | Fingers
-  .bottle-card__actions
+  //-.bottle-card__actions
     //-NuxtLink.action-btn.action-btn--edit(:to="`/bottles/manage?id=${bottle.id}`") ✏️
     NuxtLink.action-btn.action-btn--view(:to="`/bottles/${bottle.id}`") 👁️
 </template>
@@ -71,10 +71,10 @@
     display: flex;
     flex-direction: column;
 
-    // &:hover {
-    //   box-shadow: $shadow-md;
-    //   transform: translateY(-2px);
-    // }
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
 
     &.out-of-stock {
       opacity: 0.6;
@@ -103,6 +103,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      color: $text-dark;
     }
 
     &__header {
@@ -274,6 +275,14 @@
 
       .bottle-card__name {
         font-size: 1.5rem;
+      }
+    }
+  }
+  @media (max-width: 1000px) {
+    .bottle-card {
+      .bottle-card__image {
+        min-height: 0 !important;
+        aspect-ratio: 3/2;
       }
     }
   }

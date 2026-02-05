@@ -211,7 +211,7 @@
 
   .bottle-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: $spacing-lg;
   }
 
@@ -253,6 +253,20 @@
         font-size: 0.875rem;
         opacity: 0.9;
         margin-top: $spacing-sm;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .bottle-grid {
+      grid-template-columns: 1fr;
+      .bottle-card {
+        display: flex;
+        flex-direction: row;
+        font-size: 12px;
+        .bottle-card__image {
+          min-height: 0 !important;
+        }
       }
     }
   }
