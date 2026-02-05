@@ -12,6 +12,7 @@
 
 // Bidirectional synonym mapping: all synonyms are mutually recognized
 const synonymGroups = [
+  ["angostura bitters", "angostura"],
   ["beer", "lager", "ale"],
   ["blueberry", "blueberries", "fresh blueberry", "fresh blueberries"],
   ["club soda", "soda water"],
@@ -35,6 +36,7 @@ const synonymGroups = [
   ["silver tequila", "blanco tequila", "white tequila", "plata tequila", "blanco", "plata"],
   ["simple syrup", "syrup", "sugar syrup", "sugar"],
   ["pop", "cola", "coke", "dr pepper", "pepsi", "soda pop"],
+  ["salt", "sea salt", "kosher salt"],
   ["sprite", "7 up", "7up", "lemon-lime soda"],
   ["strawberry", "strawberries", "fresh strawberry", "fresh strawberries"],
   ["tequila", "mezcal"],
