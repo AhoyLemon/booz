@@ -101,9 +101,6 @@
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";
 
-  // Import Cockpit config for API URL and Key
-  import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
-
   // Extend Bottle type locally to ensure isFingers is present
   type BottleWithFingers = Bottle & {
     isFingers?: boolean;
@@ -169,25 +166,9 @@
       loading.value = true;
       error.value = null;
 
-      let bottles: Bottle[] = [];
-      // Detect if running on GitHub Pages
-      const isGithubPages = typeof window !== "undefined" && window.location.hostname.endsWith("github.io");
-      if (isGithubPages) {
-        // Fetch directly from Cockpit API
-        const cockpitUrl = `${COCKPIT_API_URL}/content/items/bottles`;
-        const response = await fetch(cockpitUrl, {
-          headers: {
-            "Content-Type": "application/json",
-            "Cockpit-Token": COCKPIT_API_KEY,
-          },
-        });
-        if (!response.ok) throw new Error("Failed to fetch bottles from Cockpit");
-        bottles = await response.json();
-      } else {
-        // Use local/server API
-        const response = await $fetch<{ success: boolean; bottles: Bottle[] }>("/api/inventory");
-        bottles = response.bottles;
-      }
+      // Fetch directly from Cockpit API using the composable
+      const cockpitAPI = useCockpitAPI();
+      const bottles = await cockpitAPI.fetchBottles();
 
       const foundBottle = bottles.find((b) => b.id === bottleId);
       if (foundBottle) {
