@@ -43,8 +43,6 @@ describe("CSV Helper Functions", () => {
     });
   });
 
-
-
   it("should write bottles to CSV correctly", () => {
     const bottles: Bottle[] = [
       {

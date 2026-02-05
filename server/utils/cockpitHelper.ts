@@ -92,6 +92,7 @@ interface CockpitBottle {
   tequilaTypes?: string[] | null;
   ginTypes?: string[] | null;
   rumTypes?: string[] | null;
+  liqueurTypes?: string[] | null;
   bottleSize?: string;
   company?: string;
   abv?: number;
@@ -125,6 +126,7 @@ export async function fetchBottlesFromCockpit(): Promise<Bottle[]> {
       if (item.tequilaTypes) tags.push(...item.tequilaTypes);
       if (item.ginTypes) tags.push(...item.ginTypes);
       if (item.rumTypes) tags.push(...item.rumTypes);
+      if (item.liqueurTypes) tags.push(...item.liqueurTypes);
       // Append additionalTags if present
       if (item.additionalTags) {
         if (Array.isArray(item.additionalTags)) {
@@ -249,53 +251,18 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
   try {
     const data = await fetchFromCockpit<CockpitEssentials>("/content/item/essentials");
 
-    // Convert the object with boolean flags to an array of Essential objects
-    const essentials: Essential[] = [];
-    const categoryMap: { [key: string]: string } = {
-      ice: "Basics",
-      water: "Basics",
-      salt: "Basics",
-      blackPepper: "Basics",
-      clubSoda: "Carbonated & Mixers",
-      tonicWater: "Carbonated & Mixers",
-      gingerBeer: "Carbonated & Mixers",
-      gingerAle: "Carbonated & Mixers",
-      sparklingWater: "Carbonated & Mixers",
-      cola: "Carbonated & Mixers",
-      sprite7Up: "Carbonated & Mixers",
-      freshLime: "Citrus & Fruit",
-      freshLemon: "Citrus & Fruit",
-      freshOrange: "Citrus & Fruit",
-      freshGrapefruit: "Citrus & Fruit",
-      limeJuice: "Citrus & Fruit",
-      lemonJuice: "Citrus & Fruit",
-      orangeJuice: "Citrus & Fruit",
-      grapefruitJuice: "Citrus & Fruit",
-      pineappleJuice: "Citrus & Fruit",
-      cranberryJuice: "Citrus & Fruit",
-      simpleSyrup: "Sweeteners",
-      sugar: "Sweeteners",
-      honey: "Sweeteners",
-      agaveNectar: "Sweeteners",
-      grenadine: "Sweeteners",
-      mapleSyrup: "Sweeteners",
-      mintLeaves: "Bitters & Aromatics",
-      basil: "Bitters & Aromatics",
-      hotSauce: "Bitters & Aromatics",
-      worcestershireSauce: "Bitters & Aromatics",
-      eggs: "Dairy & Cream",
-      heavyCream: "Dairy & Cream",
-      milk: "Dairy & Cream",
-      halfAndHalf: "Dairy & Cream",
-      coconutCream: "Dairy & Cream",
-      cocktailCherries: "Garnishes",
-      gingerCandy: "Garnishes",
-      olives: "Garnishes",
-      cocktailOnions: "Garnishes",
-      celery: "Garnishes",
-      cucumber: "Garnishes",
+    // New structure: groupings at top level, each with flat bools
+    const groupCategoryMap: { [key: string]: string } = {
+      basics: "Basics",
+      carbonatedMixers: "Carbonated & Mixers",
+      citrusFruit: "Citrus & Fruit",
+      sweeteners: "Sweeteners",
+      bittersAromatics: "Bitters & Aromatics",
+      dairyCream: "Dairy & Cream",
+      garnishes: "Garnishes",
     };
 
+    // Updated name map for renamed fields
     const nameMap: { [key: string]: string } = {
       ice: "Ice",
       water: "Water",
@@ -307,25 +274,25 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
       gingerAle: "Ginger Ale",
       sparklingWater: "Sparkling Water",
       cola: "Cola",
-      sprite7Up: "Sprite/7-Up",
-      freshLime: "Fresh Lime",
-      freshLemon: "Fresh Lemon",
-      freshOrange: "Fresh Orange",
-      freshGrapefruit: "Fresh Grapefruit",
-      limeJuice: "Lime Juice",
+      lemonLimeSoda: "Lemon-Lime Soda",
+      limes: "Limes",
+      lemons: "Lemons",
+      oranges: "Oranges",
+      grapefruits: "Grapefruits",
       lemonJuice: "Lemon Juice",
+      limeJuice: "Lime Juice",
       orangeJuice: "Orange Juice",
       grapefruitJuice: "Grapefruit Juice",
       pineappleJuice: "Pineapple Juice",
       cranberryJuice: "Cranberry Juice",
-      simpleSyrup: "Simple Syrup",
-      sugar: "Sugar",
-      honey: "Honey",
       agaveNectar: "Agave Nectar",
       grenadine: "Grenadine",
+      honey: "Honey",
       mapleSyrup: "Maple Syrup",
-      mintLeaves: "Mint Leaves",
+      sugar: "Sugar",
+      simpleSyrup: "Simple Syrup",
       basil: "Basil",
+      mint: "Mint",
       hotSauce: "Hot Sauce",
       worcestershireSauce: "Worcestershire Sauce",
       eggs: "Eggs",
@@ -341,19 +308,24 @@ export async function fetchEssentialsFromCockpit(): Promise<Essential[]> {
       cucumber: "Cucumber",
     };
 
-    for (const [key, value] of Object.entries(data)) {
-      // Include all items that have a name mapping, regardless of stock status
-      // value can be true (in stock), false (out of stock), or null (out of stock)
-      if (nameMap[key]) {
-        essentials.push({
-          id: key
-            .replace(/([A-Z])/g, "-$1")
-            .toLowerCase()
-            .replace(/^-/, ""),
-          name: nameMap[key],
-          category: categoryMap[key] || "Other",
-          inStock: value === true, // Only true means in stock, false/null means out of stock
-        });
+    const essentials: Essential[] = [];
+    for (const [groupKey, groupValue] of Object.entries(data)) {
+      if (typeof groupValue === "object" && groupValue !== null && !Array.isArray(groupValue)) {
+        // This is a group (e.g., basics, citrusFruit, etc)
+        const category = groupCategoryMap[groupKey] || groupKey;
+        for (const [fieldKey, fieldValue] of Object.entries(groupValue)) {
+          if (nameMap[fieldKey]) {
+            essentials.push({
+              id: fieldKey
+                .replace(/([A-Z])/g, "-$1")
+                .toLowerCase()
+                .replace(/^-/, ""),
+              name: nameMap[fieldKey],
+              category,
+              inStock: fieldValue === true,
+            });
+          }
+        }
       }
     }
 
