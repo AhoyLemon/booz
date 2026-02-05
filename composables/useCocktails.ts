@@ -180,7 +180,7 @@ export const useCocktails = () => {
     if (!Array.isArray(inventory.value)) return false;
     
     // Exclude bottles marked as fingers from being available for cocktails
-    const inStockItems = inventory.value.filter((b) => b.inStock && !b.isFinger);
+    const inStockItems = inventory.value.filter((b) => b.inStock && !b.isFingers);
     const lowerIngredient = ingredientName.toLowerCase().trim();
 
     // Check essentials from state (API-loaded data)

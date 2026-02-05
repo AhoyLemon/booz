@@ -41,7 +41,7 @@
 
           .form-group.special-fingers-group
             label
-              input(type="checkbox" v-model="form.isFinger")
+              input(type="checkbox" v-model="form.isFingers")
               span Mark as Special Fingers 🥃
             small.help-text.finger-explanation
               | Checking this will exclude this bottle from drink recipes and only present it as being served straight up or on the rocks.
@@ -108,7 +108,7 @@
                 span.badge {{ bottle.category }}
                 span.badge(v-if="bottle.inStock" class="in-stock") In Stock
                 span.badge(v-else class="out-of-stock") Out of Stock
-                span.badge(v-if="bottle.isFinger" class="finger-badge") 🥃 Special Finger
+                span.badge(v-if="bottle.isFingers" class="finger-badge") 🥃 Special Finger
                 span.size(v-if="bottle.bottleSize") {{ bottle.bottleSize }}
                 span.abv(v-if="bottle.abv") {{ bottle.abv }}% ABV
                 span.origin(v-if="bottle.origin") {{ bottle.origin }}
@@ -136,7 +136,7 @@
     category: "",
     tags: [] as string[],
     inStock: true,
-    isFinger: false,
+    isFingers: false,
     bottleSize: "",
     bottleState: "",
     image: "",
@@ -174,7 +174,7 @@
       category: "",
       tags: [],
       inStock: true,
-      isFinger: false,
+      isFingers: false,
       bottleSize: "",
       bottleState: "",
       image: "",
@@ -194,7 +194,7 @@
       category: bottle.category,
       tags: [...bottle.tags],
       inStock: bottle.inStock,
-      isFinger: bottle.isFinger || false,
+      isFingers: bottle.isFingers || false,
       bottleSize: bottle.bottleSize || "",
       bottleState: bottle.bottleState || "",
       image: bottle.image || "",
@@ -223,7 +223,7 @@
         category: form.value.category,
         tags: form.value.tags,
         inStock: form.value.inStock,
-        isFinger: form.value.isFinger,
+        isFingers: form.value.isFingers,
         bottleSize: form.value.bottleSize || undefined,
         bottleState: (form.value.bottleState as "unopened" | "opened" | "empty") || undefined,
         image: form.value.image || undefined,

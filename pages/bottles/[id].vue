@@ -50,8 +50,8 @@
           NuxtLink.btn.btn-edit(:to="`/bottles/manage?id=${bottle.id}`") ✏️ Edit Bottle
           button.btn.btn-mark-empty(v-if="bottle.inStock" @click="toggleInStock") ⚠️ Mark Empty
           button.btn.btn-mark-in-stock(v-else @click="toggleInStock") ✅ Mark In Stock
-          button.btn.btn-toggle-finger(@click="toggleFingerStatus" :class="{ 'is-finger': isFinger(bottle) }") 
-            | {{ isFinger(bottle) ? '🥃 Remove from Fingers' : '🥃 Make Finger' }}
+          button.btn.btn-toggle-finger(@click="toggleFingerStatus" :class="{ 'is-finger': isFingers(bottle) }") 
+            | {{ isFingers(bottle) ? '🥃 Remove from Fingers' : '🥃 Make Finger' }}
       
       .drinks-section
         h3 {{ bottle.isFingers ? 'Serving Options' : 'Drinks Using This Bottle' }}
@@ -123,7 +123,7 @@
   } = useCocktails();
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
-  const { isFinger } = useFingers();
+  const { isFingers } = useFingers();
 
   const bottle = ref<BottleWithFingers | null>(null);
   const loading = ref(true);
@@ -275,7 +275,7 @@
 
     const updatedData = {
       ...bottle.value,
-      isFinger: !bottle.value.isFinger,
+      isFingers: !bottle.value.isFingers,
     };
 
     $fetch(`/api/inventory/${bottle.value.id}`, {

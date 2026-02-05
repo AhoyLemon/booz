@@ -26,9 +26,9 @@
         .bottle-card(
           v-for="bottle in filteredBottles" 
           :key="bottle.id"
-          :class="{ 'is-finger': bottle.isFinger, 'out-of-stock': !bottle.inStock }"
+          :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
         )
-          .bottle-finger-badge(v-if="bottle.isFinger") 🥃 Finger
+          .bottle-finger-badge(v-if="bottle.isFingers") 🥃 Finger
           .bottle-image(v-if="bottle.image")
             img(:src="bottle.image" :alt="bottle.name")
           .bottle-image.placeholder(v-else)
@@ -52,8 +52,8 @@
   });
 
   const bottles = computed(() => inventory.value || []);
-  const fingerBottles = computed(() => bottles.value.filter((b) => b.isFinger));
-  const nonFingerBottles = computed(() => bottles.value.filter((b) => !b.isFinger));
+  const fingerBottles = computed(() => bottles.value.filter((b) => b.isFingers));
+  const nonFingerBottles = computed(() => bottles.value.filter((b) => !b.isFingers));
 
   const filteredBottles = computed(() => {
     let result = bottles.value;

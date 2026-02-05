@@ -1,4 +1,5 @@
 import type { Bottle, Drink, Essential, BeerWine } from "~/types";
+import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
 
 interface CockpitBottle {
   _id: string;
@@ -59,26 +60,30 @@ interface CockpitBeerWine {
 }
 
 export const useCockpitAPI = () => {
-  const config = useRuntimeConfig();
-  const apiUrl = config.public.cockpitApiUrl;
-  const apiKey = config.public.cockpitApiKey;
+  const apiUrl = COCKPIT_API_URL;
+  const apiKey = COCKPIT_API_KEY;
 
   const fetchFromCockpit = async <T>(endpoint: string): Promise<T> => {
     const url = `${apiUrl}${endpoint}`;
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Cockpit-Token": apiKey,
-      },
-    });
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Cockpit-Token": apiKey,
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Cockpit API error: ${response.status} ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Cockpit API error: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`Failed to fetch from Cockpit API (${endpoint}):`, error);
+      throw error;
     }
-
-    return await response.json();
   };
 
   const fetchBottles = async (): Promise<Bottle[]> => {

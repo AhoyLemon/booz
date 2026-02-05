@@ -104,7 +104,7 @@
 
   // Get available finger bottles
   const availableFingerBottles = computed(() => {
-    return inventory.value.filter((b) => b.inStock && b.isFinger);
+    return inventory.value.filter((b) => b.inStock && b.isFingers);
   });
 
   const handleSearch = async () => {
