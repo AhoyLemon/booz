@@ -167,9 +167,28 @@
       loading.value = true;
       error.value = null;
 
-      const response = await $fetch<{ success: boolean; bottles: Bottle[] }>("/api/inventory");
+      let bottles: Bottle[] = [];
+      // Detect if running on GitHub Pages
+      const isGithubPages = typeof window !== "undefined" && window.location.hostname.endsWith("github.io");
+      if (isGithubPages) {
+        // Fetch directly from Cockpit API
+        const cockpitUrl = "https://hirelemon.com/bar/api/content/items/bottles";
+        const COCKPIT_API_KEY = "API-319b8ffd3422b8c4e491e9e46356f39bd831dc56";
+        const response = await fetch(cockpitUrl, {
+          headers: {
+            "Content-Type": "application/json",
+            "Cockpit-Token": COCKPIT_API_KEY,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch bottles from Cockpit");
+        bottles = await response.json();
+      } else {
+        // Use local/server API
+        const response = await $fetch<{ success: boolean; bottles: Bottle[] }>("/api/inventory");
+        bottles = response.bottles;
+      }
 
-      const foundBottle = response.bottles.find((b) => b.id === bottleId);
+      const foundBottle = bottles.find((b) => b.id === bottleId);
       if (foundBottle) {
         bottle.value = foundBottle;
       } else {
