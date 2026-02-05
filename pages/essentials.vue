@@ -38,15 +38,7 @@
 </template>
 
 <script setup lang="ts">
-  const {
-    essentials,
-    essentialCategories,
-    loading,
-    error,
-    fetchEssentials,
-    getItemsForCategory,
-    totalEssentials,
-  } = useEssentials();
+  const { essentials, essentialCategories, loading, error, fetchEssentials, getItemsForCategory, totalEssentials } = useEssentials();
 
   // Fetch essentials - runs on every navigation to this page
   await fetchEssentials();

@@ -16,6 +16,7 @@ export const ingredientSynonyms: Record<string, string[]> = {
   "club soda": ["soda water"],
   "cocktail cherries": ["cherries", "cherry", "cocktail cherry", "maraschino cherries", "maraschino cherry"],
   cranberry: ["cranberries", "fresh cranberry", "fresh cranberries"],
+  "cherry liqueur": ["maraschino liqueur"],
   "coffee liqueur": ["kahlua", "kahlúa", "licor de café", "licor de cafe"],
   "creme de cacao": ["crème de cacao", "chocolate liqueur"],
   "crème de violette": ["creme de violette", "creme de violet", "violet liqueur"],

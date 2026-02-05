@@ -1,6 +1,7 @@
-import type { Bottle, Drink, InventoryData, DrinkData, Essential, EssentialsData } from "~/types";
+import type { Bottle, Drink, InventoryData, DrinkData, Essential, EssentialsData, EssentialsRawData } from "~/types";
 import { ingredientSynonyms } from "../types/ingredientSynonyms";
 import { ingredientHierarchy } from "../types/ingredientHierarchy";
+import { processEssentialsData } from "./useEssentials";
 
 interface CocktailDBDrink {
   idDrink: string;
@@ -44,8 +45,8 @@ export const useCocktails = () => {
   const loadEssentials = async () => {
     try {
       const cockpitAPI = useCockpitAPI();
-      const essentialsData = await cockpitAPI.fetchEssentials();
-      essentials.value = essentialsData;
+      const rawData = await cockpitAPI.fetchEssentials();
+      essentials.value = processEssentialsData(rawData as EssentialsRawData);
     } catch (e) {
       console.error("Failed to load essentials:", e);
       error.value = "Failed to load essentials data";
@@ -168,7 +169,7 @@ export const useCocktails = () => {
 
   // Helper function to check if a term matches as a whole word in a string
   const matchesAsWord = (text: string, term: string): boolean => {
-    const regex = new RegExp(`\\b${term}\\b`, 'i');
+    const regex = new RegExp(`\\b${term}\\b`, "i");
     return regex.test(text);
   };
 
@@ -176,9 +177,9 @@ export const useCocktails = () => {
   // Excludes bottles marked as "fingers" from being available for cocktails
   const isIngredientInStock = (ingredientName: string): boolean => {
     // Guard against undefined or null ingredient names
-    if (!ingredientName || typeof ingredientName !== 'string') return false;
+    if (!ingredientName || typeof ingredientName !== "string") return false;
     if (!Array.isArray(inventory.value)) return false;
-    
+
     // Exclude bottles marked as fingers from being available for cocktails
     const inStockItems = inventory.value.filter((b) => b.inStock && !b.isFingers);
     const lowerIngredient = ingredientName.toLowerCase().trim();
@@ -191,7 +192,7 @@ export const useCocktails = () => {
       if (matchesStrict(requested, candidate)) return true;
       // If requested is a parent, allow any child to fulfill
       const children = ingredientHierarchy[requested];
-      if (children && children.some(child => matchesStrict(child, candidate))) return true;
+      if (children && children.some((child) => matchesStrict(child, candidate))) return true;
       return false;
     };
 
@@ -204,7 +205,7 @@ export const useCocktails = () => {
 
       // Check if ingredient name matches any synonyms for this essential
       const essentialSynonyms = ingredientSynonyms[lowerEssential];
-      if (essentialSynonyms && essentialSynonyms.some(syn => matchesStrict(lowerIngredient, syn))) {
+      if (essentialSynonyms && essentialSynonyms.some((syn) => matchesStrict(lowerIngredient, syn))) {
         return true;
       }
     }
@@ -225,7 +226,7 @@ export const useCocktails = () => {
         if (matchesStrict(lowerIngredient, tag.toLowerCase())) return true;
         // Check if ingredient name matches any synonyms for this tag
         const mappedIngredients = ingredientSynonyms[tag.toLowerCase()];
-        if (mappedIngredients && mappedIngredients.some(syn => matchesStrict(lowerIngredient, syn))) {
+        if (mappedIngredients && mappedIngredients.some((syn) => matchesStrict(lowerIngredient, syn))) {
           return true;
         }
       }
