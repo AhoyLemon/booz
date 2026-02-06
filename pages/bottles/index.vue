@@ -44,8 +44,9 @@
         label Filter by Tag
         TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredBottles.length")
 
-    .bottle-grid
-      BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
+    section.bottles
+      .bottle-grid
+        BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
 </template>
 
 <script setup lang="ts">
@@ -123,18 +124,7 @@
 <style lang="scss" scoped>
   @use "sass:color";
   @use "@/assets/styles/variables" as *;
-  .bottles-page {
-    min-height: 60vh;
-
-    h2 {
-      color: $dark-bg;
-      margin-bottom: $spacing-sm;
-    }
-
-    p {
-      color: color.adjust($text-dark, $lightness: 20%);
-    }
-  }
+  @use "@/assets/styles/abstracts/mixins" as *;
 
   .header-with-action {
     display: flex;
@@ -146,29 +136,6 @@
       flex-direction: column;
       align-items: flex-start;
     }
-  }
-
-  .manage-btn {
-    padding: $spacing-sm $spacing-xl;
-    background: $accent-color;
-    color: white;
-    text-decoration: none;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-
-    &:hover {
-      background: color.adjust($accent-color, $lightness: -10%);
-      transform: translateY(-2px);
-      box-shadow: $shadow-md;
-    }
-  }
-
-  .bottle-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: $spacing-lg;
   }
 
   .error-banner {

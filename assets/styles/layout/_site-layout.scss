@@ -1,0 +1,12 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+
+.site-layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  > main {
+    padding-top: $spacing-md;
+    flex-grow: 1;
+  }
+}

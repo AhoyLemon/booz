@@ -41,30 +41,34 @@
       .loading(v-if="loading") Loading drinks...
       .error(v-if="error") {{ error }}
 
-      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
-        DrinkCard(
-          v-for="drink in filteredDrinks"
-          :key="drink.id"
-          :drink="drink"
-          :show-availability="true"
-          :external="drink.external"
-        )
-      .hydrate-btn-container(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
-        button.hydrate-btn(@click="hydrateMoreCocktailDB") Get More Random Cocktails!
+      section.drinks-section(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers')")
+        h2.section-title Cocktails
+        .drinks-grid
+          DrinkCard(
+            v-for="drink in filteredDrinks"
+            :key="drink.id"
+            :drink="drink"
+            :show-availability="true"
+            :external="drink.external"
+          )
+        .hydrate-btn-container
+          button.hydrate-btn(@click="hydrateMoreCocktailDB") Get More Random Cocktails!
 
       // Beer & Wine Section
-      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
-        h3.section-title 🍺🍷 Beer & Wine Available
+      section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
+        h2.section-title Beer & Wine
         .beer-wine-grid
           .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .beer-wine-image(v-if="item.image")
+              img(:src="item.image" :alt="item.name")
+            .beer-wine-icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
             .beer-wine-info
               .beer-wine-name {{ item.name }}
               .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
       
       // Finger bottles section
-      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
-        h3.section-title 🥃 Special Fingers Available
+      section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
+        h2.section-title Special Fingers
         .fingers-grid
           .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
             NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")

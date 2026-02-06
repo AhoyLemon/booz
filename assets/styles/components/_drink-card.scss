@@ -1,0 +1,143 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $spacing-lg;
+}
+
+.drink-card {
+  @include card();
+
+  .external-source {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    text-shadow: 0 0 2px black;
+    cursor: help;
+  }
+
+  // Drink Availability
+  .drink-card__availability {
+    margin-bottom: $spacing-md;
+
+    .availability-bar {
+      height: 10px;
+      background: $light-bg;
+      border-radius: $border-radius-sm;
+      overflow: hidden;
+      margin-bottom: $spacing-xs;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+
+      &__fill {
+        height: 100%;
+        // background: linear-gradient(90deg, $secondary-color, $accent-color);
+        background-color: $dark-bg;
+        transition: width 0.3s ease;
+
+        &.incomplete {
+          background-color: $secondary-color;
+        }
+      }
+    }
+
+    .availability-text {
+      font-size: 0.875rem;
+      color: color.adjust($text-dark, $lightness: 20%);
+    }
+  }
+
+  // Ingredients List
+  .drink-ingredients {
+    flex: 1;
+    h4 {
+      font-size: 1rem;
+      margin-bottom: $spacing-sm;
+      color: $text-dark;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        padding: $spacing-xs 0;
+        border-bottom: 1px solid $light-bg;
+        &:last-child {
+          border-bottom: none;
+        }
+        opacity: 0.5;
+
+        &.available {
+          opacity: 1;
+          font-weight: 500;
+        }
+
+        .ingredient-name {
+          flex: 1;
+        }
+
+        .ingredient-qty {
+          color: color.adjust($text-dark, $lightness: 30%);
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  // Star Drink
+  .star-button {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: $shadow-sm;
+
+    span {
+      color: #ccc;
+      transition: color 0.3s ease;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: $shadow-md;
+
+      span {
+        color: gold;
+      }
+    }
+
+    &.starred {
+      background: gold;
+      border-color: gold;
+
+      span {
+        color: white;
+      }
+
+      &:hover {
+        background: color.adjust(gold, $lightness: -10%);
+        border-color: color.adjust(gold, $lightness: -10%);
+      }
+    }
+  }
+}

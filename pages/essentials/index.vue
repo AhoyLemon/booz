@@ -1,40 +1,40 @@
 <template lang="pug">
 .essentials-page
   .container
-      h2 🥬 Essential Ingredients
-      p.mb-3 Viewing the basic ingredients and mixers currently in stock (managed in Cockpit CMS)
+    hgroup
+      h2 Essential Ingredients
+      p.mb-3 Viewing the basic ingredients and mixers currently in stock
+    .loading(v-if="loading") Loading essentials...
+    
+    .error-banner.mb-3(v-if="error")
+      .error-icon ⚠️
+      .error-content
+        h3 Failed to Load Essentials
+        p {{ error }}
+        p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
 
-      .loading(v-if="loading") Loading essentials...
-      
-      .error-banner.mb-3(v-if="error")
-        .error-icon ⚠️
-        .error-content
-          h3 Failed to Load Essentials
-          p {{ error }}
-          p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
+    template(v-else-if="!loading")
+      .stats.mb-3
+        .stat-card
+          h3 {{ totalEssentials }}
+          p Items In Stock
 
-      template(v-else-if="!loading")
-        .stats.mb-3
-          .stat-card
-            h3 {{ totalEssentials }}
-            p Items In Stock
-
-        .essentials-grid
-          template(v-for="category in essentialCategories" :key="category.name")
-            .category-section(v-if="getCategoryItemCount(category) > 0")
-              h3.category-header
-                span.category-icon {{ category.icon }}
-                span {{ category.name }}
-                span.category-count ({{ getCategoryItemCount(category) }})
-              
-              .items-list
-                .item-display(
-                  v-for="item in getItemsForCategory(category.name)"
-                  :key="item.id"
-                )
-                  .status-indicator
-                    span.checkmark ✓
-                  .item-label {{ item.name }}
+      .essentials-grid
+        template(v-for="category in essentialCategories" :key="category.name")
+          .category-section(v-if="getCategoryItemCount(category) > 0")
+            h3.category-header
+              span.category-icon {{ category.icon }}
+              span {{ category.name }}
+              span.category-count ({{ getCategoryItemCount(category) }})
+            
+            .items-list
+              .item-display(
+                v-for="item in getItemsForCategory(category.name)"
+                :key="item.id"
+              )
+                .status-indicator
+                  span.checkmark ✓
+                .item-label {{ item.name }}
 </template>
 
 <script setup lang="ts">

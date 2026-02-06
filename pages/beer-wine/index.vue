@@ -2,7 +2,7 @@
 .beer-wine-page
   .container
     hgroup
-      h2 Beer & Wine
+      h1 Beer & Wine
       p View your beer and wine inventory
     
     .loading(v-if="loading") Loading...
@@ -21,9 +21,15 @@
         section.beer-section
           h2 Beer
           ul(v-if="getBeers.length > 0")
-            li(v-for="beer in getBeers" :key="beer.id")
-              .beer-name {{ beer.name }}
-              .beer-type(v-if="beer.type") {{ beer }}
+            li.beer-wine-card(v-for="beer in getBeers" :key="beer.id")
+              figure.beer-wine-image(v-if="beer.image")
+                img(:src="beer.image" :alt="beer.name")
+              figure.beer-wine-image.placeholder(v-else)
+                span.icon 🍺
+              .text
+                .beer-wine-info
+                  .name {{ beer.name }}
+                  .type(v-if="beer.subtype") {{ beer.subtype }}
           .empty-state(v-else)
             p No beers in inventory
           
@@ -33,9 +39,15 @@
 
           h2 Wine
           ul(v-if="getWines.length > 0")
-            li(v-for="wine in getWines" :key="wine.id")
-              .wine-name {{ wine.name }}
-              .wine-type {{ wine }}
+            li.beer-wine-card(v-for="wine in getWines" :key="wine.id")
+              figure.beer-wine-image(v-if="wine.image")
+                img(:src="wine.image" :alt="wine.name")
+              figure.beer-wine-image.placeholder(v-else)
+                span.icon 🍷
+              .text
+                .beer-wine-info
+                  .name {{ wine.name }}
+                  .type(v-if="wine.subtype") {{ wine.subtype }}
           .empty-state(v-else)
             p No wines in inventory
 
@@ -54,17 +66,6 @@
   @use "@/assets/styles/variables" as *;
 
   .beer-wine-page {
-    min-height: 60vh;
-
-    h2 {
-      color: $dark-bg;
-      margin-bottom: $spacing-sm;
-    }
-
-    p {
-      color: color.adjust($text-dark, $lightness: 20%);
-    }
-
     .loading,
     .error {
       text-align: center;
@@ -78,129 +79,26 @@
       border-radius: $border-radius-md;
       margin-bottom: $spacing-lg;
     }
-  }
 
-  .content-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-xl;
-
-    @media (max-width: 968px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .section-card {
-    background: white;
-    padding: $spacing-xl;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-md;
-  }
-
-  .section-title {
-    color: $dark-bg;
-    margin: 0 0 $spacing-lg 0;
-    font-size: 1.5rem;
-  }
-
-  .items-list {
-    h4 {
-      color: $dark-bg;
-      margin: 0 0 $spacing-md 0;
-      font-size: 1.125rem;
-    }
-  }
-
-  .item-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $spacing-md;
-    margin-bottom: $spacing-sm;
-    background: color.adjust($border-color, $lightness: 15%);
-    border-radius: $border-radius-md;
-    transition: all 0.3s ease;
-  }
-
-  .item-info {
-    flex: 1;
-  }
-
-  .item-name {
-    font-weight: 600;
-    color: $dark-bg;
-    margin-bottom: $spacing-xs;
-  }
-
-  .item-type {
-    font-size: 0.875rem;
-    color: color.adjust($text-dark, $lightness: 20%);
-    margin-bottom: $spacing-xs;
-  }
-
-  .item-badge {
-    display: inline-block;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $border-radius-sm;
-    font-size: 0.75rem;
-    font-weight: 600;
-
-    &.in-stock {
-      background: color.adjust(green, $lightness: 40%);
-      color: color.adjust(green, $lightness: -30%);
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-xxl;
     }
 
-    &.out-of-stock {
-      background: color.adjust(red, $lightness: 40%);
-      color: color.adjust(red, $lightness: -20%);
-    }
-  }
+    .beer-section,
+    .wine-section {
+      margin-bottom: $spacing-xxl;
 
-  .empty-state {
-    text-align: center;
-    padding: $spacing-xl;
-    color: color.adjust($text-dark, $lightness: 30%);
-    font-style: italic;
-  }
-
-  .error-banner {
-    background: linear-gradient(135deg, #dc3545 0%, color.adjust(#dc3545, $lightness: -10%) 100%);
-    color: white;
-    padding: $spacing-lg;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-md;
-    display: flex;
-    gap: $spacing-md;
-    align-items: flex-start;
-
-    .error-icon {
-      font-size: 2rem;
-      flex-shrink: 0;
-    }
-
-    .error-content {
-      flex: 1;
-
-      h3 {
-        margin: 0 0 $spacing-sm 0;
-        color: white;
-        font-size: 1.25rem;
+      h2 {
+        color: $dark-bg;
+        margin-bottom: $spacing-md;
       }
 
-      p {
-        margin: 0 0 $spacing-xs 0;
-        color: rgba(255, 255, 255, 0.95);
-        line-height: 1.5;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-
-      .error-help {
-        font-size: 0.875rem;
-        opacity: 0.9;
-        margin-top: $spacing-sm;
+      ul {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $spacing-lg;
       }
     }
   }

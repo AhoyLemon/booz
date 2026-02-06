@@ -5,5 +5,16 @@
 // BASE is for things like global site styles and typography.
 @use "base/defaults";
 
+// LAYOUT is for stuff like a grid system, topnav, footer, etc.
+@use "layout/site-layout";
+@use "layout/header";
+@use "layout/footer";
+
+// COMPONENTS is for stuff like buttons, cards, callouts, toasts, etc... Essentially - reusable rectangles.
+@use "components/hgroup";
+@use "components/beer-wine-card";
+@use "components/bottle-card";
+@use "components/drink-card";
+
 // PAGES is for any specific page template
 @use "pages/list";

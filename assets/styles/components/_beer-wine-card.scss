@@ -1,0 +1,54 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+.beer-wine-grid {
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+  display: flex;
+}
+
+.beer-wine-card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-sm;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: $spacing-md;
+  transition: all 0.3s ease;
+
+  figure {
+    aspect-ratio: 1/1;
+    img {
+      width: 100%;
+      display: block;
+    }
+    &.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // background-color: color.adjust($light-bg, $lightness: -5%);
+      .icon {
+        font-size: 2.25em;
+        filter: grayscale(0.5);
+      }
+    }
+  }
+
+  .info {
+    flex: 1;
+  }
+
+  .name {
+    font-weight: 600;
+    color: $dark-bg;
+  }
+
+  .type {
+    font-size: 0.875rem;
+    color: color.adjust($text-dark, $lightness: 20%);
+    font-style: italic;
+  }
+}

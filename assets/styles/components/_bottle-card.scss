@@ -1,0 +1,37 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+section.bottles {
+  padding-bottom: $spacing-xxl;
+}
+
+.bottle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: $spacing-lg;
+}
+
+.fingers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.bottle-card {
+  @include card();
+  .card-links {
+    display: flex;
+    gap: $spacing-md;
+    font-size: 0.75rem;
+    a {
+      color: $accent-color;
+      text-decoration: none;
+      font-weight: 500;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

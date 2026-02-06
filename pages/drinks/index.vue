@@ -211,17 +211,6 @@
     color: $secondary-color;
   }
 
-  .drinks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: $spacing-lg;
-    padding-bottom: $spacing-xl;
-  }
-
-  .fingers-section {
-    margin-bottom: $spacing-xxl;
-  }
-
   .section-title {
     color: $dark-bg;
     font-size: 1.5rem;
@@ -230,136 +219,9 @@
 
   .fingers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: $spacing-md;
     margin-bottom: $spacing-xl;
-  }
-
-  .finger-card {
-    background: white;
-    border-radius: $border-radius-lg;
-    overflow: hidden;
-    box-shadow: $shadow-sm;
-    transition: all 0.3s ease;
-
-    &:hover {
-      box-shadow: $shadow-md;
-      transform: translateY(-4px);
-    }
-  }
-
-  .finger-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .finger-image {
-    width: 100%;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    padding-top: $spacing-sm;
-    padding-bottom: $spacing-sm;
-    border-bottom: 1px solid $border-color;
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    &.placeholder {
-      font-size: 4rem;
-      color: color.adjust($text-dark, $lightness: 40%);
-    }
-  }
-
-  .finger-info {
-    padding: $spacing-md;
-  }
-
-  .finger-name {
-    font-weight: 600;
-    font-size: 1.125rem;
-    color: $dark-bg;
-    margin-bottom: $spacing-sm;
-  }
-
-  .finger-options {
-    font-size: 0.875rem;
-    color: color.adjust($text-dark, $lightness: 20%);
-
-    .option-link {
-      color: $accent-color;
-      text-decoration: none;
-      font-weight: 500;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  // Beer & Wine Section
-  .beer-wine-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: $spacing-md;
-    margin-bottom: $spacing-xl;
-  }
-
-  .beer-wine-card {
-    background: white;
-    border-radius: $border-radius-lg;
-    padding: $spacing-lg;
-    box-shadow: $shadow-sm;
-    display: flex;
-    align-items: center;
-    gap: $spacing-md;
-    transition: all 0.3s ease;
-
-    &:hover {
-      box-shadow: $shadow-md;
-      transform: translateY(-4px);
-    }
-  }
-
-  .beer-wine-icon {
-    font-size: 2.5rem;
-  }
-
-  .beer-wine-info {
-    flex: 1;
-  }
-
-  .beer-wine-name {
-    font-weight: 600;
-    color: $dark-bg;
-    margin-bottom: $spacing-xs;
-  }
-
-  .beer-wine-type {
-    font-size: 0.875rem;
-    color: color.adjust($text-dark, $lightness: 20%);
-  }
-
-  @media (max-width: 1000px) {
-    .drinks-grid {
-      grid-template-columns: 1fr;
-      .drink-card {
-        display: flex;
-        flex-direction: row;
-        font-size: 12px;
-        .drink-card__image {
-          img {
-            opacity: 0.5;
-          }
-        }
-      }
-    }
   }
 
   .error-banner {

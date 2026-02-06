@@ -55,8 +55,8 @@ interface CockpitEssentials {
 }
 
 interface CockpitBeerWine {
-  beer?: Array<{ _id?: string; name: string; subtype?: string; inStock?: boolean; image?: string }>;
-  wine?: Array<{ _id?: string; name: string; subtype?: string; inStock?: boolean; image?: string }>;
+  beer?: Array<{ _id?: string; name: string; type?: string; subtype?: string; inStock?: boolean; image?: any }>;
+  wine?: Array<{ _id?: string; name: string; type?: string; subtype?: string; inStock?: boolean; image?: any }>;
 }
 
 export const useCockpitAPI = () => {
@@ -205,26 +205,34 @@ export const useCockpitAPI = () => {
 
       if (Array.isArray(data.beer)) {
         data.beer.forEach((item, index) => {
+          let imageUrl = undefined;
+          if (item.image && item.image.path) {
+            imageUrl = `https://hirelemon.com/bar/storage/uploads${item.image.path}`;
+          }
           items.push({
             id: item._id || `beer-${index + 1}`,
             name: item.name || "",
             type: "beer",
-            subtype: item.subtype,
+            subtype: item.type || item.subtype || undefined,
             inStock: item.inStock ?? true,
-            image: item.image,
+            image: imageUrl,
           });
         });
       }
 
       if (Array.isArray(data.wine)) {
         data.wine.forEach((item, index) => {
+          let imageUrl = undefined;
+          if (item.image && item.image.path) {
+            imageUrl = `https://hirelemon.com/bar/storage/uploads${item.image.path}`;
+          }
           items.push({
             id: item._id || `wine-${index + 1}`,
             name: item.name || "",
             type: "wine",
-            subtype: item.subtype,
+            subtype: item.type || item.subtype || undefined,
             inStock: item.inStock ?? true,
-            image: item.image,
+            image: imageUrl,
           });
         });
       }
