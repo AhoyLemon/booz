@@ -1,31 +1,51 @@
 <template lang="pug">
 .bottles-page
   .container
-      .header-with-action.mb-3
-        div
-          h2 Your Bottles
-          p Browse your bottle collection (managed in Cockpit)
+    hgroup
+      h1 Your Bottles
+      p Browse your bottle collection
 
-      .error-banner.mb-3(v-if="error")
-        .error-icon ⚠️
-        .error-content
-          h3 Failed to Load Bottles
-          p {{ error }}
-          p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
+    .error-banner(v-if="error")
+      .error-icon ⚠️
+      .error-content
+        h3 Failed to Load Bottles
+        p {{ error }}
+        p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
 
-      .category-filters.mb-3
-        button.category-btn(:class="{ active: categoryFilter === 'all' }" @click="categoryFilter = 'all'") All Categories
-        button.category-btn(:class="{ active: categoryFilter === 'Staples' }" @click="categoryFilter = 'Staples'") Staples
-        button.category-btn(:class="{ active: categoryFilter === 'Liqueur' }" @click="categoryFilter = 'Liqueur'") Liqueur
-        button.category-btn(:class="{ active: categoryFilter === 'Premix' }" @click="categoryFilter = 'Premix'") Premix
-        button.category-btn(:class="{ active: categoryFilter === 'Special Occasion' }" @click="categoryFilter = 'Special Occasion'") Special Occasion
-        
-      .tag-filters.mb-3(v-if="availableTags.length > 0")
-        h3 Filter by Tag
+    section.filters
+      .filter-buttons
+        button.filter-btn(
+          v-if="getBottleCountForCategory('all') > 0"
+          :class="{ active: categoryFilter === 'all' }"
+          @click="categoryFilter = 'all'"
+        ) All Categories ({{ getBottleCountForCategory('all') }})
+        button.filter-btn(
+          v-if="getBottleCountForCategory('Staples') > 0"
+          :class="{ active: categoryFilter === 'Staples' }"
+          @click="categoryFilter = 'Staples'"
+        ) Staples ({{ getBottleCountForCategory('Staples') }})
+        button.filter-btn(
+          v-if="getBottleCountForCategory('Liqueur') > 0"
+          :class="{ active: categoryFilter === 'Liqueur' }"
+          @click="categoryFilter = 'Liqueur'"
+        ) Liqueur ({{ getBottleCountForCategory('Liqueur') }})
+        button.filter-btn(
+          v-if="getBottleCountForCategory('Premix') > 0"
+          :class="{ active: categoryFilter === 'Premix' }"
+          @click="categoryFilter = 'Premix'"
+        ) Premix ({{ getBottleCountForCategory('Premix') }})
+        button.filter-btn(
+          v-if="getBottleCountForCategory('Special Occasion') > 0"
+          :class="{ active: categoryFilter === 'Special Occasion' }"
+          @click="categoryFilter = 'Special Occasion'"
+        ) Special Occasion ({{ getBottleCountForCategory('Special Occasion') }})
+      
+      .tag-filters(v-if="availableTags.length > 0")
+        label Filter by Tag
         TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredBottles.length")
 
-      .bottle-grid
-        BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
+    .bottle-grid
+      BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
 </template>
 
 <script setup lang="ts">
@@ -66,6 +86,14 @@
   // Get bottle count for a specific tag
   const getBottleCountForTag = (tag: string) => {
     return inventory.value.filter((b) => b.tags.includes(tag)).length;
+  };
+
+  // Get bottle count for a specific category
+  const getBottleCountForCategory = (category: string) => {
+    if (category === "all") {
+      return inventory.value.length;
+    }
+    return inventory.value.filter((b) => b.category === category).length;
   };
 
   const filteredBottles = computed(() => {
@@ -134,75 +162,6 @@
       background: color.adjust($accent-color, $lightness: -10%);
       transform: translateY(-2px);
       box-shadow: $shadow-md;
-    }
-  }
-
-  .filters,
-  .category-filters {
-    display: flex;
-    gap: $spacing-md;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn,
-  .category-btn {
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $border-radius-md;
-    background: white;
-    border: 2px solid $border-color;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      border-color: $accent-color;
-      background: color.adjust($accent-color, $lightness: 45%);
-    }
-
-    &.active {
-      background: $accent-color;
-      color: white;
-      border-color: $accent-color;
-    }
-  }
-
-  .category-btn {
-    font-size: 0.875rem;
-    padding: $spacing-xs $spacing-md;
-
-    &.active {
-      background: $primary-color;
-      border-color: $primary-color;
-    }
-  }
-
-  .tag-filters {
-    h3 {
-      font-size: 1rem;
-      margin-bottom: $spacing-sm;
-      color: $text-dark;
-    }
-  }
-
-  .tag-btn {
-    font-size: 0.875rem;
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $border-radius-md;
-    background: white;
-    border: 2px solid $border-color;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      border-color: $accent-color;
-      background: color.adjust($accent-color, $lightness: 45%);
-    }
-
-    &.active {
-      background: color.adjust($primary-color, $lightness: 10%);
-      border-color: color.adjust($primary-color, $lightness: 10%);
-      color: white;
     }
   }
 

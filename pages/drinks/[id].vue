@@ -3,7 +3,7 @@
 <style lang="scss" scoped src="./id.scss"></style>
 
 <script setup lang="ts">
-  import type { Bottle } from "~/types";
+  import type { Bottle, Drink } from "~/types";
 
   const route = useRoute();
   const { loadInventory, inventory, loadEssentials, loadLocalDrinks, fetchCocktailDBDrinkById, getAllDrinks, isIngredientInStock } = useCocktails();
@@ -15,6 +15,8 @@
   const fingerBottle = ref<Bottle | null>(null);
   const servingStyle = ref<"straight" | "rocks">("straight");
 
+  // Declare localDrinks state for hydration
+  const localDrinks = useState<Drink[]>("localDrinks", () => []);
   // Load data on mount
   onMounted(async () => {
     await loadInventory();
@@ -23,10 +25,7 @@
 
     // Hydrate localDrinks with both drinks and drinksCommon
     const { fetchDrinks, fetchDrinksCommon } = useCockpitAPI();
-    const [drinks, drinksCommon] = await Promise.all([
-      fetchDrinks(),
-      fetchDrinksCommon(),
-    ]);
+    const [drinks, drinksCommon] = await Promise.all([fetchDrinks(), fetchDrinksCommon()]);
     // Combine and dedupe by id
     const combined = [...drinks, ...drinksCommon.filter((dc) => !drinks.some((d) => d.id === dc.id))];
     localDrinks.value = combined;

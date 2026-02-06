@@ -1,0 +1,108 @@
+@use "sass:color";
+@use "../variables" as *;
+
+hgroup {
+  h1 {
+    margin: unset;
+  }
+  p {
+    opacity: 0.7;
+  }
+  padding-bottom: 1.5rem;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  form {
+    display: flex;
+  }
+  input {
+    flex: 1;
+    padding: 0.75em 1.25em;
+    border: 2px solid $border-color;
+    border-radius: $border-radius-md 0 0 $border-radius-md;
+    border-right: none;
+
+    font-size: 0.875rem;
+
+    &:focus {
+      outline: none;
+      border-color: $accent-color;
+    }
+  }
+  button {
+    background-color: $secondary-color;
+    padding: 0.75em 1.25em;
+    font-size: 0.875rem;
+    border: 2px solid $border-color;
+    border-radius: 0 $border-radius-md $border-radius-md 0;
+    color: $text-light;
+    font-weight: 625;
+    &:hover,
+    &:focus-visible {
+      background-color: color.adjust($secondary-color, $lightness: -15%);
+      border-color: $accent-color;
+    }
+  }
+}
+
+// .search-btn {
+//   padding: $spacing-md $spacing-xl;
+//   background: $accent-color;
+//   color: white;
+//   border: none;
+//   border-radius: $border-radius-md;
+//   font-weight: 600;
+//   cursor: pointer;
+//   transition: all 0.3s ease;
+
+//   &:hover {
+//     background: color.adjust($accent-color, $lightness: -10%);
+//   }
+// }
+
+section.filters {
+  // background-color: lime;
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+  .tag-filters {
+    padding-top: 1rem;
+    max-width: 320px;
+    margin-left: auto;
+    padding-bottom: 1rem;
+    > label {
+      font-weight: 650;
+      opacity: 0.6;
+    }
+    .tag-filter-select {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.filter-btn {
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  background: white;
+  border: 2px solid $border-color;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $accent-color;
+    background: color.adjust($accent-color, $lightness: 45%);
+  }
+
+  &.active {
+    background: $accent-color;
+    color: white;
+    border-color: $accent-color;
+  }
+}

@@ -289,6 +289,7 @@ export const useCocktails = () => {
       (drink) =>
         drink.category?.toLowerCase().includes("non-alcoholic") ||
         drink.tags?.some((tag) => tag.toLowerCase().includes("non-alcoholic")) ||
+        drink.tags?.some((tag) => tag.toLowerCase().includes("non alcoholic")) ||
         drink.tags?.some((tag) => tag.toLowerCase().includes("mocktail")),
     );
   });
@@ -300,6 +301,7 @@ export const useCocktails = () => {
       (drink) =>
         !drink.category?.toLowerCase().includes("non-alcoholic") &&
         !drink.tags?.some((tag) => tag.toLowerCase().includes("non-alcoholic")) &&
+        !drink.tags?.some((tag) => tag.toLowerCase().includes("non alcoholic")) &&
         !drink.tags?.some((tag) => tag.toLowerCase().includes("mocktail")),
     );
   });

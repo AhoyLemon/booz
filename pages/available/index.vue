@@ -1,10 +1,12 @@
 <template lang="pug">
 .available-page
   .container
-      h2 🎯 Available Now
-      p.mb-3 Drinks you can have right now!
+    hgroup
+      h1 Available Now
+      p Drinks you can have right now!
 
-      .filters.mb-3
+    section.filters.mb-3
+      .filter-buttons
         button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'")
           | All ({{ allCount }})
         button.filter-btn(v-if="availableFingerBottles.length > 0" :class="{ active: filter === 'fingers' }" @click="filter = 'fingers'")
@@ -15,52 +17,52 @@
           | Cocktails ({{ getAvailableDrinks.length }})
         
       
-      .error-banner.mb-3(v-if="error")
-        .error-icon ⚠️
-        .error-content
-          h3 Failed to Load Data
-          p {{ error }}
-          p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
+    .error-banner.mb-3(v-if="error")
+      .error-icon ⚠️
+      .error-content
+        h3 Failed to Load Data
+        p {{ error }}
+        p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
       
-      // Finger bottles section
-      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'fingers')")
-        h3.section-title 🥃 Special Fingers Available
-        .fingers-grid
-          .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
-            NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")
-              .finger-image(v-if="bottle.image")
-                img(:src="bottle.image" :alt="bottle.name")
-              .finger-image.placeholder(v-else)
-                span 🥃
-              .finger-info
-                .finger-name {{ bottle.name }}
-                .finger-options
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
-                  span  | 
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
+    // Finger bottles section
+    .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'fingers')")
+      h3.section-title 🥃 Special Fingers Available
+      .fingers-grid
+        .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
+          NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")
+            .finger-image(v-if="bottle.image")
+              img(:src="bottle.image" :alt="bottle.name")
+            .finger-image.placeholder(v-else)
+              span 🥃
+            .finger-info
+              .finger-name {{ bottle.name }}
+              .finger-options
+                NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
+                span  | 
+                NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
 
-      // Beer & Wine Section
-      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'all' || filter === 'beerWine')")
-        h3.section-title 🍺🍷 Beer & Wine Available
-        .beer-wine-grid
-          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
-            .beer-wine-info
-              .beer-wine-name {{ item.name }}
-              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
+    // Beer & Wine Section
+    .beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'all' || filter === 'beerWine')")
+      h3.section-title 🍺🍷 Beer & Wine Available
+      .beer-wine-grid
+        .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
+          .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
+          .beer-wine-info
+            .beer-wine-name {{ item.name }}
+            .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
 
-      .drinks-grid(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
-        DrinkCard(
-          v-for="drink in getAvailableDrinks"
-          :key="drink.id"
-          :drink="drink"
-        )
+    .drinks-grid(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
+      DrinkCard(
+        v-for="drink in getAvailableDrinks"
+        :key="drink.id"
+        :drink="drink"
+      )
 
-      .empty-state(v-else-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0 && getAvailableDrinks.length === 0")
-        .empty-state__icon 🔍
-        h3 No Fully Available Drinks
-        p Try adding more items to your bottles or essentials, or search for different cocktails
-        NuxtLink.btn.btn-primary(to="/bottles") View Bottles
+    .empty-state(v-else-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0 && getAvailableDrinks.length === 0")
+      .empty-state__icon 🔍
+      h3 No Fully Available Drinks
+      p Try adding more items to your bottles or essentials, or search for different cocktails
+      NuxtLink.btn.btn-primary(to="/bottles") View Bottles
 </template>
 
 <script setup lang="ts">
@@ -110,33 +112,6 @@
     }
   }
 
-  .filters {
-    display: flex;
-    gap: $spacing-md;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $border-radius-md;
-    background: white;
-    border: 2px solid $border-color;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      border-color: $accent-color;
-      background: color.adjust($accent-color, $lightness: 45%);
-    }
-
-    &.active {
-      background: $accent-color;
-      color: white;
-      border-color: $accent-color;
-    }
-  }
-
   .beer-wine-section {
     margin-bottom: $spacing-xxl;
   }
@@ -183,7 +158,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $light-bg;
 
     img {
       max-width: 100%;
@@ -267,7 +241,7 @@
 
   .drinks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: $spacing-lg;
   }
 

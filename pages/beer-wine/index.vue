@@ -1,8 +1,9 @@
 <template lang="pug">
 .beer-wine-page
   .container
-    h2 🍺🍷 Beer & Wine
-    p.mb-3 View your beer and wine inventory (managed in Cockpit)
+    hgroup
+      h2 Beer & Wine
+      p View your beer and wine inventory
     
     .loading(v-if="loading") Loading...
     
@@ -15,37 +16,29 @@
     
     template(v-else-if="!loading")
       .content-grid
+
         // Beer Section
-        .section-card
-          h3.section-title 🍺 Beer
-          
-          .items-list(v-if="getBeers.length > 0")
-            h4 Current Beers ({{ getBeers.length }})
-            .item-card(v-for="beer in getBeers" :key="beer.id")
-              .item-info
-                .item-name {{ beer.name }}
-                .item-type(v-if="beer.subtype") {{ beer.subtype }}
-                .item-badge(:class="{ 'in-stock': beer.inStock, 'out-of-stock': !beer.inStock }")
-                  | {{ beer.inStock ? 'In Stock' : 'Out of Stock' }}
-          
+        section.beer-section
+          h2 Beer
+          ul(v-if="getBeers.length > 0")
+            li(v-for="beer in getBeers" :key="beer.id")
+              .beer-name {{ beer.name }}
+              .beer-type(v-if="beer.type") {{ beer }}
           .empty-state(v-else)
             p No beers in inventory
-        
+          
+
         // Wine Section
-        .section-card
-          h3.section-title 🍷 Wine
-          
-          .items-list(v-if="getWines.length > 0")
-            h4 Current Wines ({{ getWines.length }})
-            .item-card(v-for="wine in getWines" :key="wine.id")
-              .item-info
-                .item-name {{ wine.name }}
-                .item-type {{ wine.subtype }}
-                .item-badge(:class="{ 'in-stock': wine.inStock, 'out-of-stock': !wine.inStock }")
-                  | {{ wine.inStock ? 'In Stock' : 'Out of Stock' }}
-          
+        section.wine-section
+
+          h2 Wine
+          ul(v-if="getWines.length > 0")
+            li(v-for="wine in getWines" :key="wine.id")
+              .wine-name {{ wine.name }}
+              .wine-type {{ wine }}
           .empty-state(v-else)
             p No wines in inventory
+
 </template>
 
 <script setup lang="ts">

@@ -1,79 +1,7 @@
-<template lang="pug">
-.drinks-page
-  .container
-      .header-section
-        div
-          h2 All Drinks
-          p.mb-3 Explore cocktails from TheCocktailDB and custom recipes (managed in Cockpit)
-
-      .error-banner.mb-3(v-if="error")
-        .error-icon ⚠️
-        .error-content
-          h3 Failed to Load Data
-          p {{ error }}
-          p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
-
-      .search-bar.mb-3
-        input(
-          v-model="searchTerm"
-          type="text"
-          placeholder="Search for cocktails..."
-          @keyup.enter="handleSearch"
-        )
-        button.search-btn(@click="handleSearch") Search
-
-      .filters.mb-3
-        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ allDrinksCount }})
-        button.filter-btn(:class="{ active: filter === 'cocktails' }" @click="filter = 'cocktails'") Cocktails ({{ filteredDrinks.length }})
-        button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
-        button.filter-btn(:class="{ active: filter === 'fingers' }" @click="filter = 'fingers'") Fingers ({{ availableFingerBottles.length }})
-        button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
-        button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length + + availableFingerBottles.length }})
-        button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
-
-      .loading(v-if="loading") Loading drinks...
-      .error(v-if="error") {{ error }}
-
-      .drinks-grid(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers') ")
-        DrinkCard(
-          v-for="drink in filteredDrinks"
-          :key="drink.id"
-          :drink="drink"
-          :show-availability="true"
-          :external="drink.external"
-        )
-      .hydrate-btn-container
-        button.hydrate-btn(@click="hydrateMoreCocktailDB") Get More Random Cocktails!
-
-      // Beer & Wine Section
-      .beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
-        h3.section-title 🍺🍷 Beer & Wine Available
-        .beer-wine-grid
-          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            .beer-wine-icon {{ item.type === 'beer' ? '🍺' : '🍷' }}
-            .beer-wine-info
-              .beer-wine-name {{ item.name }}
-              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
-      
-      // Finger bottles section
-      .fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
-        h3.section-title 🥃 Special Fingers Available
-        .fingers-grid
-          .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
-            NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")
-              .finger-image(v-if="bottle.image")
-                img(:src="bottle.image" :alt="bottle.name")
-              .finger-image.placeholder(v-else)
-                span 🥃
-              .finger-info
-                .finger-name {{ bottle.name }}
-                .finger-options
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
-                  span  | 
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
-</template>
+<template lang="pug" src="./index.pug"></template>
 
 <script setup lang="ts">
+  import TagFilterSelect from "~/components/TagFilterSelect.vue";
   import type { Bottle } from "~/types";
 
   const { loadBeerWine, getInStockBeerWine } = useBeerWine();
@@ -100,6 +28,29 @@
 
   const searchTerm = ref("");
   const filter = ref<"all" | "alcoholic" | "nonAlcoholic" | "available" | "beerWine">("all");
+  const tagFilter = ref<string>("all");
+  // Gather all tags from drinks
+  const allTags = computed(() => {
+    const tags = new Map<string, number>();
+    // Local drinks
+    localDrinks.value.forEach((drink) => {
+      (drink.tags || []).forEach((tag) => {
+        tags.set(tag, (tags.get(tag) || 0) + 1);
+      });
+    });
+    // API drinks
+    apiDrinks.value.forEach((drink) => {
+      (drink.tags || []).forEach((tag) => {
+        tags.set(tag, (tags.get(tag) || 0) + 1);
+      });
+    });
+    return Array.from(tags.entries()).map(([tag, count]) => ({ label: tag, value: tag, count }));
+  });
+
+  // Tag options sorted by count
+  const tagOptions = computed(() => {
+    return allTags.value.sort((a, b) => b.count - a.count);
+  });
 
   const hydratedCount = ref(0);
 
@@ -180,6 +131,11 @@
         drinks = filteredAllDrinks.value;
     }
 
+    // Apply tag filter
+    if (tagFilter.value !== "all") {
+      drinks = drinks.filter((drink) => (drink.tags || []).includes(tagFilter.value));
+    }
+
     // If there's a search term, sort by relevance
     if (searchTerm.value.trim()) {
       const term = searchTerm.value.toLowerCase();
@@ -241,96 +197,6 @@
       &:focus-visible {
         background-color: color.adjust($secondary-color, $lightness: -15%);
       }
-    }
-  }
-
-  .header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: $spacing-lg;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: $spacing-md;
-    }
-  }
-
-  .btn-create {
-    padding: $spacing-md $spacing-xl;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #218838;
-    }
-  }
-
-  .search-bar {
-    display: flex;
-    gap: $spacing-md;
-    max-width: 600px;
-
-    input {
-      flex: 1;
-      padding: $spacing-md;
-      border: 2px solid $border-color;
-      border-radius: $border-radius-md;
-      font-size: 1rem;
-
-      &:focus {
-        outline: none;
-        border-color: $accent-color;
-      }
-    }
-  }
-
-  .search-btn {
-    padding: $spacing-md $spacing-xl;
-    background: $accent-color;
-    color: white;
-    border: none;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: color.adjust($accent-color, $lightness: -10%);
-    }
-  }
-
-  .filters {
-    display: flex;
-    gap: $spacing-md;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $border-radius-md;
-    background: white;
-    border: 2px solid $border-color;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-      border-color: $accent-color;
-      background: color.adjust($accent-color, $lightness: 45%);
-    }
-
-    &.active {
-      background: $accent-color;
-      color: white;
-      border-color: $accent-color;
     }
   }
 

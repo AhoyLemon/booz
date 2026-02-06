@@ -1,10 +1,12 @@
 <template lang="pug">
 .fingers-page
   .container
-      .header-section.mb-3
-        div
-          h2 🥃 Special Fingers
-          p View special occasion bottles served as "two fingers" - these aren't used in cocktails (managed in Cockpit)
+      hgroup
+        h1 Special Fingers
+        p View special occasion bottles served as "two fingers" - these aren't used in cocktails
+        p.info-text 
+          span #[strong What are fingers?] Special occasion bottles that are too nice to mix in cocktails. 
+          span They're served on their own - either straight up or on the rocks.
       
       .error-banner.mb-3(v-if="error")
         .error-icon ⚠️
@@ -13,27 +15,13 @@
           p {{ error }}
           p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
       
-      .info-card.mb-3
-        p.info-text 
-          | <strong>What are Fingers?</strong> Special occasion bottles that are too nice to mix in cocktails. 
-          | They're served on their own - either straight up or on the rocks.
-      
-      .filters.mb-3
-        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ bottles.length }})
-        button.filter-btn(:class="{ active: filter === 'selected' }" @click="filter = 'selected'") Fingers ({{ fingerBottles.length }})
-        button.filter-btn(:class="{ active: filter === 'unselected' }" @click="filter = 'unselected'") Not Fingers ({{ nonFingerBottles.length }})
-      
-      .category-filters.mb-3
-        button.category-btn(:class="{ active: categoryFilter === 'all' }" @click="categoryFilter = 'all'") All Categories
-        button.category-btn(:class="{ active: categoryFilter === 'Special Occasion' }" @click="categoryFilter = 'Special Occasion'") Special Occasion
-        button.category-btn(:class="{ active: categoryFilter === 'Staples' }" @click="categoryFilter = 'Staples'") Staples
-        button.category-btn(:class="{ active: categoryFilter === 'Liqueur' }" @click="categoryFilter = 'Liqueur'") Liqueur
-      
       .bottle-grid
-        .bottle-card(
+
+        NuxtLink.bottle-card(
           v-for="bottle in filteredBottles" 
           :key="bottle.id"
           :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
+          :to="`/bottles/${bottle.id}`"
         )
           .bottle-finger-badge(v-if="bottle.isFingers") 🥃 Finger
           .bottle-image(v-if="bottle.image")
@@ -42,9 +30,9 @@
             span 🍾
           .bottle-info
             .bottle-name {{ bottle.name }}
-            .bottle-category {{ bottle.category }}
-            .bottle-status(:class="{ 'in-stock': bottle.inStock, 'out-of-stock': !bottle.inStock }")
-              | {{ bottle.inStock ? 'In Stock' : 'Out of Stock' }}
+            .bottle-tags
+              span.tag(v-for="tag in bottle.tags" :key="tag") {{ tag }}
+
 </template>
 
 <script setup lang="ts">
@@ -85,23 +73,6 @@
   @use "sass:color";
   @use "@/assets/styles/variables" as *;
 
-  .fingers-page {
-    min-height: 60vh;
-
-    h2 {
-      color: $dark-bg;
-      margin-bottom: $spacing-sm;
-    }
-
-    p {
-      color: color.adjust($text-dark, $lightness: 20%);
-    }
-  }
-
-  .header-section {
-    margin-bottom: $spacing-lg;
-  }
-
   .info-card {
     background: linear-gradient(135deg, $accent-color 0%, color.adjust($accent-color, $lightness: -10%) 100%);
     color: white;
@@ -119,37 +90,6 @@
       }
     }
   }
-
-  .filters,
-  .category-filters {
-    display: flex;
-    gap: $spacing-sm;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn,
-  .category-btn {
-    padding: $spacing-sm $spacing-lg;
-    background: white;
-    border: 2px solid $border-color;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    color: $text-dark;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: color.adjust($accent-color, $lightness: 45%);
-      border-color: $accent-color;
-    }
-
-    &.active {
-      background: $accent-color;
-      color: white;
-      border-color: $accent-color;
-    }
-  }
-
   .bottle-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -164,13 +104,13 @@
     transition: all 0.3s ease;
     position: relative;
 
-    &.is-finger {
-      border: 3px solid $accent-color;
-      box-shadow: 0 4px 12px rgba($accent-color, 0.3);
-    }
-
     &.out-of-stock {
       opacity: 0.6;
+    }
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
     }
   }
 
@@ -218,10 +158,18 @@
     margin-bottom: $spacing-xs;
   }
 
-  .bottle-category {
-    color: color.adjust($text-dark, $lightness: 20%);
-    font-size: 0.875rem;
-    margin-bottom: $spacing-xs;
+  .bottle-tags {
+    display: flex;
+    gap: $spacing-xs;
+    flex-wrap: wrap;
+    margin-bottom: $spacing-sm;
+    .tag {
+      background: $light-bg;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-sm;
+      font-size: 0.75rem;
+      color: $text-dark;
+    }
   }
 
   .bottle-status {

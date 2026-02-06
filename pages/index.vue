@@ -16,10 +16,10 @@
         h3 Drinks
         p Discover drinks you can make
 
-      NuxtLink.nav-card(to="/essentials")
-        .nav-card__icon 🥬
-        h3 Essentials
-        p Track basic ingredients and mixers
+      //- NuxtLink.nav-card(to="/essentials")
+      //-   .nav-card__icon 🥬
+      //-   h3 Essentials
+      //-   p Track basic ingredients and mixers
 
       NuxtLink.nav-card(to="/fingers")
         .nav-card__icon 🫰
