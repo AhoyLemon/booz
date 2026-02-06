@@ -59,26 +59,31 @@
         h2.section-title Beer & Wine
         .beer-wine-grid
           .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            .beer-wine-image(v-if="item.image")
-              img(:src="item.image" :alt="item.name")
-            .beer-wine-icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
-            .beer-wine-info
-              .beer-wine-name {{ item.name }}
-              .beer-wine-type(v-if="item.subtype") {{ item.subtype }}
+            figure.beer-wine-image(:class="{ 'placeholder': !item.image }")
+              img(v-if="item.image" :src="item.image" :alt="item.name")
+              span.icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .text
+              .name {{ item.name }}
+              .type(v-if="item.subtype") {{ item.subtype }}
       
       // Finger bottles section
       section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
         h2.section-title Special Fingers
         .fingers-grid
-          .finger-card(v-for="bottle in availableFingerBottles" :key="bottle.id")
-            NuxtLink.finger-link(:to="`/bottles/${bottle.id}`")
-              .finger-image(v-if="bottle.image")
-                img(:src="bottle.image" :alt="bottle.name")
-              .finger-image.placeholder(v-else)
-                span 🥃
-              .finger-info
-                .finger-name {{ bottle.name }}
-                .finger-options
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
-                  span  | 
-                  NuxtLink.option-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
+          .bottle-card(
+            v-for="bottle in availableFingerBottles" 
+            :key="bottle.id"
+            :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
+            :to="`/bottles/${bottle.id}`"
+          )
+            figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
+              img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
+              span.icon(v-else) 🍾
+              span.category Fingers
+            .card-content
+              .card-header
+                .card-name {{bottle.name}}
+              .card-links
+                NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
+                span  | 
+                NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
