@@ -88,6 +88,7 @@
 
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";
+  import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
 
   // Extend Bottle type locally to ensure isFingers is present
   type BottleWithFingers = Bottle & {
@@ -119,6 +120,34 @@
   const drinksLoading = ref(false);
 
   const drinksUsingBottle = ref<Drink[]>([]);
+
+  // Update head with specific bottle information when bottle loads
+  watch(
+    bottle,
+    (newBottle) => {
+      if (newBottle) {
+        const tenantConfig = getTenantConfig(tenant.value) || getDefaultTenantConfig();
+        const title = `${newBottle.name} - ${tenantConfig.barName}`;
+        const description = `${newBottle.name} details at ${tenantConfig.barName}. ${newBottle.category}, ${newBottle.inStock ? "In Stock" : "Out of Stock"}.`;
+
+        useHead({
+          title,
+          meta: [
+            { name: "description", content: description },
+            { property: "og:title", content: title },
+            { property: "og:description", content: description },
+            { property: "og:image", content: newBottle.image || tenantConfig.ogImage || "/opengraph-generic.png" },
+            { property: "og:type", content: "article" },
+            { name: "twitter:card", content: "summary_large_image" },
+            { name: "twitter:title", content: title },
+            { name: "twitter:description", content: description },
+            { name: "twitter:image", content: newBottle.image || tenantConfig.ogImage || "/opengraph-generic.png" },
+          ],
+        });
+      }
+    },
+    { immediate: true },
+  );
 
   // Computed: sorted drinks by availability and starred status
   const sortedDrinksUsingBottle = computed(() => sortDrinksByAvailability(drinksUsingBottle.value, isStarred));

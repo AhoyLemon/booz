@@ -12,6 +12,8 @@ export interface TenantConfig {
   drinks: string;
   essentials: string;
   beerWine: string;
+  description?: string;
+  ogImage?: string;
 }
 
 export const TENANT_CONFIG: Record<string, TenantConfig> = {
@@ -22,6 +24,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     drinks: "drinksVictor",
     essentials: "essentials",
     beerWine: "beerWineVictor",
+    description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
   },
   lemon: {
     slug: "lemon",
@@ -30,6 +33,8 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     drinks: "drinks",
     essentials: "essentials",
     beerWine: "beerWine",
+    description: "Willkommen am Lemonhaus - Discover our curated selection of spirits, craft cocktails, beer, and wine. See what's available today!",
+    ogImage: "/opengraph-lemon.png",
   },
   victor: {
     slug: "victor",
@@ -38,6 +43,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     drinks: "drinksVictor",
     essentials: "essentialsVictor",
     beerWine: "beerWineVictor",
+    description: "Victor's Place - Your destination for premium spirits, expertly crafted cocktails, and fine wine selection. Check availability now!",
   },
   // Alias for default - foo tenant uses same config as default
   foo: {
@@ -47,6 +53,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     drinks: "drinksVictor",
     essentials: "essentials",
     beerWine: "beerWineVictor",
+    description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
   },
 };
 

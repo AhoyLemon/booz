@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";
+  import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
 
   const route = useRoute();
   const tenant = computed(() => route.params.tenant as string);
@@ -85,6 +86,34 @@
   const drink = computed(() => {
     return getAllDrinks.value.find((r) => r.id === drinkId.value);
   });
+
+  // Update head with specific drink information when drink loads
+  watch(
+    drink,
+    (newDrink) => {
+      if (newDrink) {
+        const tenantConfig = getTenantConfig(tenant.value) || getDefaultTenantConfig();
+        const title = `${newDrink.name} - ${tenantConfig.barName}`;
+        const description = `Recipe for ${newDrink.name} at ${tenantConfig.barName}. ${newDrink.ingredients.length} ingredients required.`;
+
+        useHead({
+          title,
+          meta: [
+            { name: "description", content: description },
+            { property: "og:title", content: title },
+            { property: "og:description", content: description },
+            { property: "og:image", content: newDrink.imageUrl || newDrink.image || tenantConfig.ogImage || "/opengraph-generic.png" },
+            { property: "og:type", content: "article" },
+            { name: "twitter:card", content: "summary_large_image" },
+            { name: "twitter:title", content: title },
+            { name: "twitter:description", content: description },
+            { name: "twitter:image", content: newDrink.imageUrl || newDrink.image || tenantConfig.ogImage || "/opengraph-generic.png" },
+          ],
+        });
+      }
+    },
+    { immediate: true },
+  );
 
   // Check if this is a local drink or from CocktailDB
   const isLocalDrink = computed(() => {

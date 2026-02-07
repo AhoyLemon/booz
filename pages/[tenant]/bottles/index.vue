@@ -124,6 +124,20 @@
 
     return bottles;
   });
+
+  onMounted(() => {
+    const pageTitle = `Bottles | ${getDefaultTenantConfig().barName}`;
+    const description = `Bottles in inventory at  ${getDefaultTenantConfig().barName}.`;
+    useHead({
+      title: pageTitle,
+      meta: [
+        { name: "description", content: description },
+        { property: "og:title", content: pageTitle },
+        { property: "og:description", content: description },
+        //{ property: "og:image", content: newBottle.image || tenantConfig.ogImage || "/images/og-default.png" },
+      ],
+    });
+  });
 </script>
 
 <style lang="scss" scoped>
