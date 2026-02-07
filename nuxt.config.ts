@@ -58,7 +58,29 @@ export default defineNuxtConfig({
     baseURL: process.env.NODE_ENV === "production" ? "/lemonbar/" : "/",
     buildAssetsDir: "assets",
     head: {
+      title: "Lemonbar - Bar Inventory Management",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
+        { name: "theme-color", content: "#264653" },
+        // OpenGraph
+        { property: "og:title", content: "Lemonbar - Bar Inventory Management" },
+        { property: "og:description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
+        { property: "og:image", content: "/opengraph-generic.png" },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "https://ahoylemon.github.io/lemonbar" },
+        // Twitter Card
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Lemonbar - Bar Inventory Management" },
+        { name: "twitter:description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
+        { name: "twitter:image", content: "/opengraph-generic.png" },
+      ],
       link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        { rel: "manifest", href: "/site.webmanifest" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
         {
@@ -71,6 +93,36 @@ export default defineNuxtConfig({
 
   // SSG target for static generation
   ssr: true,
+
+  // Prerender tenant routes
+  nitro: {
+    prerender: {
+      routes: [
+        '/',
+        '/foo',
+        '/lemon',
+        '/victor',
+        '/foo/drinks',
+        '/lemon/drinks',
+        '/victor/drinks',
+        '/foo/bottles',
+        '/lemon/bottles',
+        '/victor/bottles',
+        '/foo/essentials',
+        '/lemon/essentials',
+        '/victor/essentials',
+        '/foo/beer-wine',
+        '/lemon/beer-wine',
+        '/victor/beer-wine',
+        '/foo/fingers',
+        '/lemon/fingers',
+        '/victor/fingers',
+        '/foo/available',
+        '/lemon/available',
+        '/victor/available',
+      ],
+    },
+  },
 
   // Runtime configuration for API access
   runtimeConfig: {
