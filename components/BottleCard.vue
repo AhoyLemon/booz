@@ -1,5 +1,5 @@
 <template lang="pug">
-NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="`/bottles/${bottle.id}`")
+NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="bottleLink")
   figure.card-image(v-if="bottle.image")
     img(:src="bottle.image" :alt="bottle.name")
     span.category {{ bottle.category }}
@@ -24,6 +24,7 @@ NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="`/bottles
 
   const props = defineProps<{
     bottle: Bottle;
+    tenant?: string;
   }>();
 
   const bottleStateLabel = computed(() => {
@@ -33,6 +34,13 @@ NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="`/bottles
       empty: "⚠️ Empty",
     };
     return props.bottle.bottleState ? states[props.bottle.bottleState] : "";
+  });
+
+  const bottleLink = computed(() => {
+    if (props.tenant) {
+      return `/${props.tenant}/bottles/${props.bottle.id}`;
+    }
+    return `/bottles/${props.bottle.id}`;
   });
 
   // Helper to merge all tag-like fields for display

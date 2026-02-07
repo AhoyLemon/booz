@@ -1,5 +1,5 @@
 <template lang="pug">
-NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
+NuxtLink.drink-card(:to="drinkLink" :class="{ 'fully-available': isFullyAvailable, 'starred': starred }")
   button.star-button(@click.prevent="handleToggleStar" :class="{ 'starred': starred }" :title="starred ? 'Remove from favorites' : 'Add to favorites'")
     span {{ starred ? '★' : '☆' }}
   figure.drink-card__image(v-if="drink.imageUrl")
@@ -35,12 +35,20 @@ NuxtLink.drink-card(:to="`/drinks/${drink.id}`" :class="{ 'fully-available': isF
   const props = defineProps<{
     drink: Drink;
     showAvailability?: boolean;
+    tenant?: string;
   }>();
 
-  const { isIngredientInStock } = useCocktails();
+  const { isIngredientInStock } = useCocktails(props.tenant);
   const { isStarred, toggleStar } = useStarredDrinks();
 
   const starred = computed(() => isStarred(props.drink.id));
+
+  const drinkLink = computed(() => {
+    if (props.tenant) {
+      return `/${props.tenant}/drinks/${props.drink.id}`;
+    }
+    return `/drinks/${props.drink.id}`;
+  });
 
   const handleToggleStar = () => {
     toggleStar(props.drink.id);

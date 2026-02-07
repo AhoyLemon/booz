@@ -4,7 +4,7 @@
     hgroup.with-back
       h1 {{ bottle?.name || 'Loading...' }}
       .button-holder
-        NuxtLink.back-btn(to="/bottles") ← Back to Bottles
+        NuxtLink.back-btn(:to="`/${tenant}/bottles`") ← Back to Bottles
       
     .content-grid(v-if="bottle")
       .bottle-info-section
@@ -52,7 +52,7 @@
               .drink-name {{ bottle.name }}, Straight Up
               .drink-availability
                 span.availability-label.fully-available Available
-            NuxtLink.drink-view-btn(:to="`/drinks/finger-${bottle.id}-straight`") View
+            NuxtLink.drink-view-btn(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") View
           .drink-list-item.fully-available
             .drink-thumbnail
               .no-image 🧊
@@ -60,7 +60,7 @@
               .drink-name {{ bottle.name }} On The Rocks
               .drink-availability
                 span.availability-label.fully-available Available
-            NuxtLink.drink-view-btn(:to="`/drinks/finger-${bottle.id}-rocks`") View
+            NuxtLink.drink-view-btn(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") View
         
         // Show regular drinks if not a finger bottle
         template(v-else)
@@ -79,7 +79,7 @@
                 .drink-name {{ drink.name }}
                 .drink-availability
                   span.availability-label(:class="{ 'fully-available': drinkHasAllIngredients(drink) }") {{ getAvailabilityLabel(drink) }}
-              NuxtLink.drink-view-btn(:to="`/drinks/${drink.id}`") View
+              NuxtLink.drink-view-btn(:to="`/${tenant}/drinks/${drink.id}`") View
           p.no-drinks(v-else) No drinks found using this bottle yet.
     
     .loading(v-else-if="loading") Loading bottle details...
@@ -95,7 +95,8 @@
   };
 
   const route = useRoute();
-  const bottleId = route.params.id as string;
+  const tenant = computed(() => route.params.tenant as string);
+  const bottleId = computed(() => route.params.id as string);
 
   const {
     loadInventory,
@@ -107,7 +108,7 @@
     countMatchedIngredients,
     getAvailabilityPercentage,
     sortDrinksByAvailability,
-  } = useCocktails();
+  } = useCocktails(tenant.value);
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
   const { isFingers } = useFingers();
@@ -158,10 +159,10 @@
       error.value = null;
 
       // Fetch directly from Cockpit API using the composable
-      const cockpitAPI = useCockpitAPI();
+      const cockpitAPI = useCockpitAPI(tenant.value);
       const bottles = await cockpitAPI.fetchBottles();
 
-      const foundBottle = bottles.find((b) => b.id === bottleId);
+      const foundBottle = bottles.find((b) => b.id === bottleId.value);
       if (foundBottle) {
         bottle.value = foundBottle;
       } else {

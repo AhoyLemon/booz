@@ -56,7 +56,10 @@
 </template>
 
 <script setup lang="ts">
-  const { loadBeerWine, getBeers, getWines, loading, error } = useBeerWine();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { loadBeerWine, getBeers, getWines, loading, error } = useBeerWine(tenant.value);
 
   onMounted(async () => {
     await loadBeerWine();

@@ -24,7 +24,10 @@
   import type { Bottle, Drink } from "~/types";
 
   const route = useRoute();
-  const { loadInventory, inventory, loadEssentials, loadLocalDrinks, fetchCocktailDBDrinkById, getAllDrinks, isIngredientInStock } = useCocktails();
+  const tenant = computed(() => route.params.tenant as string);
+  const drinkId = computed(() => route.params.id as string);
+
+  const { loadInventory, inventory, loadEssentials, loadLocalDrinks, fetchCocktailDBDrinkById, getAllDrinks, isIngredientInStock } = useCocktails(tenant.value);
   const { loadStarredDrinks } = useStarredDrinks();
 
   const isLoading = ref(false);
@@ -42,29 +45,28 @@
     loadStarredDrinks();
 
     // Hydrate localDrinks with both drinks and drinksCommon
-    const { fetchDrinks, fetchDrinksCommon } = useCockpitAPI();
-    const [drinks, drinksCommon] = await Promise.all([fetchDrinks(), fetchDrinksCommon()]);
+    const cockpitAPI = useCockpitAPI(tenant.value);
+    const [drinks, drinksCommon] = await Promise.all([cockpitAPI.fetchDrinks(), cockpitAPI.fetchDrinksCommon()]);
     // Combine and dedupe by id
     const combined = [...drinks, ...drinksCommon.filter((dc) => !drinks.some((d) => d.id === dc.id))];
     localDrinks.value = combined;
 
     // Check if this is a finger drink
-    const drinkId = route.params.id as string;
-    if (drinkId.startsWith("finger-")) {
+    if (drinkId.value.startsWith("finger-")) {
       isFingerDrink.value = true;
-      const parts = drinkId.split("-");
+      const parts = drinkId.value.split("-");
       const bottleId = parts[1];
       servingStyle.value = parts[2] as "straight" | "rocks";
 
       // Find the bottle
       fingerBottle.value = inventory.value.find((b) => b.id === bottleId) || null;
       dataReady.value = true;
-    } else if (drinkId.startsWith("cocktaildb-")) {
+    } else if (drinkId.value.startsWith("cocktaildb-")) {
       // Check if this is a CocktailDB drink that needs to be fetched
-      const cocktailDbId = drinkId.replace("cocktaildb-", "");
+      const cocktailDbId = drinkId.value.replace("cocktaildb-", "");
 
       // Check if we already have this drink
-      const existingDrink = getAllDrinks.value.find((r) => r.id === drinkId);
+      const existingDrink = getAllDrinks.value.find((r) => r.id === drinkId.value);
 
       if (!existingDrink) {
         // Fetch the specific drink from CocktailDB
@@ -81,7 +83,7 @@
 
   // Find the drink by ID
   const drink = computed(() => {
-    return getAllDrinks.value.find((r) => r.id === route.params.id);
+    return getAllDrinks.value.find((r) => r.id === drinkId.value);
   });
 
   // Check if this is a local drink or from CocktailDB

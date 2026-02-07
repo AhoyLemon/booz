@@ -23,7 +23,7 @@
             v-for="bottle in filteredBottles" 
             :key="bottle.id"
             :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
-            :to="`/bottles/${bottle.id}`"
+            :to="`/${tenant}/bottles/${bottle.id}`"
           )
             figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
               img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
@@ -38,7 +38,10 @@
 </template>
 
 <script setup lang="ts">
-  const { loadInventory, inventory, error } = useCocktails();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { loadInventory, inventory, error } = useCocktails(tenant.value);
 
   const filter = ref<"all" | "selected" | "unselected">("selected");
   const categoryFilter = ref<string>("all");

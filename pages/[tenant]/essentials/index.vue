@@ -55,7 +55,10 @@
 </template>
 
 <script setup lang="ts">
-  const { essentials, bitters, essentialCategories, loading, error, fetchEssentials, getItemsForCategory, totalEssentials } = useEssentials();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { essentials, bitters, essentialCategories, loading, error, fetchEssentials, getItemsForCategory, totalEssentials } = useEssentials(tenant.value);
 
   // Collect unique flavors from all bitters bottles
   const bittersFlavors = computed(() => {

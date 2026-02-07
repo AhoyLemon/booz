@@ -48,11 +48,14 @@
 
     section.bottles
       .bottle-grid
-        BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle")
+        BottleCard(v-for="bottle in filteredBottles" :key="bottle.id" :bottle="bottle" :tenant="tenant")
 </template>
 
 <script setup lang="ts">
-  const { loadInventory, inventory, error } = useCocktails();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { loadInventory, inventory, error } = useCocktails(tenant.value);
 
   const filter = ref<"all" | "inStock" | "outOfStock">("all");
   const categoryFilter = ref<string>("all");

@@ -2,7 +2,7 @@
 .drink-detail-page(v-if="isFingerDrink && fingerBottle")
   .container
       //-.back-navigation
-        NuxtLink.btn.btn-back(:to="`/bottles/${fingerBottle.id}`") ← Back to Bottle
+        NuxtLink.btn.btn-back(:to="`/${tenant}/bottles/${fingerBottle.id}`") ← Back to Bottle
       .drink-hero
         .drink-hero__image(v-if="fingerBottle.image")
           img(:src="fingerBottle.image" :alt="fingerBottle.name")
@@ -46,7 +46,7 @@
 .drink-detail-page(v-else-if="drink && !isLoading")
   .container
     //- .back-navigation
-    //-   NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
+    //-   NuxtLink.btn.btn-back(:to="`/${tenant}/drinks`") ← Back to Drinks
     .drink-hero(:class="{ 'full-width': !drinkImageUrl, 'has-image': drinkImageUrl }")
       
       .hero-content
@@ -55,7 +55,7 @@
           p.fully-available(v-if="drink && isFullyAvailable") All ingredients available
           p.partially-available(v-else-if="drink && !isFullyAvailable") ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
         .back-navigation
-          NuxtLink.back-btn(to="/drinks") ← Back to Drinks
+          NuxtLink.back-btn(:to="`/${tenant}/drinks`") ← Back to Drinks
         .badge-row
           abbr.badge.source(
             v-if="drink"
@@ -99,7 +99,7 @@
 .drink-detail-page.drink-skeleton(v-else-if="(isLoading)")
   .container
     .back-navigation
-      NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
+      NuxtLink.btn.btn-back(:to="`/${tenant}/drinks`") ← Back to Drinks
 
     .drink-hero
       .drink-hero__image.skeleton
@@ -142,4 +142,4 @@
   .container
     h2 Drink Not Found
     p The drink you're looking for doesn't exist.
-    NuxtLink.btn.btn-primary(to="/drinks") Back to Drinks
+    NuxtLink.btn.btn-primary(:to="`/${tenant}/drinks`") Back to Drinks

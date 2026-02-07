@@ -26,12 +26,11 @@
       section.filters
         .filter-buttons
           button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ allDrinksCount }})
-          button.filter-btn(:class="{ active: filter === 'cocktails' }" @click="filter = 'cocktails'") Cocktails ({{ filteredDrinks.length }})
           button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
-          button.filter-btn(:class="{ active: filter === 'fingers' }" @click="filter = 'fingers'") Fingers ({{ availableFingerBottles.length }})
           button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
-          button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length + + availableFingerBottles.length }})
+          button.filter-btn(:class="{ active: filter === 'alcoholic' }" @click="filter = 'alcoholic'") Alcoholic ({{ filteredAlcoholicDrinks.length + availableFingerBottles.length }})
           button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
+
 
         // Tag filter selector (moved below filter buttons)
         .tag-filters(v-if="tagOptions.length > 0")
@@ -50,12 +49,13 @@
             :drink="drink"
             :show-availability="true"
             :external="drink.external"
+            :tenant="tenant"
           )
         .hydrate-btn-container
           button.hydrate-btn(@click="hydrateMoreCocktailDB") Get More Random Cocktails!
 
       // Beer & Wine Section
-      section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic' ")
+      section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic')")
         h2.section-title Beer & Wine
         .beer-wine-grid
           .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
@@ -67,14 +67,14 @@
               .type(v-if="item.subtype") {{ item.subtype }}
       
       // Finger bottles section
-      section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic' || filter === 'fingers') ")
+      section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic')")
         h2.section-title Special Fingers
         .fingers-grid
-          .bottle-card(
+          NuxtLink.bottle-card(
             v-for="bottle in availableFingerBottles" 
             :key="bottle.id"
             :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
-            :to="`/bottles/${bottle.id}`"
+            :to="`/${tenant}/bottles/${bottle.id}`"
           )
             figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
               img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
@@ -84,6 +84,6 @@
               .card-header
                 .card-name {{bottle.name}}
               .card-links
-                NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
+                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") Straight Up
                 span  | 
-                NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
+                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") On The Rocks

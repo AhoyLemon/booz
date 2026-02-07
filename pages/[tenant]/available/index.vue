@@ -29,11 +29,11 @@
       h2.section-title Available Fingers
       .fingers-grid
 
-        .bottle-card(
+        NuxtLink.bottle-card(
           v-for="bottle in availableFingerBottles" 
           :key="bottle.id"
           :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
-          :to="`/bottles/${bottle.id}`"
+          :to="`/${tenant}/bottles/${bottle.id}`"
         )
           figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
             img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
@@ -43,9 +43,9 @@
             .card-header
               .card-name {{bottle.name}}
             .card-links
-              NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-straight`") Straight Up
+              NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") Straight Up
               span  | 
-              NuxtLink.card-link(:to="`/drinks/finger-${bottle.id}-rocks`") On The Rocks
+              NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") On The Rocks
 
     // Beer & Wine Section
     section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'all' || filter === 'beerWine')")
@@ -66,21 +66,25 @@
           v-for="drink in getAvailableDrinks"
           :key="drink.id"
           :drink="drink"
+          :tenant="tenant"
         )
 
     .empty-state(v-else-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0 && getAvailableDrinks.length === 0")
       .empty-state__icon 🔍
       h3 No Fully Available Drinks
       p Try adding more items to your bottles or essentials, or search for different cocktails
-      NuxtLink.btn.btn-primary(to="/bottles") View Bottles
+      NuxtLink.btn.btn-primary(:to="`/${tenant}/bottles`") View Bottles
 </template>
 
 <script setup lang="ts">
   import type { Bottle } from "~/types";
 
-  const { loadInventory, inventory, loadLocalDrinks, loadEssentials, fetchCocktailDBDrinks, getAvailableDrinks, error } = useCocktails();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { loadInventory, inventory, loadLocalDrinks, loadEssentials, fetchCocktailDBDrinks, getAvailableDrinks, error } = useCocktails(tenant.value);
   const { loadStarredDrinks } = useStarredDrinks();
-  const { loadBeerWine, getInStockBeerWine } = useBeerWine();
+  const { loadBeerWine, getInStockBeerWine } = useBeerWine(tenant.value);
 
   // Filter state
   const filter = ref<"all" | "fingers" | "beerWine" | "cocktails">("all");

@@ -4,7 +4,10 @@
   import TagFilterSelect from "~/components/TagFilterSelect.vue";
   import type { Bottle } from "~/types";
 
-  const { loadBeerWine, getInStockBeerWine } = useBeerWine();
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
+
+  const { loadBeerWine, getInStockBeerWine } = useBeerWine(tenant.value);
 
   const {
     loadInventory,
@@ -22,7 +25,7 @@
     error,
     apiDrinks,
     localDrinks,
-  } = useCocktails();
+  } = useCocktails(tenant.value);
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
 
@@ -63,8 +66,8 @@
     await loadBeerWine();
 
     // Custom hydration: drinks + drinksCommon
-    const { fetchDrinks, fetchDrinksCommon } = useCockpitAPI();
-    const [drinks, drinksCommon] = await Promise.all([fetchDrinks(), fetchDrinksCommon()]);
+    const cockpitAPI = useCockpitAPI(tenant.value);
+    const [drinks, drinksCommon] = await Promise.all([cockpitAPI.fetchDrinks(), cockpitAPI.fetchDrinksCommon()]);
     // Combine and dedupe by id
     const combined = [...drinks, ...drinksCommon.filter((dc) => !drinks.some((d) => d.id === dc.id))];
     localDrinks.value = combined;

@@ -3,10 +3,10 @@
  * 
  * This middleware:
  * 1. Redirects root paths to default tenant paths (e.g., / => /foo, /drinks => /foo/drinks)
- * 2. Validates tenant slugs and returns 404 for unknown tenants
+ * 2. Validates tenant slugs and shows error page for unknown tenants
  */
 
-import { getDefaultTenantConfig, isValidTenant } from "~/utils/tenants";
+import { getDefaultTenantConfig, isValidTenant, getAllTenantSlugs } from "~/utils/tenants";
 
 export default defineNuxtRouteMiddleware((to) => {
   const path = to.path;
@@ -20,17 +20,20 @@ export default defineNuxtRouteMiddleware((to) => {
   const pathSegments = path.split('/').filter(Boolean);
   const possibleTenant = pathSegments[0];
 
-  // List of known non-tenant routes (top-level pages without tenant)
-  const topLevelRoutes = [''];
-
   // Check if path starts with a tenant slug
   if (possibleTenant && isValidTenant(possibleTenant)) {
     // Valid tenant, allow navigation
     return;
   }
 
+  // Check if this is the error page for an invalid tenant
+  if (pathSegments.length >= 2 && pathSegments[1] === 'error') {
+    // Allow access to error page
+    return;
+  }
+
   // Check if this is a root path that needs default tenant
-  if (!possibleTenant || topLevelRoutes.includes(possibleTenant)) {
+  if (!possibleTenant || path === '/') {
     // Redirect to default tenant
     const defaultConfig = getDefaultTenantConfig();
     const newPath = path === '/' || path === '' 
@@ -40,7 +43,11 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo(newPath, { redirectCode: 302 });
   }
 
-  // If we have a path segment that's not a valid tenant and not a known top-level route,
-  // it might be an invalid tenant - let it through to be handled by the catch-all route
+  // If we have a path segment that's not a valid tenant
+  if (possibleTenant && !isValidTenant(possibleTenant)) {
+    // This is an invalid tenant - redirect to error page
+    return navigateTo(`/${possibleTenant}/error`, { redirectCode: 302 });
+  }
+
   return;
 });
