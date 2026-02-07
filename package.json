@@ -8,6 +8,7 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "generate": "nuxi generate",
+    "postgenerate": "cp -r public/* .output/public/",
     "preview": "nuxi preview",
     "postinstall": "nuxi prepare",
     "sync-data": "tsx --env-file=.env scripts/sync-data.ts",
