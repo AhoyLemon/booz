@@ -1,6 +1,8 @@
 // Global styles
 @use "sass:color";
 @use "./variables" as *;
+@use "./abstracts/mixins" as *;
+@use "./abstracts/animations" as *;
 
 // BASE is for things like global site styles and typography.
 @use "base/defaults";
@@ -20,3 +22,5 @@
 @use "pages/home";
 @use "pages/list";
 @use "pages/essentials";
+@use "pages/bottle";
+@use "pages/drink";

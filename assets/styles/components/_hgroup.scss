@@ -20,4 +20,25 @@ hgroup {
     font-size: 0.875rem;
     max-width: 86ch;
   }
+
+  &.with-back {
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .back-btn {
+    display: inline-block;
+    padding: $spacing-xs $spacing-md;
+    background: white;
+    color: $text-dark;
+    border-radius: $border-radius-md;
+    border: 2px solid $border-color;
+    transition: all 0.15s linear;
+    &:hover,
+    &:focus-visible {
+      border-color: $accent-color;
+      color: $accent-color;
+      box-shadow: $shadow-md;
+    }
+  }
 }

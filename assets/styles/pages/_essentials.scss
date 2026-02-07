@@ -25,10 +25,9 @@
       grid-template-columns: 24px 1fr;
       gap: 0.5rem;
       .status-indicator {
-        background: $accent-color;
-        width: 24px;
-        height: 24px;
-        border: 2px solid $border-color;
+        background-color: $dark-bg;
+        aspect-ratio: 1/1;
+        border: 2px solid $text-dark;
         border-radius: $border-radius-sm;
         display: flex;
         align-items: center;
@@ -42,6 +41,7 @@
       }
       .item-label {
         color: $text-dark;
+        font-weight: 600;
       }
     }
   }
@@ -60,7 +60,6 @@
     gap: 1.5rem;
   }
   dl {
-    // padding-left: 1em;
     .bottles-title,
     .flavors-title {
       font-weight: 700;
@@ -83,15 +82,6 @@
       color: $text-dark;
     }
   }
-  // dl {
-  //   padding-left: 1em;
-  //   dt {
-  //     font-size: 1.25rem;
-  //   }
-  //   dd {
-  //     padding-left: 2em;
-  //   }
-  // }
 }
 
 .category-box {

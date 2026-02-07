@@ -1,6 +1,24 @@
 <template lang="pug" src="./id.pug"></template>
 
-<style lang="scss" scoped src="./id.scss"></style>
+<style lang="scss" scoped>
+  @use "sass:color";
+  @use "@/assets/styles/variables" as *;
+
+  .not-found {
+    text-align: center;
+    padding: $spacing-xxl;
+
+    h2 {
+      color: $dark-bg;
+      margin-bottom: $spacing-md;
+    }
+
+    p {
+      color: color.adjust($text-dark, $lightness: 20%);
+      margin-bottom: $spacing-lg;
+    }
+  }
+</style>
 
 <script setup lang="ts">
   import type { Bottle, Drink } from "~/types";

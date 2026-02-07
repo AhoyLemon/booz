@@ -344,7 +344,7 @@ export const useCocktails = () => {
     const bottleName = bottle.name.toLowerCase();
 
     // Create list of search terms from bottle name, tags, and aka
-    const searchTerms = [bottleName, ...bottle.tags.map((tag) => tag.toLowerCase()), ...(bottle.aka || []).map((aka) => aka.toLowerCase())];
+    const searchTerms = [bottleName, ...(bottle.tags || []).map((tag) => tag.toLowerCase()), ...(bottle.aka || []).map((aka) => aka.toLowerCase())];
 
     return allDrinks.filter((drink) => {
       return drink.ingredients.some((ingredient) => {

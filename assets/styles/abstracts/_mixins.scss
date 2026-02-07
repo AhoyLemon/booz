@@ -63,6 +63,9 @@
     font-weight: 600;
     color: $text-dark;
   }
+  h3 {
+    margin-bottom: unset;
+  }
 
   .card-meta {
     display: flex;
@@ -87,4 +90,18 @@
     box-shadow: $shadow-sm;
     transform: none;
   }
+}
+
+@mixin tags() {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+@mixin tag() {
+  background-color: $tag-bg;
+  color: $tag-fg;
+  padding: 0.5em 1.25em;
+  border-radius: 0.35em;
+  font-weight: 600;
 }

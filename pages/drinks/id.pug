@@ -1,7 +1,7 @@
 // Finger drink display
 .drink-detail-page(v-if="isFingerDrink && fingerBottle")
   .container
-      .back-navigation
+      //-.back-navigation
         NuxtLink.btn.btn-back(:to="`/bottles/${fingerBottle.id}`") ← Back to Bottle
       .drink-hero
         .drink-hero__image(v-if="fingerBottle.image")
@@ -42,53 +42,60 @@
               .step-number {{ servingStyle === 'rocks' ? '3' : '2' }}
               p Serve and enjoy this special occasion spirit on its own, without any mixers.
 
-// Regular drink display (show skeleton if loading CocktailDB drink)
+// Regular drink display
 .drink-detail-page(v-else-if="drink && !isLoading")
   .container
-      .back-navigation
-        NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
-      .drink-hero
-        .drink-hero__image(v-if="drinkImageUrl && drink")
-          img(:src="drinkImageUrl" :alt="drink.name")
-        .drink-hero__content
-          h1
-            | {{ drink ? drink.name : '' }}
-          .badge-row
-            span.source-badge(:class="isLocalDrink ? 'local' : 'external'", v-if="drink")
-              | {{ isLocalDrink ? '🏠 Local Drink' : '🌐 CocktailDB' }}
-            span.category-badge(v-if="drink && drink.category") {{ drink.category }}
-            span.prep-badge(v-if="drink && drink.prep") {{ drink.prep }}
-          .tags-row(v-if="drink && drink.tags && drink.tags.length > 0")
-            span.tag(v-for="tag in drink.tags" :key="tag") \#{{ tag }}
-          .availability-info
-            p(v-if="drink && isFullyAvailable") ✅ All ingredients available!
-            p(v-else-if="drink && !isFullyAvailable") ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
+    //- .back-navigation
+    //-   NuxtLink.btn.btn-back(to="/drinks") ← Back to Drinks
+    .drink-hero(:class="{ 'full-width': !drinkImageUrl, 'has-image': drinkImageUrl }")
+      
+      .hero-content
+        hgroup
+          h1.drink-name {{ drink ? drink.name : '' }}
+          p.fully-available(v-if="drink && isFullyAvailable") All ingredients available
+          p.partially-available(v-else-if="drink && !isFullyAvailable") ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
+        .back-navigation
+          NuxtLink.back-btn(to="/drinks") ← Back to Drinks
+        .badge-row
+          abbr.badge.source(
+            v-if="drink"
+            :class="isLocalDrink ? 'local' : 'external'"
+            :title="isLocalDrink ? 'This drink is made with ingredients from your bar' : 'This drink is from the CocktailDB API'"
+            ) {{ isLocalDrink ? 'Local Drink' : 'CocktailDB' }}
+          abbr.badge.category(v-if="drink && drink.category" :title="`This drink's category is ${drink.category}`") {{ drink.category }}
+          abbr.badge.prep(v-if="drink && drink.prep" :title="`This drink's preparation is ${drink.prep}`") {{ drink.prep }}
+        .tags-row(v-if="drink && drink.tags && drink.tags.length > 0")
+          span.tag(v-for="tag in drink.tags" :key="tag") {{ tag }}
+        
+      .drink-hero__image(v-if="drinkImageUrl && drink")
+        img(:src="drinkImageUrl" :alt="drink.name")
 
-      .drink-content
-        .drink-ingredients
-          h2 Ingredients
-          ul.ingredients-list(v-if="drink")
-            li(
-              v-for="(ingredient, index) in drink.ingredients"
-              :key="index"
-              :class="{ 'available': isIngredientAvailable(ingredient.name), 'optional': ingredient.optional }"
-            )
-              span.ingredient-name 
-                | {{ ingredient.name }}
-                span.optional-label(v-if="ingredient.optional")  (optional)
-              span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
+    .drink-content
+      .drink-ingredients
+        h2 Ingredients
+        ul.ingredients-list(v-if="drink")
+          li(
+            v-for="(ingredient, index) in drink.ingredients"
+            :key="index"
+            :class="{ 'available': isIngredientAvailable(ingredient.name), 'optional': ingredient.optional }"
+          )
+            span.ingredient-name 
+              | {{ ingredient.name }}
+              span.optional-label(v-if="ingredient.optional")  (optional)
+            span.ingredient-qty(v-if="ingredient.qty") {{ ingredient.qty }}
 
-        .drink-instructions
-          h2 Instructions
-          .instructions-container(v-if="drink")
-            .instruction-step(
-              v-for="(step, index) in instructionSteps"
-              :key="index"
-              class="scroll-animated"
-            )
-              .step-number {{ index + 1 }}
-              p {{ step }}
+      .drink-instructions
+        h2 Instructions
+        .instructions-container(v-if="drink")
+          .instruction-step(
+            v-for="(step, index) in instructionSteps"
+            :key="index"
+            class="scroll-animated"
+          )
+            .step-number {{ index + 1 }}
+            p {{ step }}
 
+// Skeleton for Drink (while loading)
 .drink-detail-page.drink-skeleton(v-else-if="(isLoading)")
   .container
     .back-navigation
@@ -129,7 +136,6 @@
           .instruction-step.skeleton(v-for="n in 3" :key="n")
             .step-number &nbsp;
             p.skeleton-text &nbsp;
-
 
 // ERROR: Drink not found
 .not-found(v-else-if="dataReady && !isLoading && !drink && !isFingerDrink")

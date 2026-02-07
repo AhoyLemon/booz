@@ -1,9 +1,10 @@
 <template lang="pug">
 .bottle-detail-page
   .container
-    .header-section.mb-3
-      NuxtLink.back-btn(to="/bottles") ← Back to Bottles
-      h2 {{ bottle?.name || 'Loading...' }}
+    hgroup.with-back
+      h1 {{ bottle?.name || 'Loading...' }}
+      .button-holder
+        NuxtLink.back-btn(to="/bottles") ← Back to Bottles
       
     .content-grid(v-if="bottle")
       .bottle-info-section
@@ -12,42 +13,35 @@
         
         .bottle-details-card
           h3 Details
-          .detail-row
-            span.label Category:
-            span.value {{ bottle.category }}
-          
-          .detail-row(v-if="bottle.bottleSize")
-            span.label Size:
-            span.value 📏 {{ bottle.bottleSize }}
-          
-          .detail-row(v-if="bottle.abv")
-            span.label ABV:
-            span.value 🍷 {{ bottle.abv }}%
-          
-          .detail-row(v-if="bottle.origin")
-            span.label Origin:
-            span.value 🌍 {{ bottle.origin }}
-          
-          .detail-row(v-if="bottle.bottleState")
-            span.label State:
-            span.value {{ bottleStateLabel(bottle.bottleState) }}
-          
-          .detail-row
-            span.label Status:
-            span.value(:class="bottle.inStock ? 'in-stock' : 'out-of-stock'") 
-              | {{ bottle.inStock ? '✓ In Stock' : '✗ Out of Stock' }}
-          
-          .detail-row(v-if="bottle.isFingers")
-            span.label Serving:
-            span.value 🤞 Fingers 
-          
-          .detail-row(v-if="bottle.tags.length")
-            span.label Tags:
-            .tags-list
-              span.tag(v-for="tag in bottle.tags" :key="tag") {{ tag }}
+          .detail-rows
+            .detail-row
+              span.label Category:
+              span.value {{ bottle.category }}
+            .detail-row(v-if="bottle.bottleSize")
+              span.label Size:
+              span.value {{ bottle.bottleSize }}
+            .detail-row(v-if="bottle.abv")
+              span.label ABV:
+              span.value {{ bottle.abv }}%
+            .detail-row(v-if="bottle.origin")
+              span.label Origin:
+              span.value {{ bottle.origin }}
+            .detail-row(v-if="bottle.bottleState")
+              span.label State:
+              span.value {{ bottleStateLabel(bottle.bottleState) }}
+            .detail-row
+              span.label Status:
+              span.value(:class="bottle.inStock ? 'in-stock' : 'out-of-stock'") {{ bottle.inStock ? 'In Stock' : 'Out of Stock' }}
+            .detail-row(v-if="bottle.isFingers")
+              span.label Serving:
+              span.value Fingers 
+            .detail-row(v-if="bottle.tags && bottle.tags.length")
+              span.label Tags:
+              .tags-list
+                span.tag(v-for="tag in bottle.tags" :key="tag") {{ tag }}
       
       .drinks-section
-        h3 {{ bottle.isFingers ? 'Serving Options' : 'Drinks Using This Bottle' }}
+        h3 {{ bottle.isFingers ? 'Serving Options' : (searchingDrinks ? 'Searching Drinks...' : `Drinks Using ${drinksSearchTerm}`) }}
         
         // Show finger options if this is a finger bottle
         .drinks-list(v-if="bottle.isFingers")
@@ -122,12 +116,15 @@
   const loading = ref(true);
   const error = ref<string | null>(null);
   const drinksLoading = ref(false);
+
   const drinksUsingBottle = ref<Drink[]>([]);
 
-  // Computed property to sort drinks by availability
-  const sortedDrinksUsingBottle = computed(() => {
-    return sortDrinksByAvailability(drinksUsingBottle.value, isStarred);
-  });
+  // Computed: sorted drinks by availability and starred status
+  const sortedDrinksUsingBottle = computed(() => sortDrinksByAvailability(drinksUsingBottle.value, isStarred));
+
+  // Track the search term used for display
+  const drinksSearchTerm = ref("");
+  const searchingDrinks = computed(() => !drinksSearchTerm.value);
 
   // Helper to check if drink has all ingredients
   const drinkHasAllIngredients = (drink: Drink): boolean => {
@@ -184,31 +181,66 @@
     // If this is a finger bottle, do not load any other drinks
     if (bottle.value.isFingers) {
       drinksUsingBottle.value = [];
+      drinksSearchTerm.value = bottle.value.name || "";
       return;
     }
 
+    // Forbidden search terms (too generic)
+    const forbiddenTerms = ["liqueur", "staples"];
+
     try {
       drinksLoading.value = true;
-
-      // Load inventory and local drinks first
       await Promise.all([loadInventory(), loadLocalDrinks()]);
 
       // Get local drinks that use this bottle
       const localDrinks = getDrinksUsingBottle(bottle.value as Bottle);
 
-      // Fetch API drinks using the bottle name and tags
-      const searchTerms = [bottle.value.name, ...bottle.value.tags, ...(bottle.value.aka || [])];
+      // 1. Try searching by bottle name (if not forbidden)
+      let apiDrinks: Drink[] = [];
+      let searchSource = "name";
+      let searchTerm = bottle.value.name || "";
+      if (searchTerm && !forbiddenTerms.includes(searchTerm.toLowerCase())) {
+        apiDrinks = await fetchDrinksByIngredient(searchTerm);
+      }
 
-      // Fetch drinks from API for each search term
-      const apiDrinksPromises = searchTerms.slice(0, 3).map((term) => fetchDrinksByIngredient(term));
-      const apiDrinksResults = await Promise.all(apiDrinksPromises);
-      const apiDrinks = apiDrinksResults.flat();
+      // 2. If no results, try last tag (if present and not forbidden)
+      if (apiDrinks.length === 0 && bottle.value.tags && bottle.value.tags.length > 0) {
+        for (let i = 0; i < bottle.value.tags.length; i++) {
+          const tag = bottle.value.tags[i];
+          if (tag && !forbiddenTerms.includes(tag.toLowerCase())) {
+            const tagDrinks = await fetchDrinksByIngredient(tag);
+            if (tagDrinks.length > 0) {
+              apiDrinks = tagDrinks;
+              searchSource = "tag";
+              searchTerm = tag;
+              break;
+            }
+          }
+        }
+      }
+
+      // 3. If still no results, try category (if not forbidden)
+      if (apiDrinks.length === 0 && bottle.value.category && !forbiddenTerms.includes(bottle.value.category.toLowerCase())) {
+        apiDrinks = await fetchDrinksByIngredient(bottle.value.category);
+        searchSource = "category";
+        searchTerm = bottle.value.category;
+      }
+
+      drinksSearchTerm.value = searchTerm;
 
       // Combine and deduplicate drinks
       const allDrinks = [...localDrinks, ...apiDrinks];
       const uniqueDrinks = allDrinks.filter((drink, index, self) => index === self.findIndex((d) => d.id === drink.id));
 
-      drinksUsingBottle.value = uniqueDrinks;
+      // Filter: Only show drinks where at least one ingredient matches bottle name, aka, or search term
+      drinksUsingBottle.value = uniqueDrinks.filter((drink) => drink.ingredients.some((ing) => ingredientMatchesBottle(ing.name)));
+
+      // Show warning if category search was used
+      if (searchSource === "category" && apiDrinks.length > 0) {
+        error.value = "Results found by category. These may not be accurate.";
+      } else {
+        error.value = null;
+      }
     } catch (e) {
       console.error("Failed to load drinks:", e);
     } finally {
@@ -216,393 +248,21 @@
     }
   }
 
+  function ingredientMatchesBottle(ingredientName: string): boolean {
+    if (!bottle.value) return false;
+    const name = bottle.value.name?.toLowerCase() || "";
+    const aliases = (bottle.value.aka || []).map((a: string) => a.toLowerCase());
+    const searchTerm = drinksSearchTerm.value.toLowerCase();
+    const ing = ingredientName.toLowerCase();
+    return ing === name || aliases.includes(ing) || (!!searchTerm && ing === searchTerm);
+  }
+
   function bottleStateLabel(state: string) {
     const states = {
-      unopened: "🔒 Unopened",
-      opened: "🍾 Opened",
-      empty: "⚠️ Empty",
+      unopened: "Unopened",
+      opened: "Opened",
+      empty: "Empty",
     };
     return states[state as keyof typeof states] || state;
   }
-
-  async function toggleInStock() {
-    if (!bottle.value) return;
-
-    try {
-      const updatedData = {
-        ...bottle.value,
-        inStock: !bottle.value.inStock,
-      };
-
-      await $fetch(`/api/inventory/${bottle.value.id}`, {
-        method: "PUT",
-        body: updatedData,
-      });
-
-      bottle.value = updatedData;
-    } catch (e: any) {
-      error.value = "Failed to update bottle status";
-      console.error(e);
-    }
-  }
-
-  function toggleFingerStatus() {
-    if (!bottle.value) return;
-
-    const updatedData = {
-      ...bottle.value,
-      isFingers: !bottle.value.isFingers,
-    };
-
-    $fetch(`/api/inventory/${bottle.value.id}`, {
-      method: "PUT",
-      body: updatedData,
-    })
-      .then(() => {
-        bottle.value = updatedData;
-      })
-      .catch((e) => {
-        error.value = "Failed to update finger status";
-        console.error(e);
-      });
-  }
 </script>
-
-<style lang="scss" scoped>
-  @use "sass:color";
-  @use "@/assets/styles/variables" as *;
-
-  .bottle-detail-page {
-    min-height: 60vh;
-    padding-bottom: $spacing-xxl;
-  }
-
-  .header-section {
-    h2 {
-      color: $dark-bg;
-      margin: $spacing-md 0;
-    }
-  }
-
-  .back-btn {
-    display: inline-block;
-    padding: $spacing-xs $spacing-md;
-    background: white;
-    color: $text-dark;
-    text-decoration: none;
-    border-radius: $border-radius-sm;
-    border: 2px solid $border-color;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: $primary-color;
-      background: color.adjust($primary-color, $lightness: 45%);
-    }
-  }
-
-  .content-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: $spacing-xl;
-
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .bottle-info-section {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-lg;
-  }
-
-  .bottle-image {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    background: white;
-    border-radius: $border-radius-lg;
-    padding: $spacing-lg;
-    box-shadow: $shadow-md;
-
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-    }
-  }
-
-  .bottle-details-card {
-    background: white;
-    padding: $spacing-xl;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-md;
-
-    h3 {
-      color: $dark-bg;
-      margin-bottom: $spacing-lg;
-    }
-  }
-
-  .detail-row {
-    display: flex;
-    align-items: flex-start;
-    gap: $spacing-md;
-    padding: $spacing-sm 0;
-    border-bottom: 1px solid $border-color;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .label {
-      font-weight: 600;
-      color: $text-dark;
-      min-width: 100px;
-    }
-
-    .value {
-      flex: 1;
-      color: color.adjust($text-dark, $lightness: 10%);
-
-      &.in-stock {
-        color: green;
-        font-weight: 600;
-      }
-
-      &.out-of-stock {
-        color: red;
-        font-weight: 600;
-      }
-    }
-  }
-
-  .tags-list {
-    display: flex;
-    gap: $spacing-xs;
-    flex-wrap: wrap;
-
-    .tag {
-      padding: $spacing-xs $spacing-sm;
-      background: color.adjust($accent-color, $lightness: 45%);
-      color: color.adjust($accent-color, $lightness: -20%);
-      border-radius: $border-radius-sm;
-      font-size: 0.75rem;
-    }
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: $spacing-md;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    padding: $spacing-sm $spacing-xl;
-    border-radius: $border-radius-md;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-  }
-
-  .btn-edit {
-    background: $primary-color;
-    color: white;
-
-    &:hover {
-      background: color.adjust($primary-color, $lightness: -10%);
-    }
-  }
-
-  .btn-mark-empty {
-    background: color.adjust(orange, $lightness: 30%);
-    color: color.adjust(orange, $lightness: -30%);
-
-    &:hover {
-      background: orange;
-      color: white;
-    }
-  }
-
-  .btn-mark-in-stock {
-    background: color.adjust(green, $lightness: 40%);
-    color: color.adjust(green, $lightness: -30%);
-
-    &:hover {
-      background: green;
-      color: white;
-    }
-  }
-
-  .btn-toggle-finger {
-    background: color.adjust($accent-color, $lightness: 40%);
-    color: color.adjust($accent-color, $lightness: -30%);
-
-    &:hover {
-      background: $accent-color;
-      color: white;
-    }
-
-    &.is-finger {
-      background: $accent-color;
-      color: white;
-
-      &:hover {
-        background: color.adjust($accent-color, $lightness: -10%);
-      }
-    }
-  }
-
-  .drinks-section {
-    background: white;
-    padding: $spacing-xl;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-md;
-    align-self: start;
-
-    h3 {
-      color: $dark-bg;
-      margin-bottom: $spacing-lg;
-    }
-
-    .coming-soon {
-      color: color.adjust($text-dark, $lightness: 30%);
-      font-style: italic;
-    }
-
-    .no-drinks {
-      color: color.adjust($text-dark, $lightness: 30%);
-      font-style: italic;
-    }
-
-    .drinks-list {
-      display: flex;
-      flex-direction: column;
-      gap: $spacing-sm;
-    }
-
-    .drink-list-item {
-      display: flex;
-      align-items: center;
-      gap: $spacing-md;
-      padding: $spacing-sm $spacing-md;
-      border: 1px solid $border-color;
-      border-radius: $border-radius-sm;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: $light-bg;
-        border-color: $primary-color;
-      }
-
-      &.fully-available {
-        background: color.adjust(green, $lightness: 50%);
-        border-color: color.adjust(green, $lightness: 35%);
-
-        &:hover {
-          background: color.adjust(green, $lightness: 47%);
-          border-color: green;
-        }
-        .drink-view-btn {
-          background: color.adjust(green, $lightness: 6%);
-          &:hover,
-          &:focus-visible {
-            background: color.adjust(green, $lightness: -16%);
-          }
-        }
-      }
-
-      &.has-missing-ingredients {
-        background: color.adjust(orange, $lightness: 48%);
-        border-color: color.adjust(orange, $lightness: 30%);
-
-        &:hover {
-          background: color.adjust(orange, $lightness: 45%);
-          border-color: orange;
-        }
-      }
-    }
-
-    .drink-thumbnail {
-      width: 50px;
-      height: 50px;
-      flex-shrink: 0;
-      border-radius: $border-radius-sm;
-      overflow: hidden;
-      background: $light-bg;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .no-image {
-        font-size: 1.5rem;
-      }
-    }
-
-    .drink-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: $spacing-xs;
-    }
-
-    .drink-name {
-      font-weight: 600;
-      color: $text-dark;
-    }
-
-    .drink-availability {
-      display: flex;
-      align-items: center;
-      gap: $spacing-xs;
-      font-size: 0.75rem;
-
-      .availability-label {
-        font-weight: 500;
-        color: color.adjust(orange, $lightness: -20%);
-
-        &.fully-available {
-          color: color.adjust(green, $lightness: -20%);
-        }
-      }
-    }
-
-    .drink-view-btn {
-      padding: $spacing-xs $spacing-md;
-      background: $primary-color;
-      color: white;
-      text-decoration: none;
-      border-radius: $border-radius-sm;
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: color.adjust($primary-color, $lightness: -10%);
-      }
-    }
-  }
-
-  .loading,
-  .error {
-    padding: $spacing-xl;
-    text-align: center;
-    font-size: 1.125rem;
-  }
-
-  .error {
-    color: red;
-  }
-</style>

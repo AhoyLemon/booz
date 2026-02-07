@@ -35,6 +35,16 @@ section.bottles {
     }
   }
 }
+a.bottle-card {
+  .card-name {
+    transition: color 0.3s linear;
+  }
+  &:hover {
+    .card-name {
+      color: $secondary-color;
+    }
+  }
+}
 
 @media (max-width: 1000px) {
   .bottle-grid {
