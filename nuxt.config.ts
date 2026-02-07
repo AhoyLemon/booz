@@ -23,7 +23,9 @@ export default defineNuxtConfig({
       },
     ],
   ],
-
+  site: {
+    url: process.env.NODE_ENV === "production" ? "https://ahoylemon.github.io/lemonbar" : "http://127.0.0.1:3000",
+  },
   sitemap: {
     urls: () => {
       const slugs = new Set(Object.values(TENANT_CONFIG).map((t) => t.slug));
