@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hirelemon.github.io/lemonbar/sitemap.xml
+API: https://hirelemon.com/bar
+By: https://ahoylemon.xyz
+Repository: https://github.com/ahoylemon/lemonbar

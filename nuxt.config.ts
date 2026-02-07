@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { TENANT_CONFIG } from "./utils/tenants";
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
@@ -11,6 +13,34 @@ export default defineNuxtConfig({
   // Enable experimental view transitions
   experimental: {
     viewTransition: true,
+  },
+
+  modules: [
+    [
+      "@nuxtjs/sitemap",
+      {
+        baseURL: process.env.NODE_ENV === "production" ? "https://hirelemon.github.io/lemonbar" : "http://127.0.0.1:3000",
+      },
+    ],
+  ],
+
+  sitemap: {
+    urls: () => {
+      const slugs = new Set(Object.values(TENANT_CONFIG).map((t) => t.slug));
+      const urls = [];
+      for (const slug of slugs) {
+        urls.push(`/${slug}`);
+        urls.push(`/${slug}/drinks`);
+        urls.push(`/${slug}/bottles`);
+        urls.push(`/${slug}/essentials`);
+        urls.push(`/${slug}/beer-wine`);
+        urls.push(`/${slug}/fingers`);
+        urls.push(`/${slug}/available`);
+      }
+      // Add lastModified as current date (build time)
+      const lastModified = new Date().toISOString();
+      return urls.map((loc) => ({ loc, lastModified }));
+    },
   },
 
   vite: {

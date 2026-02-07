@@ -1,0 +1,6 @@
+/* TEAM */
+by: Lemon
+Repository: https://github.com/ahoylemon/lemonbar
+Website: https://ahoylemon.xyz
+
+/* THANKS */
