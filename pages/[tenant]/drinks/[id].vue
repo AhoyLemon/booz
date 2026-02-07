@@ -63,19 +63,23 @@
       fingerBottle.value = inventory.value.find((b) => b.id === bottleId) || null;
       dataReady.value = true;
     } else if (drinkId.value.startsWith("cocktaildb-")) {
-      // Check if this is a CocktailDB drink that needs to be fetched
+      // This is a CocktailDB drink
+      // Note: Direct links to CocktailDB drinks may not work on static hosting
+      // because the pages aren't pre-generated during build
       const cocktailDbId = drinkId.value.replace("cocktaildb-", "");
 
-      // Check if we already have this drink
-      const existingDrink = getAllDrinks.value.find((r) => r.id === drinkId.value);
+      // Try to fetch the specific drink from CocktailDB
+      isLoading.value = true;
+      const fetchedDrink = await fetchCocktailDBDrinkById(cocktailDbId);
+      isLoading.value = false;
 
-      if (!existingDrink) {
-        // Fetch the specific drink from CocktailDB
-        isLoading.value = true;
-        await fetchCocktailDBDrinkById(cocktailDbId);
-        isLoading.value = false;
+      if (!fetchedDrink) {
+        // Drink not found in CocktailDB - this will show the "Drink Not Found" message
+        dataReady.value = true;
+      } else {
+        // Drink was fetched successfully
+        dataReady.value = true;
       }
-      dataReady.value = true;
     } else {
       // Local or common drink, not finger
       dataReady.value = true;
@@ -84,6 +88,11 @@
 
   // Find the drink by ID
   const drink = computed(() => {
+    // For CocktailDB drinks, check apiDrinks first since they might not be in getAllDrinks yet
+    if (drinkId.value.startsWith("cocktaildb-")) {
+      const { apiDrinks } = useCocktails(tenant.value);
+      return apiDrinks.value.find((r) => r.id === drinkId.value) || getAllDrinks.value.find((r) => r.id === drinkId.value);
+    }
     return getAllDrinks.value.find((r) => r.id === drinkId.value);
   });
 

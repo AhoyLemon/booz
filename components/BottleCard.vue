@@ -1,7 +1,8 @@
 <template lang="pug">
 NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="bottleLink")
-  figure.card-image(v-if="bottle.image")
-    img(:src="bottle.image" :alt="bottle.name")
+  figure.card-image(:class="{ 'placeholder': !bottle.image }")
+    img(v-if="bottle.image" :src="bottle.image" :alt="bottle.name")
+    span.placeholder-text(v-else) No Image
     span.category {{ bottle.category }}
   .card-content
     .card-header

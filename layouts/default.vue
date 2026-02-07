@@ -20,6 +20,9 @@
     .container
       p by 
         a(href="https://ahoylemon.xyz") Lemon
+        | . GitHub repo is 
+        a(href="https://github.com/ahoylemon/lemonbar") here
+        | .
 </template>
 
 <script setup lang="ts">

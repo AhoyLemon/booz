@@ -96,7 +96,7 @@
             p {{ step }}
 
 // Skeleton for Drink (while loading)
-.drink-detail-page.drink-skeleton(v-else-if="(isLoading)")
+.drink-detail-page.drink-skeleton(v-else-if="isLoading || (drinkId.startsWith('cocktaildb-') && !drink && !dataReady)")
   .container
     .back-navigation
       NuxtLink.btn.btn-back(:to="`/${tenant}/drinks`") ← Back to Drinks
@@ -140,6 +140,12 @@
 // ERROR: Drink not found
 .not-found(v-else-if="dataReady && !isLoading && !drink && !isFingerDrink")
   .container
-    h2 Drink Not Found
-    p The drink you're looking for doesn't exist.
+    h2 {{ drinkId.startsWith('cocktaildb-') ? 'Cocktail Not Available' : 'Drink Not Found' }}
+    p(v-if="drinkId.startsWith('cocktaildb-')") 
+      | Direct links to CocktailDB drinks don't work on static hosting. 
+      br
+      | Please search for this cocktail on the 
+      NuxtLink(:to="`/${tenant}/drinks`") drinks page
+      |  instead.
+    p(v-else) The drink you're looking for doesn't exist.
     NuxtLink.btn.btn-primary(:to="`/${tenant}/drinks`") Back to Drinks
