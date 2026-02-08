@@ -5,11 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { getDefaultTenantConfig } from "~/utils/tenants";
-
-// Middleware will handle the redirect, but just in case
-const defaultConfig = getDefaultTenantConfig();
-onMounted(() => {
-  navigateTo(`/${defaultConfig.slug}`);
-});
+// OG is set in useHead above
+// No redirect here - let users navigate to /foo manually or via links
 </script>

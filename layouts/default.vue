@@ -22,6 +22,12 @@
 
   // Extract tenant from route
   const tenant = computed(() => {
+    // First try route params (for tenant pages)
+    const paramTenant = route.params.tenant as string;
+    if (paramTenant) {
+      return paramTenant;
+    }
+    // Fallback to path segments (for root page)
     const pathSegments = route.path.split("/").filter(Boolean);
     // Fallback to default tenant slug as safety measure (middleware should handle redirects)
     return pathSegments[0] || getDefaultTenantConfig().slug;

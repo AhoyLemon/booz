@@ -33,7 +33,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     drinks: "drinks",
     essentials: "essentials",
     beerWine: "beerWine",
-    description: "Willkommen am Lemonhaus - Discover our curated selection of spirits, craft cocktails, beer, and wine. See what's available today!",
+    description: "See the drinks you can order if you go to lemon's bar.",
     ogImage: "/opengraph-lemon.png",
   },
   victor: {

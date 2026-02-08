@@ -33,12 +33,10 @@ export default defineNuxtRouteMiddleware((to) => {
   }
 
   // Check if this is a root path that needs default tenant
-  if (!possibleTenant || path === '/') {
-    // Redirect to default tenant
+  if (!possibleTenant && path !== '/') {
+    // Redirect paths like /drinks to /foo/drinks, but allow / to render
     const defaultConfig = getDefaultTenantConfig();
-    const newPath = path === '/' || path === '' 
-      ? `/${defaultConfig.slug}` 
-      : `/${defaultConfig.slug}${path}`;
+    const newPath = `/${defaultConfig.slug}${path}`;
     
     return navigateTo(newPath, { redirectCode: 302 });
   }

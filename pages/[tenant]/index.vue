@@ -34,25 +34,11 @@
 <script setup lang="ts">
   import { TENANT_CONFIG } from "~/utils/tenants";
 
-  // For component logic, use route only on client to avoid prerendering issues
-  const tenant = ref("foo");
-  if (process.client) {
-    const route = useRoute();
-    tenant.value = route.params.tenant as string;
-  }
+  const route = useRoute();
+  const tenant = computed(() => route.params.tenant as string);
 
   // Set page meta dynamically based on tenant
   const tenantConfig = computed(() => TENANT_CONFIG[tenant.value] || TENANT_CONFIG.default);
-  useHead({
-    title: computed(() => `${tenantConfig.value.barName} - Bar Inventory`),
-    meta: computed(() => [
-      { name: "description", content: tenantConfig.value.description },
-      { property: "og:title", content: `${tenantConfig.value.barName} - Bar Inventory` },
-      { property: "og:description", content: tenantConfig.value.description },
-      { property: "og:image", content: tenantConfig.value.ogImage || "/opengraph-generic.png" },
-      { name: "twitter:image", content: tenantConfig.value.ogImage || "/opengraph-generic.png" },
-    ]),
-  });
 
   const { loadInventory, fetchCocktailDBDrinks, inventory, getAvailableDrinks, localDrinks } = useCocktails(tenant.value);
   const { loadBeerWine, getInStockBeerWine } = useBeerWine(tenant.value);
