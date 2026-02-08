@@ -58,8 +58,18 @@
 
     switch (pageType) {
       case "home":
-        title = `${tenantConfig.value.barName} - Bar Inventory`;
-        description = tenantConfig.value.description || "Explore our bar inventory - spirits, cocktails, beer, and wine.";
+        if (path === '/') {
+          title = "Bar Inventory Management";
+          description = "A multi-tenant bar inventory management system for managing cocktails, spirits, beer, and wine across multiple locations.";
+        } else {
+          title = `${tenantConfig.value.barName} - Bar Inventory`;
+          description = tenantConfig.value.description || "Explore our bar inventory - spirits, cocktails, beer, and wine.";
+        }
+        break;
+
+      case "about":
+        title = "About - Bar Inventory Management";
+        description = "Learn more about our multi-tenant bar inventory management system for bars and restaurants.";
         break;
 
       case "bottles":
@@ -119,6 +129,13 @@
     return { title, description };
   });
 
+  // Determine og:image based on page
+  const ogImage = computed(() => {
+    if (route.path === '/') return "/opengraph-home.png";
+    if (route.path === '/about') return "/opengraph-about.png";
+    return tenantConfig.value.ogImage || "/opengraph-generic.png";
+  });
+
   // Set tenant-specific head tags
   useHead({
     title: pageMeta.value.title,
@@ -127,13 +144,13 @@
       { name: "description", content: pageMeta.value.description },
       { property: "og:title", content: pageMeta.value.title },
       { property: "og:description", content: pageMeta.value.description },
-      { property: "og:image", content: `https://booz.bar${tenantConfig.value.ogImage || "/opengraph-generic.png"}` },
+      { property: "og:image", content: `https://booz.bar${ogImage.value}` },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `https://booz.bar${route.path}` },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: pageMeta.value.title },
       { name: "twitter:description", content: pageMeta.value.description },
-      { name: "twitter:image", content: `https://booz.bar${tenantConfig.value.ogImage || "/opengraph-generic.png"}` },
+      { name: "twitter:image", content: `https://booz.bar${ogImage.value}` },
     ],
     link: [
       { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png" },
