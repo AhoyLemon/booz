@@ -1,0 +1,115 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+.about-page {
+  p {
+    margin-bottom: 1em;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    // gap: 2rem;
+    padding-top: 1rem;
+    section {
+      max-width: 72ch;
+      // margin-left: auto;
+      // margin-right: auto;
+    }
+    h2 {
+      color: $secondary-color;
+    }
+  }
+  .explanation {
+    display: grid;
+    gap: $spacing-lg;
+  }
+
+  .features {
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    li {
+      background-color: white;
+      padding: 1em;
+      display: grid;
+      font-weight: 600;
+      align-items: center;
+      grid-template-columns: 2em 1fr;
+      gap: 1em;
+      &:before {
+        content: "🍸";
+        font-size: 1.5em;
+      }
+    }
+  }
+
+  .demo-link-wrapper {
+    display: grid;
+    gap: $spacing-lg;
+    padding-top: $spacing-lg;
+  }
+  .demo-link {
+    display: blo;
+    background-color: white;
+    border-radius: $border-radius-lg;
+    padding: $spacing-md;
+    box-shadow: $shadow-md;
+    transition: all 0.3s ease;
+    p {
+      color: $text-dark;
+    }
+    h3 {
+      transition: color 0.15s linear;
+    }
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-0.5rem);
+      h3 {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .next-steps {
+    background-color: $dark-bg;
+    padding: 1em;
+    color: $text-light;
+    a {
+      color: $primary-color;
+    }
+  }
+  .contact-methods {
+    display: grid;
+    grid-template-columns: 8ch 1fr;
+    row-gap: 0.5em;
+    dd {
+      font-weight: 600;
+    }
+    a:hover,
+    a:focus-visible {
+      text-decoration: underline;
+    }
+  }
+  padding-bottom: 2em;
+}
+
+.about-page {
+  .sections-grid {
+    display: grid;
+    grid-template-columns: 72ch 1fr 40ch;
+    row-gap: $spacing-xl;
+    // .explanation {
+    //   background-color: red;
+    // }
+    // .demos {
+    //   background-color: blue;
+    // }
+  }
+  .next-steps {
+    grid-row: 2;
+    grid-column: 3;
+  }
+}
