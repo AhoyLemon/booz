@@ -2,26 +2,41 @@
   header.app-header
     .container
       .site-name 
-        NuxtLink(:to="tenantPath('/')") {{ barName }}
+        NuxtLink(:to="isNonTenantPage ? '/' : tenantPath('/')") {{ isNonTenantPage ? 'BOOZ' : barName }}
     .nav-holder
       nav
-        NuxtLink.nav-link(:to="tenantPath('/')" :class="{ active: isActive('/') }") Home
-        NuxtLink.nav-link(:to="tenantPath('/bottles')" :class="{ active: isActive('/bottles') }") Bottles
-        NuxtLink.nav-link(:to="tenantPath('/drinks')" :class="{ active: isActive('/drinks') }") Drinks
-        NuxtLink.nav-link(:to="tenantPath('/essentials')" :class="{ active: isActive('/essentials') }") Essentials
-        NuxtLink.nav-link(:to="tenantPath('/beer-wine')" :class="{ active: isActive('/beer-wine') }") Beer & Wine
-        NuxtLink.nav-link(:to="tenantPath('/fingers')" :class="{ active: isActive('/fingers') }") Fingers
-        NuxtLink.nav-link(:to="tenantPath('/available')" :class="{ active: isActive('/available') }") Available
-        NuxtLink.nav-link(:to="tenantPath('/qr')" :class="{ active: isActive('/qr') }") QR Code
+        template(v-if="isNonTenantPage")
+          NuxtLink.nav-link(:to="'/'" :class="{ active: route.path === '/' }") Home
+          NuxtLink.nav-link(:to="'/about'" :class="{ active: route.path === '/about' }") About
+          NuxtLink.nav-link(:to="'/foo'") Sample Data
+        template(v-else)
+          NuxtLink.nav-link(:to="tenantPath('/')" :class="{ active: isActive('/') }") Home
+          NuxtLink.nav-link(:to="tenantPath('/bottles')" :class="{ active: isActive('/bottles') }") Bottles
+          NuxtLink.nav-link(:to="tenantPath('/drinks')" :class="{ active: isActive('/drinks') }") Drinks
+          NuxtLink.nav-link(:to="tenantPath('/essentials')" :class="{ active: isActive('/essentials') }") Essentials
+          NuxtLink.nav-link(:to="tenantPath('/beer-wine')" :class="{ active: isActive('/beer-wine') }") Beer & Wine
+          NuxtLink.nav-link(:to="tenantPath('/fingers')" :class="{ active: isActive('/fingers') }") Fingers
+          NuxtLink.nav-link(:to="tenantPath('/available')" :class="{ active: isActive('/available') }") Available
+          NuxtLink.nav-link(:to="tenantPath('/qr')" :class="{ active: isActive('/qr') }") QR Code
 </template>
 
 <script setup lang="ts">
-  import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
+  import { getTenantConfig, getDefaultTenantConfig, isValidTenant } from "~/utils/tenants";
 
   const route = useRoute();
 
-  // Extract tenant from route
+  // Check if current page is a non-tenant page
+  const isNonTenantPage = computed(() => {
+    const path = route.path;
+    const nonTenantRoutes = ["/", "/about"];
+    return nonTenantRoutes.includes(path);
+  });
+
+  // Extract tenant from route (only for tenant pages)
   const tenant = computed(() => {
+    if (isNonTenantPage.value) {
+      return getDefaultTenantConfig().slug; // Default for non-tenant pages
+    }
     const pathSegments = route.path.split("/").filter(Boolean);
     // Fallback to default tenant slug as safety measure (middleware should handle redirects)
     return pathSegments[0] || getDefaultTenantConfig().slug;

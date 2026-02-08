@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { baseURL } from "process";
 import { TENANT_CONFIG } from "./utils/tenants";
+
+const baseURL = process.env.NODE_ENV === "production" ? "/" : "/";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -101,9 +102,13 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
+        // Home
         "/",
-        "/foo",
 
+        // Non-tenant pages
+        "/about",
+
+        // Lemon's pages
         "/lemon",
         "/lemon/available",
         "/lemon/bottles",
@@ -111,12 +116,16 @@ export default defineNuxtConfig({
         "/lemon/fingers",
         "/lemon/qr",
 
+        // Victor's pages
         "/victor",
         "/victor/available",
         "/victor/bottles",
         "/victor/drinks",
         "/victor/fingers",
         "/victor/qr",
+
+        // Sample bar
+        "/foo",
       ],
     },
   },

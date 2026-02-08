@@ -2,7 +2,7 @@
 .site-layout
   Header
   main
-    DummyDataNotice(v-if="isDefaultTenant")
+    DummyDataNotice(v-if="isDefaultTenant && route.path !== '/' && route.path !== '/about'")
     slot
   footer.app-footer
     .container
@@ -122,6 +122,7 @@
   // Set tenant-specific head tags
   useHead({
     title: pageMeta.value.title,
+    base: { href: "/" },
     meta: [
       { name: "description", content: pageMeta.value.description },
       { property: "og:title", content: pageMeta.value.title },

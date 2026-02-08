@@ -1,15 +1,18 @@
-# 🍸 The Headless Bar
+[![kinda.fun](/_NFW/repo-opengraph.png)](https://kinda.fun)
+
+[![Last Deploy](https://img.shields.io/github/last-commit/AhoyLemon/booz/main?label=Last%20Deploy&style=for-the-badge&color=green)](https://github.com/AhoyLemon/booz/actions)
+[![Live Site](https://img.shields.io/badge/Live%20Site-booz.bar-blue?style=for-the-badge)](https://booz.bar)
 
 A multi-tenant bar inventory and cocktail app built with Nuxt 3, supporting multiple bars with tenant-specific data from Cockpit CMS.
 
 ## Features
 
-- **Multi-Tenant Support**: Host multiple bars with separate inventories and drinks using path-based routing (e.g., `/lemon`, `/victor`)
 - **Inventory Management**: Track bottles with size, state, and images per tenant
-- **Recipe Discovery**: Find cocktails from TheCocktailDB API
+- **Recipe Discovery**: Find cocktails from your custom cocktails or The Cocktail DB
 - **Smart Matching**: See which drinks you can make with your current inventory
-- **Non-Alcoholic Support**: Includes mocktails, beer, and wine recipes
+- **Non-Alcoholic Support**: Includes mocktails, beer, and wine
 - **Live Data**: Fetches fresh data directly from Cockpit CMS API
+- **Multi-Tenant Support**: Host multiple bars with separate inventories and drinks using path-based routing
 
 ## Made with
 
@@ -34,23 +37,19 @@ npm install
 
 ### Multi-Tenant Configuration
 
-This app supports multiple tenants (bars), each with their own inventory and drinks. Tenants are configured in `utils/tenants.ts`.
+This app supports multiple tenants (bars), each with their own inventory and drinks. Tenants are configured in [`utils/tenants.ts`](./utils/tenants.ts), with one tenant set as the default.
 
-#### Default Tenants
-
-- **lemon** - `/lemon` - "Wilkommen am Lemonhaus"
-- **victor** - `/victor` - "Victor's Place"
-- **foo** - `/foo` - "Sample Bar" (default tenant with demo data)
-
-When you visit the root URL (`/`) or any path without a tenant (e.g., `/drinks`), you'll be automatically redirected to the default tenant (`/foo`).
+When you visit any tenant path without a tenant (e.g., `/drinks`), you'll be automatically redirected to the default tenant (`/foo`).
 
 #### Adding a New Tenant
 
-1. **Add Cockpit CMS Collections**: Create tenant-specific collections in your Cockpit CMS:
-   - `bottles{TenantName}` (e.g., `bottlesVictor`)
-   - `drinks{TenantName}` (e.g., `drinksVictor`)
-   - `essentials{TenantName}` (e.g., `essentialsVictor`)
-   - `beerWine{TenantName}` (e.g., `beerWineVictor`)
+1. **Add Cockpit CMS Models**: Create tenant-specific collections in your Cockpit CMS:
+   | dataName | Type | Description | example |
+   |----------|------|-------------|---------|
+   | bottles{TenantName} | Collection | Bottle inventory for the tenant | bottlesMyBar |
+   | drinks{TenantName} | Collection | Custom cocktails for the tenant | drinksMyBar |
+   | essentials{TenantName} | Singleton | Essentials ingredients for the tenant | essentialsMyBar |
+   | beerWine{TenantName} | Singleton | Beer and wine data for the tenant | beerWineMyBar |
 
 2. **Update `utils/tenants.ts`**: Add your tenant configuration:
 
@@ -59,7 +58,7 @@ When you visit the root URL (`/`) or any path without a tenant (e.g., `/drinks`)
      // ... existing tenants
      mybar: {
        slug: "mybar",
-       barName: "My Awesome Bar",
+       barName: "My Awesome Bar", // This will be displayed in the UI
        bottles: "bottlesMyBar",
        drinks: "drinksMyBar",
        essentials: "essentialsMyBar",
@@ -70,14 +69,6 @@ When you visit the root URL (`/`) or any path without a tenant (e.g., `/drinks`)
 
 3. **Access Your Tenant**: Navigate to `/mybar` to see your bar's data.
 
-### Cockpit CMS Setup
-
-All bar data is fetched from Cockpit CMS. You'll need:
-
-1. A Cockpit CMS instance (e.g., `https://hirelemon.com/bar`)
-2. API access configured in `utils/cockpitConfig.ts`
-3. Collections/singletons for each tenant as defined in `utils/tenants.ts`
-
 **Note**: All tenants share a common `drinksCommon` collection for shared cocktail recipes.
 
 ### Development
@@ -86,7 +77,7 @@ All bar data is fetched from Cockpit CMS. You'll need:
 npm run dev
 ```
 
-Visit `http://localhost:3000` (redirects to `/foo`) or go directly to a tenant like `http://localhost:3000/lemon`.
+Visit `http://localhost:3000`.
 
 ### Build for Production
 
@@ -130,10 +121,10 @@ This project is configured to automatically deploy to GitHub Pages when you push
 
 Once deployed, your tenants will be accessible at:
 
-- `https://booz.bar/` (redirects to `/foo`)
-- `https://booz.bar/lemon` - Lemon's bar
-- `https://booz.bar/victor` - Victor's bar
-- `https://booz.bar/foo` - Demo bar
+- `https://booz.bar/` (Home Page)
+- `https://booz.bar/about` - About Page
+- `https://booz.bar/myBar` - Home page for a tenant named "myBar"
+- `https://booz.bar/myBar/available` - Available drinks for "myBar" (follow similar structure for drinks, bottles, essentials, et al)
 
 #### How It Works
 
@@ -221,7 +212,7 @@ Each tenant has its own set of collections in Cockpit CMS:
 
 ### Tenant Configuration
 
-Tenants are defined in `utils/tenants.ts`:
+Tenants are defined in [utils/tenants.ts](utils/tenants.ts):
 
 ```typescript
 export interface TenantConfig {

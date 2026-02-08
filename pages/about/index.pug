@@ -1,0 +1,60 @@
+.about-page
+  .container
+    hgroup
+      h1 Welcome to BOOZ
+      p Inventory management and cocktail creation for home bars and cocktail enthusiasts.
+
+
+    .sections-grid
+      .grid-item.explanation
+
+        section.explanation-section
+          h2 Why BOOZ?
+          p I've tried other bar inventory apps, but they were either too complex for my needs or lacked the features I wanted. I built BOOZ to be simple, intuitive, and tailored to the needs of home bartenders.
+
+        section.features
+          h2 Features
+          ul
+            li Manage all the bottles in your bar with detailed information
+            li Keep track of the beer and wine in your fridge
+            li Manage essentials like bitters, syrups, and garnishes
+            li Suggest cocktails based on what you have available
+            li Easily create shopping lists to restock your bar
+            li Create and share your own custom cocktails.
+            li Let your guessts know what's available right now with the "Available Now" feature and QR code menu.
+      
+      .grid-item.demos
+        section.demo-links
+          h2 Try The Demo
+
+          p Want to see BOOZ in action? Check out the demo bars below to get a feel for how it works and what it can do for your home bar.
+
+          .demo-link-wrapper
+            NuxtLink.demo-link(:to="'/foo'") 
+              h3 Sample Bar
+              p A modest collection of bottles, a few beers and wines, and some basic essentials. It's a great starting point to see how BOOZ works and to get a feel for the features.
+
+            NuxtLink.demo-link(:to="'/lemon'")
+              h3 Lemonhaus
+              p We're not afraid to show what this looks like in production. Lemon keeps his bar inventory updated with BOOZ, and you can see how he uses it to manage his home bar.
+
+      .grid-item.next-steps
+        section.contact
+          h2 Open Your Own Bar
+          p Ready to manage your bar's inventory and cocktails? Contact Lemon to set up your own BOOZ account. It's probably cheaper and easier than you're expecting.
+          dl.contact-methods
+            dt Email
+            dd 
+              a(href="mailto:lemon@ahoylemon.xyz") lemon@ahoylemon.xyz
+            dt Website
+            dd 
+              a(href="https://ahoylemon.xyz" target="_blank") ahoylemon.xyz
+            dt GitHub
+            dd 
+              a(href="https://github.com/ahoylemon" target="_blank") @ahoylemon
+            dt BlueSky
+            dd 
+              a(href="https://bsky.app/profile/ahoylemon.xyz" target="_blank") @ahoylemon.xyz
+            dt Sponsor
+            dd 
+              a(href="https://github.com/sponsors/AhoyLemon" target="_blank") github.com/sponsors/AhoyLemon
