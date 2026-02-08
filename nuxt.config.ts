@@ -20,12 +20,12 @@ export default defineNuxtConfig({
     [
       "@nuxtjs/sitemap",
       {
-        baseURL: process.env.NODE_ENV === "production" ? "https://hirelemon.github.io/lemonbar" : "http://127.0.0.1:3000",
+        baseURL: process.env.NODE_ENV === "production" ? "https://booz.bar" : "http://127.0.0.1:3000",
       },
     ],
   ],
   site: {
-    url: process.env.NODE_ENV === "production" ? "https://ahoylemon.github.io/lemonbar" : "http://127.0.0.1:3000",
+    url: process.env.NODE_ENV === "production" ? "https://booz.bar" : "http://127.0.0.1:3000",
   },
   sitemap: {
     urls: () => {
@@ -58,7 +58,7 @@ export default defineNuxtConfig({
 
   // Build configuration for GitHub Pages
   app: {
-    baseURL: process.env.NODE_ENV === "production" ? "/lemonbar/" : "/",
+    baseURL: process.env.NODE_ENV === "production" ? "/" : "/",
     buildAssetsDir: "assets",
     head: {
       title: "Lemonbar - Bar Inventory Management",
