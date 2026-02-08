@@ -3,11 +3,11 @@
 <script setup lang="ts">
   // Set page meta
   useHead({
-    title: "BOOZ: Your Favorite Bar Management System",
+    title: "About BOOZ",
     meta: [
       {
         name: "description",
-        content: "Learn about BOOZ, the multi-tenant bar inventory and cocktail management platform for professional bartenders and cocktail enthusiasts.",
+        content: "Learn how to use BOOZ, and check out a couple demo bars.",
       },
     ],
   });

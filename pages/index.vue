@@ -3,7 +3,7 @@
   .container
     .hero-section
       h1 BOOZ
-      p.lead Some sort of really clever tagline about BOOZ that makes you want to explore the demo bar and learn more about the project.
+      p.lead Your new favorite way to manage your home bar.
       .cta-section
         NuxtLink.cta-button.primary(to="/about") Learn More About BOOZ
         NuxtLink.cta-button.secondary(to="/foo") Explore Demo Bar
@@ -12,11 +12,11 @@
 <script setup lang="ts">
   // Set page meta
   useHead({
-    title: "BOOZ - Bar Management System",
+    title: "BOOZ",
     meta: [
       {
         name: "description",
-        content: "BOOZ is a multi-tenant bar inventory and cocktail management platform for professional bartenders and cocktail enthusiasts.",
+        content: "Your new favorite way to manage your home bar.",
       },
     ],
   });
