@@ -4,4 +4,4 @@ Allow: /
 Sitemap: https://booz.bar/sitemap.xml
 API: https://hirelemon.com/bar
 By: https://ahoylemon.xyz
-Repository: https://github.com/ahoylemon/lemonbar
+Repository: https://github.com/ahoylemon/booz

@@ -61,21 +61,21 @@ export default defineNuxtConfig({
     baseURL: process.env.NODE_ENV === "production" ? "/" : "/",
     buildAssetsDir: "assets",
     head: {
-      title: "Lemonbar - Bar Inventory Management",
+      title: "BOOZ - Bar Inventory Management",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
         { name: "theme-color", content: "#264653" },
         // OpenGraph
-        { property: "og:title", content: "Lemonbar - Bar Inventory Management" },
+        { property: "og:title", content: "BOOZ - Bar Inventory Management" },
         { property: "og:description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
         { property: "og:image", content: `${baseURL}/opengraph-generic.png` },
         { property: "og:type", content: "website" },
         { property: "og:url", content: `${baseURL}` },
         // Twitter Card
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "Lemonbar - Bar Inventory Management" },
+        { name: "twitter:title", content: "BOOZ - Bar Inventory Management" },
         { name: "twitter:description", content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations." },
         { name: "twitter:image", content: `${baseURL}/opengraph-generic.png` },
       ],

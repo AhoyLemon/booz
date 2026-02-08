@@ -8,7 +8,7 @@ After merging this PR, follow these steps to enable GitHub Pages deployment:
 
 The deployment requires Cockpit CMS API credentials to fetch live data:
 
-1. Go to your repository: `https://github.com/AhoyLemon/lemonbar`
+1. Go to your repository: `https://github.com/AhoyLemon/booz`
 2. Click on **Settings** (top navigation)
 3. In the left sidebar, click **Secrets and variables** → **Actions**
 4. Click **New repository secret**
@@ -22,7 +22,7 @@ The deployment requires Cockpit CMS API credentials to fetch live data:
 
 ### 2. Enable GitHub Pages
 
-1. Go to your repository: `https://github.com/AhoyLemon/lemonbar`
+1. Go to your repository: `https://github.com/AhoyLemon/booz`
 2. Click on **Settings** (top navigation)
 3. In the left sidebar, click **Pages** (under "Code and automation")
 4. Under "Build and deployment":
@@ -32,6 +32,7 @@ The deployment requires Cockpit CMS API credentials to fetch live data:
 ### 3. Trigger the First Deployment
 
 The workflow will automatically run when you:
+
 - Push to the `main` branch
 - Manually trigger it from the Actions tab
 
@@ -49,7 +50,7 @@ Once the workflow completes (usually 2-5 minutes):
 
 1. Go to the **Actions** tab to monitor progress
 2. Once complete, your site will be live at:
-   - **URL**: `https://ahoylemon.github.io/lemonbar/`
+   - **URL**: `https://ahoylemon.github.io/booz/`
 3. You can also find the URL in:
    - Repository **Settings** → **Pages** section
    - The workflow run summary under "github-pages" environment
@@ -81,7 +82,7 @@ The deployment workflow:
 
 ### 404 Errors on Deployed Site
 
-- Verify the `baseURL` in `nuxt.config.ts` matches `/lemonbar/`
+- Verify the `baseURL` in `nuxt.config.ts` matches `/`
 - If you renamed the repository, update the baseURL accordingly
 
 ### Data Not Showing
@@ -113,5 +114,3 @@ To test the production build locally before deploying:
 npm run generate
 npx serve .output/public
 ```
-
-Then visit `http://localhost:3000/lemonbar/` (note the `/lemonbar/` path!)

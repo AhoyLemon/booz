@@ -9,7 +9,7 @@
       p by 
         a(href="https://ahoylemon.xyz") Lemon
         | . GitHub repo is 
-        a(href="https://github.com/ahoylemon/lemonbar") here
+        a(href="https://github.com/ahoylemon/booz") here
         | .
 </template>
 

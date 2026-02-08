@@ -1,4 +1,4 @@
-# Lemonbar Development Guidelines
+# BOOZ Development Guidelines
 
 ## Multi-Tenant Architecture
 
@@ -10,12 +10,12 @@ Tenants are configured in `/utils/tenants.ts`:
 
 ```typescript
 export interface TenantConfig {
-  slug: string;           // URL path segment (e.g., "lemon", "victor")
-  barName: string;        // Display name (e.g., "Wilkommen am Lemonhaus")
-  bottles: string;        // Cockpit collection name (e.g., "bottles", "bottlesVictor")
-  drinks: string;         // Cockpit collection name (e.g., "drinks", "drinksVictor")
-  essentials: string;     // Cockpit singleton name (e.g., "essentials", "essentialsVictor")
-  beerWine: string;       // Cockpit singleton name (e.g., "beerWine", "beerWineVictor")
+  slug: string; // URL path segment (e.g., "lemon", "victor")
+  barName: string; // Display name (e.g., "Wilkommen am Lemonhaus")
+  bottles: string; // Cockpit collection name (e.g., "bottles", "bottlesVictor")
+  drinks: string; // Cockpit collection name (e.g., "drinks", "drinksVictor")
+  essentials: string; // Cockpit singleton name (e.g., "essentials", "essentialsVictor")
+  beerWine: string; // Cockpit singleton name (e.g., "beerWine", "beerWineVictor")
 }
 ```
 
@@ -31,6 +31,7 @@ All pages use tenant-based dynamic routing:
 - **Invalid tenant**: `/invalid` → `/invalid/error` (error page)
 
 All pages are located under `/pages/[tenant]/`:
+
 - `/pages/[tenant]/index.vue` - Tenant home page
 - `/pages/[tenant]/drinks/index.vue` - Drinks listing
 - `/pages/[tenant]/drinks/[id].vue` - Individual drink
@@ -45,6 +46,7 @@ All pages are located under `/pages/[tenant]/`:
 ### Middleware
 
 `/middleware/tenant.global.ts` handles:
+
 1. Redirecting root paths to default tenant
 2. Validating tenant slugs
 3. Redirecting invalid tenants to error pages
@@ -75,6 +77,7 @@ Each tenant has separate Cockpit collections:
 #### API Configuration
 
 API constants are defined in `/utils/cockpitConfig.ts`:
+
 ```typescript
 export const COCKPIT_API_URL = "https://hirelemon.com/bar/api";
 export const COCKPIT_API_KEY = "API-9aa5e339d0d1f948a80f410dfdc0229eac75ad84";
@@ -102,7 +105,7 @@ await loadBeerWine();
 
 // For drinks, combine tenant-specific + common
 const [drinks, drinksCommon] = await Promise.all([fetchDrinks(), fetchDrinksCommon()]);
-const combined = [...drinks, ...drinksCommon.filter(dc => !drinks.some(d => d.id === dc.id))];
+const combined = [...drinks, ...drinksCommon.filter((dc) => !drinks.some((d) => d.id === dc.id))];
 ```
 
 **IMPORTANT**: All composables that fetch data MUST accept a tenant parameter. This ensures data isolation between tenants.
@@ -113,7 +116,7 @@ Each tenant has isolated state using tenant-prefixed keys:
 
 ```typescript
 export const useCocktails = (tenantSlug?: string) => {
-  const stateKey = tenantSlug ? `${tenantSlug}_` : '';
+  const stateKey = tenantSlug ? `${tenantSlug}_` : "";
   const inventory = useState<Bottle[]>(`${stateKey}inventory`, () => []);
   const localDrinks = useState<Drink[]>(`${stateKey}localDrinks`, () => []);
   // ...
@@ -132,8 +135,9 @@ This prevents data from one tenant affecting another tenant's state.
 ### Deprecated Files
 
 The following files/folders have been moved to `/deprecated/` and should NOT be used:
+
 - `/deprecated/data/` - Old CSV and JSON files
-- `/deprecated/public-data/` - Old static JSON files  
+- `/deprecated/public-data/` - Old static JSON files
 - `/deprecated/server-api/` - Old server API routes
 - `/deprecated/scripts/` - Old data sync scripts
 - `/deprecated/server-utils/` - Old server-side utilities
@@ -168,6 +172,7 @@ These items should **NOT** be stored in Cockpit CMS as they are user-specific.
 2. **Update Tenant Configuration**:
    - Edit `/utils/tenants.ts`
    - Add new tenant to `TENANT_CONFIG`:
+
    ```typescript
    mybar: {
      slug: "mybar",
@@ -196,22 +201,25 @@ These items should **NOT** be stored in Cockpit CMS as they are user-specific.
 When creating or modifying pages:
 
 1. **Always extract tenant from route**:
+
    ```typescript
    const route = useRoute();
    const tenant = computed(() => route.params.tenant as string);
    ```
 
 2. **Pass tenant to all composables**:
+
    ```typescript
    const { loadInventory } = useCocktails(tenant.value);
    const { loadBeerWine } = useBeerWine(tenant.value);
    ```
 
 3. **Update all NuxtLink paths to include tenant**:
+
    ```vue
    <!-- Bad -->
    <NuxtLink to="/drinks">Drinks</NuxtLink>
-   
+
    <!-- Good -->
    <NuxtLink :to="`/${tenant}/drinks`">Drinks</NuxtLink>
    ```
@@ -227,6 +235,7 @@ When creating or modifying pages:
 When creating reusable components that link to pages:
 
 1. **Accept optional tenant prop**:
+
    ```typescript
    const props = defineProps<{
      bottle: Bottle;
@@ -237,9 +246,7 @@ When creating reusable components that link to pages:
 2. **Use tenant for links or fall back to route**:
    ```typescript
    const route = useRoute();
-   const currentTenant = computed(() => 
-     props.tenant || (route.params.tenant as string) || 'foo'
-   );
+   const currentTenant = computed(() => props.tenant || (route.params.tenant as string) || "foo");
    ```
 
 ### Working with User Preferences
@@ -263,7 +270,7 @@ The `nuxt.config.ts` file includes specific settings for GitHub Pages deployment
 
 ```typescript
 app: {
-  baseURL: process.env.NODE_ENV === "production" ? "/lemonbar/" : "/",
+  baseURL: "/",
   buildAssetsDir: "assets",
 }
 
@@ -276,7 +283,7 @@ runtimeConfig: {
 }
 ```
 
-- **baseURL**: Set to `/lemonbar/` in production to match the GitHub Pages repository path
+- **baseURL**: Set to `/` to match the GitHub Pages repository path
 - **buildAssetsDir**: Set to `assets` to ensure proper asset loading
 - **runtimeConfig**: Exposes Cockpit CMS API credentials to the client for live data fetching
 
@@ -295,7 +302,7 @@ The deployment uses `npm run generate` which:
 The `.github/workflows/deploy.yml` workflow:
 
 1. **Triggers**: On push to `main` or manual workflow dispatch
-2. **Build Step**: 
+2. **Build Step**:
    - Checks out code
    - Sets up Node.js 20 with npm caching
    - Runs `npm ci` for clean install
@@ -318,18 +325,16 @@ The `.github/workflows/deploy.yml` workflow:
 
 4. **External APIs**: TheCocktailDB API calls continue to work as they are client-side requests.
 
-5. **Base URL**: The production baseURL `/lemonbar/` is hardcoded in the config. If you rename the repository, update this value in `nuxt.config.ts`.
-
-6. **Repository Settings**: You must:
+5. **Repository Settings**: You must:
    - Enable GitHub Pages in repository settings and set the source to "GitHub Actions"
    - Configure GitHub secrets for `COCKPIT_API_URL` and `COCKPIT_API_KEY`
 
-7. **Build Time**: The static generation process pre-renders all routes, making the deployed site extremely fast with no server-side rendering needed at runtime.
+6. **Build Time**: The static generation process pre-renders all routes, making the deployed site extremely fast with no server-side rendering needed at runtime.
 
 ### Troubleshooting
 
 - **404 errors on deployed site**: Check that baseURL in `nuxt.config.ts` matches your repository name
-- **Assets not loading**: Verify buildAssetsDir is set to "assets" 
+- **Assets not loading**: Verify buildAssetsDir is set to "assets"
 - **Workflow fails**: Check the Actions tab for detailed error logs
 - **No data showing**: Verify GitHub secrets are configured correctly with valid Cockpit API credentials
 - **CORS errors**: Ensure Cockpit CMS is configured to allow requests from your GitHub Pages domain

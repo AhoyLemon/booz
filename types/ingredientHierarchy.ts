@@ -1,4 +1,4 @@
-// Lemonbar Ingredient Hierarchy (One-way Fulfillment)
+// Ingredient Hierarchy (One-way Fulfillment)
 // --------------------------------------------------
 // This file defines parent-child relationships for ingredient fulfillment.
 // If a recipe calls for a parent (e.g., "whiskey"), any child (e.g., "irish whiskey") can fulfill it.

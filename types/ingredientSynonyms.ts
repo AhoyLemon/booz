@@ -1,4 +1,4 @@
-// Lemonbar Ingredient Synonyms
+//  Ingredient Synonyms
 // ---------------------------------------------
 // This file defines alternate names (synonyms) for ingredients.
 // Use this for spelling variations, plural/singular, and true alternate names ONLY.
