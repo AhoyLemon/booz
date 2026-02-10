@@ -5,6 +5,11 @@
  * This enables multi-tenant support with path-based routing.
  */
 
+// Common/shared bar configuration
+export const COMMON_BAR = {
+  barData: "commonBar",
+};
+
 export interface TenantConfig {
   slug: string;
   barName: string;
@@ -13,16 +18,18 @@ export interface TenantConfig {
   ogImage?: string;
   includeCommonDrinks: boolean; // Include common cocktails from Cockpit API
   includeRandomCocktails: boolean; // Include random cocktails from TheCocktailDB
+  isSampleData?: boolean; // Whether this tenant contains sample/demo data
 }
 
 export const TENANT_CONFIG: Record<string, TenantConfig> = {
-  default: {
-    slug: "foo",
+  sample: {
+    slug: "sample",
     barName: "Sample Bar",
     barData: "sampleBar",
     description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
     includeCommonDrinks: false,
-    includeRandomCocktails: false,
+    includeRandomCocktails: true,
+    isSampleData: true,
   },
   lemon: {
     slug: "lemon",
@@ -41,15 +48,6 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     includeCommonDrinks: true,
     includeRandomCocktails: true,
   },
-  // Alias for default - foo tenant uses same config as default
-  foo: {
-    slug: "foo",
-    barName: "Sample Bar",
-    barData: "sampleBar",
-    description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
-    includeCommonDrinks: false,
-    includeRandomCocktails: false,
-  },
 };
 
 /**
@@ -66,15 +64,23 @@ export function getTenantConfig(slug: string): TenantConfig | null {
  * @returns The default tenant configuration
  */
 export function getDefaultTenantConfig(): TenantConfig {
-  return TENANT_CONFIG.default;
+  return TENANT_CONFIG.sample;
 }
 
 /**
  * Get list of all valid tenant slugs
- * @returns Array of tenant slugs (excluding 'default')
+ * @returns Array of tenant slugs (excluding sample data tenants)
  */
 export function getAllTenantSlugs(): string[] {
-  return Object.keys(TENANT_CONFIG).filter((slug) => slug !== "default");
+  return Object.keys(TENANT_CONFIG).filter((slug) => !TENANT_CONFIG[slug].isSampleData);
+}
+
+/**
+ * Get list of sample data tenant slugs
+ * @returns Array of tenant slugs that contain sample/demo data
+ */
+export function getSampleDataTenantSlugs(): string[] {
+  return Object.keys(TENANT_CONFIG).filter((slug) => TENANT_CONFIG[slug].isSampleData);
 }
 
 /**
@@ -83,5 +89,5 @@ export function getAllTenantSlugs(): string[] {
  * @returns True if the slug is valid, false otherwise
  */
 export function isValidTenant(slug: string): boolean {
-  return slug in TENANT_CONFIG && slug !== "default";
+  return slug in TENANT_CONFIG;
 }

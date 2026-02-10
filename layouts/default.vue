@@ -2,7 +2,7 @@
 .site-layout
   Header
   main
-    DummyDataNotice(v-if="isDefaultTenant && route.path !== '/' && route.path !== '/about'")
+    DummyDataNotice(v-if="isSampleDataTenant && route.path !== '/' && route.path !== '/about'")
     slot
   footer.app-footer
     .container
@@ -38,7 +38,7 @@
     return getTenantConfig(tenant.value) || getDefaultTenantConfig();
   });
 
-  const isDefaultTenant = computed(() => tenant.value === getDefaultTenantConfig().slug);
+  const isSampleDataTenant = computed(() => tenantConfig.value.isSampleData === true);
 
   // Determine page type and generate appropriate meta tags
   const pageMeta = computed(() => {

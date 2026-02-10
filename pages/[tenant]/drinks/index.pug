@@ -37,7 +37,21 @@
           label Tag Filter:
           TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredDrinks.length")
 
-      .loading(v-if="loading") Loading drinks...
+      .loading.fetching-drinks(v-if="loading" role="status" aria-live="polite" aria-label="Loading drinks data")
+        .inside
+          .loading-header(aria-hidden="true") Loading Drinks...
+          .animation-wrapper(aria-hidden="true")
+            .loader
+          .text-wrapper
+            ul.steps(aria-label="Loading progress")
+              li(
+                v-for="(step, index) in loadingSteps"
+                :key="index"
+                :class="step.status"
+                :aria-label="step.text"
+              ) {{ step.text }}
+
+
       .error(v-if="error") {{ error }}
 
       section.drinks-section(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers')")

@@ -33,12 +33,14 @@ section.fingers-section {
 
   // Drink Availability
   .drink-card__availability {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
     .availability-bar {
       height: 10px;
       background: color.adjust($light-bg, $lightness: -7%);
       border-radius: $border-radius-sm;
       overflow: hidden;
-      margin-bottom: $spacing-xs;
       box-shadow: inset 1px 1px 3px rgba(10, 10, 10, 0.6);
 
       &__fill {
@@ -57,10 +59,9 @@ section.fingers-section {
         }
       }
     }
-
     .availability-text {
-      font-size: 0.875rem;
-      color: color.adjust($text-dark, $lightness: 20%);
+      font-size: 13px;
+      opacity: 0.6;
     }
   }
 
@@ -90,6 +91,21 @@ section.fingers-section {
         &.available {
           opacity: 1;
           font-weight: 500;
+          .ingredient .optional {
+            display: none;
+          }
+        }
+        &.optional {
+          font-style: italic;
+          .ingredient {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5em;
+            .optional {
+              font-size: 50%;
+            }
+          }
         }
       }
     }

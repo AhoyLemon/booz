@@ -17,6 +17,7 @@
 @use "components/beer-wine-card";
 @use "components/bottle-card";
 @use "components/drink-card";
+@use "components/loading";
 
 // PAGES is for any specific page template
 @use "pages/home";

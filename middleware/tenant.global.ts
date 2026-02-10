@@ -2,7 +2,7 @@
  * Global middleware for tenant routing
  *
  * This middleware:
- * 1. Redirects non-tenant paths to default tenant paths (e.g., /drinks => /foo/drinks)
+ * 1. Redirects non-tenant paths to default tenant paths (e.g., /drinks => /sample/drinks)
  * 2. Validates tenant slugs and shows error page for unknown tenants
  */
 
@@ -43,7 +43,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   // Check if this is a root path that needs default tenant
   if (!possibleTenant && originalPath !== "/") {
-    // Redirect paths like /drinks to /foo/drinks, but allow / to render
+    // Redirect paths like /drinks to /sample/drinks, but allow / to render
     const defaultConfig = getDefaultTenantConfig();
     const newPath = `/${defaultConfig.slug}${path}`;
 

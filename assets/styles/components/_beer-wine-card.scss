@@ -8,8 +8,9 @@
   display: flex;
   flex-wrap: wrap;
   .beer-wine-card {
-    flex-basis: 220px;
+    flex-basis: 260px;
     flex-grow: 1;
+    max-width: 320px;
   }
 }
 

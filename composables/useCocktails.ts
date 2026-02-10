@@ -12,6 +12,11 @@ export const useCocktails = (tenantSlug?: string) => {
   const loading = useState<boolean>(`${stateKey}loading`, () => false);
   const error = useState<string | null>(`${stateKey}error`, () => null);
 
+  // Loading step states
+  const localDrinksLoading = useState<boolean>(`${stateKey}localDrinksLoading`, () => false);
+  const commonDrinksLoading = useState<boolean>(`${stateKey}commonDrinksLoading`, () => false);
+  const randomDrinksLoading = useState<boolean>(`${stateKey}randomDrinksLoading`, () => false);
+
   // Helper to safely get all drinks with defensive checks
   const safeGetAllDrinks = () => {
     const local = Array.isArray(localDrinks.value) ? localDrinks.value : [];
@@ -36,10 +41,7 @@ export const useCocktails = (tenantSlug?: string) => {
   const loadEssentials = async () => {
     try {
       const cockpitAPI = useCockpitAPI(tenantSlug);
-      const [essentialsData, barData] = await Promise.all([
-        cockpitAPI.fetchEssentials(),
-        cockpitAPI.fetchBarData()
-      ]);
+      const [essentialsData, barData] = await Promise.all([cockpitAPI.fetchEssentials(), cockpitAPI.fetchBarData()]);
       const bittersData = barData.bitters || [];
       essentials.value = processEssentialsData(essentialsData as EssentialsRawData, bittersData);
     } catch (e) {
@@ -50,14 +52,20 @@ export const useCocktails = (tenantSlug?: string) => {
 
   // Load local drinks from API
   const loadLocalDrinks = async () => {
+    loading.value = true;
+    error.value = null;
     try {
       const cockpitAPI = useCockpitAPI(tenantSlug);
       const theCocktailDB = useTheCocktailDB();
-      const tenantConfig = getTenantConfig(tenantSlug || "foo") || getDefaultTenantConfig();
+      const tenantConfig = tenantSlug ? getTenantConfig(tenantSlug) || getDefaultTenantConfig() : getDefaultTenantConfig();
 
+      // Start loading local drinks
+      localDrinksLoading.value = true;
       let drinks = await cockpitAPI.fetchDrinks();
+      localDrinksLoading.value = false;
 
       if (tenantConfig.includeCommonDrinks) {
+        commonDrinksLoading.value = true;
         const commonDrinks = await cockpitAPI.fetchDrinksCommon();
         // Merge, avoiding duplicates by name
         const combined = [...drinks];
@@ -67,17 +75,29 @@ export const useCocktails = (tenantSlug?: string) => {
           }
         }
         drinks = combined;
+        commonDrinksLoading.value = false;
       }
 
       if (tenantConfig.includeRandomCocktails) {
-        const randomDrinks = await theCocktailDB.fetchRandomCocktails(20);
-        drinks = [...drinks, ...randomDrinks];
+        randomDrinksLoading.value = true;
+        // Calculate how many random cocktails we need to reach minimum 20 total
+        const minTotalDrinks = 20;
+        const currentCount = drinks.length;
+        const neededRandom = Math.max(0, minTotalDrinks - currentCount);
+
+        if (neededRandom > 0) {
+          const randomDrinks = await theCocktailDB.fetchRandomCocktails(neededRandom);
+          drinks = [...drinks, ...randomDrinks];
+        }
+        randomDrinksLoading.value = false;
       }
 
       localDrinks.value = drinks;
     } catch (e) {
       console.error("Failed to load local drinks:", e);
       error.value = "Failed to load local drinks";
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -294,21 +314,37 @@ export const useCocktails = (tenantSlug?: string) => {
     return (matched / requiredIngredients.length) * 100;
   };
 
+  // Helper function to calculate percentage of ALL ingredients available (including optional)
+  const getTotalAvailabilityPercentage = (drink: Drink): number => {
+    if (drink.ingredients.length === 0) return 0;
+    const matched = drink.ingredients.filter((ingredient) => isIngredientInStock(ingredient.name)).length;
+    return (matched / drink.ingredients.length) * 100;
+  };
+
   // Sort drinks by ingredient availability percentage, then by favorited status, then alphabetically
-  // Drinks with higher percentage of ingredients available appear first (100% before 83%, etc.)
-  // Within each percentage tier, favorited drinks appear first
+  // Drinks with higher percentage of REQUIRED ingredients available appear first (100% before 83%, etc.)
+  // Within each required percentage tier, drinks with more TOTAL ingredients available appear first
+  // Within each total percentage tier, favorited drinks appear first
   // Then alphabetically by name if still tied
   const sortDrinksByAvailability = (drinks: Drink[], isStarredFn: (id: string) => boolean): Drink[] => {
     return [...drinks].sort((a, b) => {
-      const aPercentage = getAvailabilityPercentage(a);
-      const bPercentage = getAvailabilityPercentage(b);
+      const aRequiredPercentage = getAvailabilityPercentage(a);
+      const bRequiredPercentage = getAvailabilityPercentage(b);
 
-      // First, sort by percentage of matched ingredients (descending)
-      if (aPercentage !== bPercentage) {
-        return bPercentage - aPercentage;
+      // First, sort by percentage of REQUIRED ingredients (descending)
+      if (aRequiredPercentage !== bRequiredPercentage) {
+        return bRequiredPercentage - aRequiredPercentage;
       }
 
-      // If percentage is the same, prioritize favorited drinks
+      // If required percentages are equal, sort by TOTAL ingredient availability
+      const aTotalPercentage = getTotalAvailabilityPercentage(a);
+      const bTotalPercentage = getTotalAvailabilityPercentage(b);
+
+      if (aTotalPercentage !== bTotalPercentage) {
+        return bTotalPercentage - aTotalPercentage;
+      }
+
+      // If total percentages are equal, prioritize favorited drinks
       const aStarred = isStarredFn(a.id);
       const bStarred = isStarredFn(b.id);
 
@@ -325,6 +361,9 @@ export const useCocktails = (tenantSlug?: string) => {
     localDrinks,
     loading,
     error,
+    localDrinksLoading,
+    commonDrinksLoading,
+    randomDrinksLoading,
     loadInventory,
     loadEssentials,
     loadLocalDrinks,

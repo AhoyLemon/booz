@@ -39,7 +39,7 @@ npm install
 
 This app supports multiple tenants (bars), each with their own inventory and drinks. Tenants are configured in [`utils/tenants.ts`](./utils/tenants.ts), with one tenant set as the default.
 
-When you visit any tenant path without a tenant (e.g., `/drinks`), you'll be automatically redirected to the default tenant (`/foo`).
+When you visit any tenant path without a tenant (e.g., `/drinks`), you'll be automatically redirected to the default tenant (`/sample`).
 
 #### Adding a New Tenant
 

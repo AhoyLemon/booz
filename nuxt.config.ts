@@ -131,7 +131,7 @@ export default defineNuxtConfig({
         "/victor/qr",
 
         // Sample bar
-        "/foo",
+        "/sample",
       ],
     },
   },

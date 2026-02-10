@@ -6,7 +6,7 @@
       p.lead Your new favorite way to manage your home bar.
       .cta-section
         NuxtLink.cta-button.primary(to="/about") Learn More About BOOZ
-        NuxtLink.cta-button.secondary(to="/foo") Explore Demo Bar
+        NuxtLink.cta-button.secondary(to="/sample") Explore Demo Bar
 </template>
 
 <script setup lang="ts">

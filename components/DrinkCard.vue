@@ -20,13 +20,19 @@ NuxtLink.drink-card(:to="drinkLink" :class="{ 'fully-available': isFullyAvailabl
     .drink-card__availability(v-if="showAvailability")
       .availability-bar(:class="{ 'complete': availabilityPercentage === 100, 'incomplete': availabilityPercentage < 100 }")
         .availability-bar__fill(:style="{ width: availabilityPercentage + '%' }" :class="{ 'complete': availabilityPercentage === 100, 'incomplete': availabilityPercentage < 100 }")
-      span.availability-text(v-if="availableCount < totalCount")
-        | {{ availableCount }}/{{ totalCount }} ingredients available
+      span.availability-text(v-if="availableCount === totalCount") All ingredients available!
+      span.availability-text(v-if="requiredAvailableCount < requiredIngredients.length")
+        | {{ requiredAvailableCount }}/{{ requiredIngredients.length }} required ingredients available
+      span.availability-text(v-else-if="availableCount < totalCount")
+        | optional ingredient(s) missing
     .drink-ingredients
       ul
-        li(v-for="ingredient in drink.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name) }")
-          span.ingredient-name {{ ingredient.name }}
-          span.ingredient-qty {{ ingredient.qty }}
+        li(v-for="ingredient in drink.ingredients" :key="ingredient.name" :class="{ 'available': isIngredientAvailable(ingredient.name), 'optional': ingredient.optional }")
+          .ingredient(:class="{ 'optional': ingredient.optional }")
+            span.name {{ ingredient.name }}
+            span.optional(v-if="ingredient.optional") optional
+          .qty 
+            span {{ ingredient.qty }}
 </template>
 
 <script setup lang="ts">
@@ -62,12 +68,21 @@ NuxtLink.drink-card(:to="drinkLink" :class="{ 'fully-available': isFullyAvailabl
     return props.drink.ingredients.length;
   });
 
+  const requiredIngredients = computed(() => {
+    return props.drink.ingredients.filter((ing) => !ing.optional);
+  });
+
+  const requiredAvailableCount = computed(() => {
+    return requiredIngredients.value.filter((ing) => isIngredientInStock(ing.name)).length;
+  });
+
   const availabilityPercentage = computed(() => {
-    return totalCount.value > 0 ? (availableCount.value / totalCount.value) * 100 : 0;
+    const required = requiredIngredients.value.length;
+    return required > 0 ? (requiredAvailableCount.value / required) * 100 : 0;
   });
 
   const isFullyAvailable = computed(() => {
-    return availableCount.value === totalCount.value;
+    return requiredAvailableCount.value === requiredIngredients.value.length;
   });
 
   const isIngredientAvailable = (ingredientName: string) => {

@@ -19,7 +19,7 @@ export interface TenantConfig {
 }
 ```
 
-**Default Tenant**: The `default` tenant (slug: "foo") is used when users visit paths without a tenant slug. It displays demo data with a notice banner.
+**Default Tenant**: The `sample` tenant (slug: "sample") is used when users visit paths without a tenant slug. It displays demo data with a notice banner.
 
 ### Routing Structure
 
@@ -27,7 +27,7 @@ All pages use tenant-based dynamic routing:
 
 - **Pattern**: `/[tenant]/page` (e.g., `/lemon/drinks`, `/victor/bottles`)
 - **Root path**: `/` serves the home page (`pages/index.vue`)
-- **Non-tenant redirect**: `/drinks` → `/foo/drinks`
+- **Non-tenant redirect**: `/drinks` → `/sample/drinks`
 - **Invalid tenant**: `/invalid` → `/invalid/error` (error page)
 
 All pages are located under `/pages/[tenant]/`:
@@ -47,7 +47,7 @@ All pages are located under `/pages/[tenant]/`:
 
 `/middleware/tenant.global.ts` handles:
 
-1. Redirecting non-tenant paths to default tenant (e.g., `/drinks` → `/foo/drinks`)
+1. Redirecting non-tenant paths to default tenant (e.g., `/drinks` → `/sample/drinks`)
 2. Validating tenant slugs
 3. Redirecting invalid tenants to error pages
 4. Skipping static assets
@@ -246,7 +246,7 @@ When creating reusable components that link to pages:
 2. **Use tenant for links or fall back to route**:
    ```typescript
    const route = useRoute();
-   const currentTenant = computed(() => props.tenant || (route.params.tenant as string) || "foo");
+   const currentTenant = computed(() => props.tenant || (route.params.tenant as string) || "sample");
    ```
 
 ### Working with User Preferences

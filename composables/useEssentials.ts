@@ -97,10 +97,11 @@ export const processEssentialsData = (data: EssentialsRawData, bittersData?: any
 };
 
 export const useEssentials = (tenantSlug?: string) => {
-  const essentials = useState<Essential[]>(`${tenantSlug || "default"}_essentials`, () => []);
-  const bitters = useState<any[]>(`${tenantSlug || "default"}_bitters`, () => []);
-  const loading = useState<boolean>(`${tenantSlug || "default"}_essentialsLoading`, () => false);
-  const error = useState<string | null>(`${tenantSlug || "default"}_essentialsError`, () => null);
+  const defaultSlug = getDefaultTenantConfig().slug;
+  const essentials = useState<Essential[]>(`${tenantSlug || defaultSlug}_essentials`, () => []);
+  const bitters = useState<any[]>(`${tenantSlug || defaultSlug}_bitters`, () => []);
+  const loading = useState<boolean>(`${tenantSlug || defaultSlug}_essentialsLoading`, () => false);
+  const error = useState<string | null>(`${tenantSlug || defaultSlug}_essentialsError`, () => null);
 
   // Category configuration - dynamically generated from ESSENTIAL_CATEGORIES
   const essentialCategories = getEssentialCategories();
@@ -111,10 +112,7 @@ export const useEssentials = (tenantSlug?: string) => {
     error.value = null;
     try {
       const cockpitAPI = useCockpitAPI(tenantSlug);
-      const [essentialsData, barData] = await Promise.all([
-        cockpitAPI.fetchEssentials(),
-        cockpitAPI.fetchBarData()
-      ]);
+      const [essentialsData, barData] = await Promise.all([cockpitAPI.fetchEssentials(), cockpitAPI.fetchBarData()]);
       const bittersData = barData.bitters || [];
       essentials.value = processEssentialsData(essentialsData as EssentialsRawData, bittersData);
     } catch (e: any) {

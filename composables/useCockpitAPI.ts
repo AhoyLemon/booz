@@ -1,6 +1,6 @@
 import type { Bottle, Drink, Beer, Wine, Bitter, BarData, EssentialsRawData } from "~/types";
 import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
-import { getTenantConfig, getDefaultTenantConfig, type TenantConfig } from "~/utils/tenants";
+import { getTenantConfig, getDefaultTenantConfig, type TenantConfig, COMMON_BAR } from "~/utils/tenants";
 
 interface CockpitBottle {
   _id?: string;
@@ -303,8 +303,8 @@ export const useCockpitAPI = (tenantSlug?: string) => {
 
   const fetchDrinksCommon = async (): Promise<Drink[]> => {
     try {
-      const data = await fetchFromCockpit<{ entries: CockpitDrink[] }>(`/content/items/drinksCommon`);
-      return data.entries.map((item, index) => {
+      const data = await fetchFromCockpit<CockpitBarData>(`/content/item/${COMMON_BAR.barData}`);
+      return data.drinks.map((item, index) => {
         const ingredients = Array.isArray(item.ingredients)
           ? item.ingredients.map((ing) => ({
               name: ing.name || ing["Ingredient Name"] || "",

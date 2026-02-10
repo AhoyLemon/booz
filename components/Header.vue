@@ -8,7 +8,7 @@
         template(v-if="isNonTenantPage")
           NuxtLink.nav-link(:to="'/'" :class="{ active: route.path === '/' }") Home
           NuxtLink.nav-link(:to="'/about'" :class="{ active: route.path === '/about' }") About
-          NuxtLink.nav-link(:to="'/foo'") Sample Data
+          NuxtLink.nav-link(:to="'/sample'") Sample Data
         template(v-else)
           NuxtLink.nav-link(:to="tenantPath('/')" :class="{ active: isActive('/') }") Home
           NuxtLink.nav-link(:to="tenantPath('/bottles')" :class="{ active: isActive('/bottles') }") Bottles

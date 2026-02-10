@@ -3,6 +3,7 @@
 <script setup lang="ts">
   import TagFilterSelect from "~/components/TagFilterSelect.vue";
   import type { Bottle } from "~/types";
+  import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
 
   const route = useRoute();
   const tenant = computed(() => route.params.tenant as string);
@@ -22,6 +23,9 @@
     loading,
     error,
     localDrinks,
+    localDrinksLoading,
+    commonDrinksLoading,
+    randomDrinksLoading,
   } = useCocktails(tenant.value);
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
@@ -46,7 +50,32 @@
     return allTags.value.sort((a, b) => b.count - a.count);
   });
 
-  const hydratedCount = ref(0);
+  // Get tenant config for loading steps
+  const tenantConfig = computed(() => getTenantConfig(tenant.value) || getDefaultTenantConfig());
+
+  // Loading step computed properties
+  const loadingSteps = computed(() => [
+    {
+      status: localDrinksLoading.value ? 'incomplete' : 'complete',
+      text: localDrinksLoading.value ? 'Fetching local drinks' : 'Local drinks fetched'
+    },
+    {
+      status: tenantConfig.value.includeCommonDrinks
+        ? (commonDrinksLoading.value ? 'incomplete' : 'complete')
+        : 'complete',
+      text: tenantConfig.value.includeCommonDrinks
+        ? (commonDrinksLoading.value ? 'Fetching common drinks' : 'Common drinks fetched')
+        : 'Common drinks ignored'
+    },
+    {
+      status: tenantConfig.value.includeRandomCocktails
+        ? (randomDrinksLoading.value ? 'incomplete' : 'complete')
+        : 'complete',
+      text: tenantConfig.value.includeRandomCocktails
+        ? (randomDrinksLoading.value ? 'Fetching random drinks from The Cocktail DB' : 'Random drinks fetched')
+        : 'Random drinks ignored'
+    }
+  ]);
 
   // Load data on mount
   onMounted(async () => {
