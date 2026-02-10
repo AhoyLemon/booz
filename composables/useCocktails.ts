@@ -321,10 +321,11 @@ export const useCocktails = (tenantSlug?: string) => {
     return (matched / drink.ingredients.length) * 100;
   };
 
-  // Sort drinks by ingredient availability percentage, then by favorited status, then alphabetically
+  // Sort drinks by ingredient availability percentage, then by favorited status, then by total availability, then by source, then alphabetically
   // Drinks with higher percentage of REQUIRED ingredients available appear first (100% before 83%, etc.)
-  // Within each required percentage tier, drinks with more TOTAL ingredients available appear first
-  // Within each total percentage tier, favorited drinks appear first
+  // Within each required percentage tier, favorited drinks appear first
+  // Within each favorites tier, drinks with more TOTAL ingredients available appear first
+  // Within each total percentage tier, locally sourced drinks (Cockpit) appear before external (The Cocktail DB)
   // Then alphabetically by name if still tied
   const sortDrinksByAvailability = (drinks: Drink[], isStarredFn: (id: string) => boolean): Drink[] => {
     return [...drinks].sort((a, b) => {
@@ -336,7 +337,14 @@ export const useCocktails = (tenantSlug?: string) => {
         return bRequiredPercentage - aRequiredPercentage;
       }
 
-      // If required percentages are equal, sort by TOTAL ingredient availability
+      // If required percentages are equal, prioritize favorited drinks
+      const aStarred = isStarredFn(a.id);
+      const bStarred = isStarredFn(b.id);
+
+      if (aStarred && !bStarred) return -1;
+      if (bStarred && !aStarred) return 1;
+
+      // If favorites are equal, sort by TOTAL ingredient availability
       const aTotalPercentage = getTotalAvailabilityPercentage(a);
       const bTotalPercentage = getTotalAvailabilityPercentage(b);
 
@@ -344,12 +352,10 @@ export const useCocktails = (tenantSlug?: string) => {
         return bTotalPercentage - aTotalPercentage;
       }
 
-      // If total percentages are equal, prioritize favorited drinks
-      const aStarred = isStarredFn(a.id);
-      const bStarred = isStarredFn(b.id);
-
-      if (aStarred && !bStarred) return -1;
-      if (bStarred && !aStarred) return 1;
+      // If total percentages are equal, prioritize locally sourced drinks before external
+      if (a.external !== b.external) {
+        return (a.external ? 1 : 0) - (b.external ? 1 : 0);
+      }
 
       // Finally, sort alphabetically by name
       return a.name.localeCompare(b.name);

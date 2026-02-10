@@ -56,25 +56,21 @@
   // Loading step computed properties
   const loadingSteps = computed(() => [
     {
-      status: localDrinksLoading.value ? 'incomplete' : 'complete',
-      text: localDrinksLoading.value ? 'Fetching local drinks' : 'Local drinks fetched'
+      status: localDrinksLoading.value ? "incomplete" : "complete",
+      text: localDrinksLoading.value ? "Fetching local drinks" : "Local drinks fetched",
     },
     {
-      status: tenantConfig.value.includeCommonDrinks
-        ? (commonDrinksLoading.value ? 'incomplete' : 'complete')
-        : 'complete',
-      text: tenantConfig.value.includeCommonDrinks
-        ? (commonDrinksLoading.value ? 'Fetching common drinks' : 'Common drinks fetched')
-        : 'Common drinks ignored'
+      status: tenantConfig.value.includeCommonDrinks ? (commonDrinksLoading.value ? "incomplete" : "complete") : "complete",
+      text: tenantConfig.value.includeCommonDrinks ? (commonDrinksLoading.value ? "Fetching common drinks" : "Common drinks fetched") : "Common drinks ignored",
     },
     {
-      status: tenantConfig.value.includeRandomCocktails
-        ? (randomDrinksLoading.value ? 'incomplete' : 'complete')
-        : 'complete',
+      status: tenantConfig.value.includeRandomCocktails ? (randomDrinksLoading.value ? "incomplete" : "complete") : "complete",
       text: tenantConfig.value.includeRandomCocktails
-        ? (randomDrinksLoading.value ? 'Fetching random drinks from The Cocktail DB' : 'Random drinks fetched')
-        : 'Random drinks ignored'
-    }
+        ? randomDrinksLoading.value
+          ? "Fetching random drinks from The Cocktail DB"
+          : "Random drinks fetched"
+        : "Random drinks ignored",
+    },
   ]);
 
   // Load data on mount
@@ -114,10 +110,7 @@
   };
 
   // Computed properties that apply search filter
-  const combinedDrinks = computed(() => {
-    return localDrinks.value.map((d) => ({ ...d, external: false }));
-  });
-  const filteredAllDrinks = computed(() => applySearchFilter(combinedDrinks.value));
+  const filteredAllDrinks = computed(() => applySearchFilter(localDrinks.value));
   const filteredAlcoholicDrinks = computed(() => applySearchFilter(getAlcoholicDrinks.value));
   const filteredNonAlcoholicDrinks = computed(() => applySearchFilter(getNonAlcoholicDrinks.value));
   const filteredAvailableDrinks = computed(() => applySearchFilter(getAvailableDrinks.value));

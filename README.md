@@ -27,15 +27,19 @@ A multi-tenant bar inventory and cocktail app built with Nuxt 3, supporting mult
 [![JSON](https://img.shields.io/badge/JSON-000?style=for-the-badge&labelColor=000000&logo=json&logoColor=fff&color=222)](https://getcockpit.com)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-000?style=for-the-badge&labelColor=000000&logo=github&logoColor=fff&color=222)](https://getcockpit.com)
 
-## Getting Started
+## Documentation
 
-### Install Dependencies
+- **[Drinks and Cocktails](./docs/drinks.md)** - How drinks are sourced, sorted, and displayed
+
+## Setup TLDR
 
 ```bash
-npm install
+bun install
+bun run dev
+# The local environment will be pulling data from the api
 ```
 
-### Multi-Tenant Configuration
+## Multi-Tenant Configuration
 
 This app supports multiple tenants (bars), each with their own inventory and drinks. Tenants are configured in [`utils/tenants.ts`](./utils/tenants.ts), with one tenant set as the default.
 
@@ -43,33 +47,33 @@ When you visit any tenant path without a tenant (e.g., `/drinks`), you'll be aut
 
 #### Adding a New Tenant
 
-1. **Add Cockpit CMS Models**: Create tenant-specific collections in your Cockpit CMS:
-   | dataName | Type | Description | example |
-   |----------|------|-------------|---------|
-   | bottles{TenantName} | Collection | Bottle inventory for the tenant | bottlesMyBar |
-   | drinks{TenantName} | Collection | Custom cocktails for the tenant | drinksMyBar |
-   | essentials{TenantName} | Singleton | Essentials ingredients for the tenant | essentialsMyBar |
-   | beerWine{TenantName} | Singleton | Beer and wine data for the tenant | beerWineMyBar |
+1. **Creae A New Tenant in Cockpit CMS**:
+   1. Log into Cockpit as Admin
+   1. Clone an existing bar tree
+      - **RECOMMENDED:** Clone `_The Sample Bar` for a quick start)
+   1. give the clone a unique id (ex: `mySpecialNewBar`)
+   1. Inside your newly created tenant, **Create Item**, which will create a bar for that tenant.
+   1. Give this new bar a name
+   1. ALL DONE
 
-2. **Update `utils/tenants.ts`**: Add your tenant configuration:
+1. **Update `utils/tenants.ts`**: Add your tenant configuration:
 
    ```typescript
    export const TENANT_CONFIG: Record<string, TenantConfig> = {
      // ... existing tenants
      mybar: {
        slug: "mybar",
-       barName: "My Awesome Bar", // This will be displayed in the UI
-       bottles: "bottlesMyBar",
-       drinks: "drinksMyBar",
-       essentials: "essentialsMyBar",
-       beerWine: "beerWineMyBar",
+       barData: "mySpecialNewBar", // This should match the unique id you created in 1.3
+       barName: "My New Bar",
+       description: "This is the Page meta description in case you want something special here",
+       includeCommonDrinks: false, // Set to true if you want to include drinks from the common collection
+       includeRandomCocktails: true, // Set to true if you want to include random cocktails from The Cocktail DB
+       isSampleData: true, // Set to true if this tenant is meant for sample/demo purposes (affects UI and data handling in some places)
      },
    };
    ```
 
-3. **Access Your Tenant**: Navigate to `/mybar` to see your bar's data.
-
-**Note**: All tenants share a common `drinksCommon` collection for shared cocktail recipes.
+1. **Access Your Tenant**: Navigate to `/mybar` to see your bar's data.
 
 ### Development
 

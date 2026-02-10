@@ -11,11 +11,13 @@ Tenants are configured in `/utils/tenants.ts`:
 ```typescript
 export interface TenantConfig {
   slug: string; // URL path segment (e.g., "lemon", "victor")
-  barName: string; // Display name (e.g., "Wilkommen am Lemonhaus")
-  bottles: string; // Cockpit collection name (e.g., "bottles", "bottlesVictor")
-  drinks: string; // Cockpit collection name (e.g., "drinks", "drinksVictor")
-  essentials: string; // Cockpit singleton name (e.g., "essentials", "essentialsVictor")
-  beerWine: string; // Cockpit singleton name (e.g., "beerWine", "beerWineVictor")
+  barName: string; // Display name (e.g., "Lemonhaus", "Victor's Place")
+  barData: string; // Cockpit singleton name (e.g., "sampleBar", "lemonBar", "barVictor")
+  description?: string; // SEO description for the bar
+  ogImage?: string; // OpenGraph image path
+  includeCommonDrinks: boolean; // Include common cocktails from Cockpit API
+  includeRandomCocktails: boolean; // Include random cocktails from TheCocktailDB
+  isSampleData?: boolean; // Whether this tenant contains sample/demo data
 }
 ```
 
@@ -56,23 +58,43 @@ All pages are located under `/pages/[tenant]/`:
 
 **IMPORTANT**: All data fetching happens CLIENT-SIDE from Cockpit CMS API. There is NO server-side data storage or API routes.
 
+Each bar (tenant) has completely separate data "trees" in Cockpit CMS - dedicated data in singletons for bottles, drinks, essentials, and beer/wine that are isolated from other bars.
+
 ### Data Source: Cockpit CMS
 
 All bar inventory data is fetched directly from Cockpit CMS API at **https://hirelemon.com/bar/api** on the client side when pages load.
 
 #### Tenant-Specific Data Collections
 
-Each tenant has separate Cockpit collections:
+Each tenant has a single Cockpit CMS singleton ("tree") containing all their bar data:
 
-- **Bottles**: Individual spirits, liqueurs stored at `/content/items/{tenantConfig.bottles}`
-  - Example: `/content/items/bottles` (lemon), `/content/items/bottlesVictor` (victor)
-- **Drinks**: User-created cocktail recipes stored at `/content/items/{tenantConfig.drinks}`
-  - Example: `/content/items/drinks` (lemon), `/content/items/drinksVictor` (victor)
-- **Drinks Common**: Shared cocktails at `/content/items/drinksCommon` (used by ALL tenants)
-- **Essentials**: Ice, mixers, juices, syrups stored at `/content/item/{tenantConfig.essentials}`
-  - Example: `/content/item/essentials` (lemon), `/content/item/essentialsVictor` (victor)
-- **Beer & Wine**: Beer and wine inventory stored at `/content/item/{tenantConfig.beerWine}`
-  - Example: `/content/item/beerWine` (lemon), `/content/item/beerWineVictor` (victor)
+- **Bar Data**: Complete bar inventory stored at `/content/item/{tenantConfig.barData}`
+  - Example: `/content/item/sampleBar` (sample), `/content/item/lemonBar` (lemon), `/content/item/barVictor` (victor)
+  - Contains: bottles, drinks, essentials, beers, wines, bitters
+
+- **Common Bar Data**: Shared data available to all tenants stored at `/content/item/commonBar`
+  - Contains: common drinks that can be included by any tenant (when `includeCommonDrinks: true`)
+
+**Data Isolation**: Each bar's data is completely separate - no cross-contamination between tenants. The app always fetches from the correct tenant's bar data singleton based on the URL path.
+
+#### External Drink Sources
+
+- **The Cocktail DB**: External cocktail API used to supplement tenant drink lists
+  - Fetched when `includeRandomCocktails: true` in tenant config
+  - Drinks marked with `external: true` and show 📡 indicator
+  - Used to ensure minimum drink count (20 drinks) when local drinks are insufficient
+  - **Search Integration**: In `pages/[tenant]/drinks/index.vue`, search filters existing drinks (including external ones) by name, category, and ingredients
+  - **Bottle Matching**: In `pages/[tenant]/bottles/[id].vue`, actively queries The Cocktail DB API to find matching cocktails for specific bottles using `fetchDrinksByIngredient()` with bottle name, tags, or category
+  - API endpoint: The Cocktail DB random cocktail endpoint
+
+#### Legacy API Methods (Backwards Compatible)
+
+For backwards compatibility, the following methods are still available but now extract data from the unified bar data:
+
+- `fetchBottles()` - Extracts bottles array from bar data
+- `fetchDrinks()` - Extracts drinks array from bar data
+- `fetchEssentials()` - Extracts essentials object from bar data
+- `fetchBeerWine()` - Extracts and combines beers/wines from bar data
 
 #### API Configuration
 
@@ -162,12 +184,9 @@ These items should **NOT** be stored in Cockpit CMS as they are user-specific.
 
 ### Adding a New Tenant
 
-1. **Create Cockpit CMS Collections**:
-   - In Cockpit CMS, create new collections/singletons for the tenant:
-     - `bottles{TenantName}` (collection)
-     - `drinks{TenantName}` (collection)
-     - `essentials{TenantName}` (singleton)
-     - `beerWine{TenantName}` (singleton)
+1. **Create Cockpit CMS Singleton**:
+   - In Cockpit CMS, create a new singleton for the tenant (e.g., `barMyBar`)
+   - This singleton should contain all bar data: bottles, drinks, essentials, beers, wines, bitters
 
 2. **Update Tenant Configuration**:
    - Edit `/utils/tenants.ts`
@@ -177,24 +196,24 @@ These items should **NOT** be stored in Cockpit CMS as they are user-specific.
    mybar: {
      slug: "mybar",
      barName: "My Awesome Bar",
-     bottles: "bottlesMyBar",
-     drinks: "drinksMyBar",
-     essentials: "essentialsMyBar",
-     beerWine: "beerWineMyBar",
+     barData: "barMyBar",
+     description: "Description for SEO",
+     includeCommonDrinks: true,
+     includeRandomCocktails: false,
    }
    ```
 
 3. **Test the New Tenant**:
    - Run dev server: `bun run dev` (or `npm run dev`)
    - Visit `/mybar` to test
-   - Verify data loads from correct Cockpit collections
+   - Verify data loads from correct Cockpit bar data singleton
 
 ### Working with Bar Inventory
 
 1. Update data directly in Cockpit CMS (https://hirelemon.com/bar)
 2. Changes are immediately reflected on the live site (no build needed!)
 3. Client-side composables fetch from Cockpit API when pages load
-4. Each tenant fetches from their configured collections
+4. Each tenant fetches from their configured bar data singleton
 
 ### Working with Pages
 
@@ -255,6 +274,31 @@ When creating reusable components that link to pages:
 2. Implement proper serialization/deserialization
 3. Handle missing or corrupt data gracefully
 4. Consider adding export/import functionality for user backup
+
+### Working with Drinks
+
+#### Drink Sorting Logic
+
+Drinks are sorted using a 5-tier priority system in `composables/useCocktails.ts`:
+
+1. **Required ingredients available** (descending) - Drinks with higher percentage of required ingredients in stock appear first
+2. **Favorites** (starred drinks first) - Within the same required ingredient tier, favorited drinks appear before non-favorited ones
+3. **Total ingredients available** (descending) - When favorites are tied, drinks with more total ingredients available appear first
+4. **Local source before external** - Within the same availability tier, Cockpit-sourced drinks (`external: false`) appear before The Cocktail DB drinks (`external: true`)
+5. **Alphabetical** (by name) - Final tiebreaker when all other criteria are equal
+
+**Key Implementation Details**:
+
+- Sorting is handled by `sortDrinksByAvailability(drinks, isStarredFn)` function
+- External drinks show 📡 indicator via `v-if="drink.external"`
+- Favorites use localStorage via `useStarredDrinks()` composable
+- Availability percentages calculated from required ingredients only for primary sort
+
+#### Drink Sources
+
+- **Local Drinks**: Stored in Cockpit CMS bar data singletons (`sampleBar`, `lemonBar`, `barVictor`, etc.)
+- **Common Drinks**: Shared across tenants from `drinksCommon` collection
+- **External Drinks**: Fetched from The Cocktail DB API, marked with `external: true`
 
 ## Deployment to GitHub Pages
 
