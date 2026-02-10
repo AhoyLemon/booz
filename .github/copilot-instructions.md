@@ -185,7 +185,7 @@ These items should **NOT** be stored in Cockpit CMS as they are user-specific.
    ```
 
 3. **Test the New Tenant**:
-   - Run dev server: `npm run dev`
+   - Run dev server: `bun run dev` (or `npm run dev`)
    - Visit `/mybar` to test
    - Verify data loads from correct Cockpit collections
 
@@ -289,7 +289,7 @@ runtimeConfig: {
 
 #### Static Site Generation with Live Data
 
-The deployment uses `npm run generate` which:
+The deployment uses `bun run generate` which:
 
 1. Builds the Nuxt application with the `static` preset
 2. Pre-renders all routes (29 routes including pages and data payloads)
@@ -304,9 +304,9 @@ The `.github/workflows/deploy.yml` workflow:
 1. **Triggers**: On push to `main` or manual workflow dispatch
 2. **Build Step**:
    - Checks out code
-   - Sets up Node.js 20 with npm caching
-   - Runs `npm ci` for clean install
-   - Runs `npm run generate` with environment variables:
+   - Sets up Bun (JavaScript runtime and package manager)
+   - Runs `bun install --frozen-lockfile` for clean install
+   - Runs `bun run generate` with environment variables:
      - `NODE_ENV=production`
      - `COCKPIT_API_URL` from GitHub secrets
      - `COCKPIT_API_KEY` from GitHub secrets

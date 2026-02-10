@@ -27,7 +27,7 @@
 
   // Check if current page is a non-tenant page
   const isNonTenantPage = computed(() => {
-    const path = route.path;
+    const path = route.path.replace(/\/$/, ""); // Remove trailing slash
     const nonTenantRoutes = ["/", "/about"];
     return nonTenantRoutes.includes(path);
   });

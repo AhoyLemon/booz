@@ -19,6 +19,7 @@ A multi-tenant bar inventory and cocktail app built with Nuxt 3, supporting mult
 [![Vite](https://img.shields.io/badge/Nuxt-000?style=for-the-badge&labelColor=00DC82&logo=nuxt&logoColor=white&color=222)](https://nuxt.com)
 [![Vue.js](https://img.shields.io/badge/Vue.js-000?style=for-the-badge&labelColor=4FC08D&logo=vue.js&logoColor=white&color=222)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-000?style=for-the-badge&labelColor=3178C6&logo=typescript&logoColor=white&color=222)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Bun-000?style=for-the-badge&labelColor=000000&logo=bun&logoColor=white&color=222)](https://bun.sh)
 [![Sass](https://img.shields.io/badge/Sass-000?style=for-the-badge&labelColor=CC6699&logo=sass&logoColor=white&color=222)](https://sass-lang.com/)
 [![Pug](https://img.shields.io/badge/Pug-000?style=for-the-badge&labelColor=A86454&logo=pug&logoColor=white&color=222)](https://pugjs.org/)
 [![Vitest](https://img.shields.io/badge/Vitest-000?style=for-the-badge&labelColor=6E9F18&logo=vitest&logoColor=white&color=222)](https://vitest.dev)
@@ -29,9 +30,33 @@ A multi-tenant bar inventory and cocktail app built with Nuxt 3, supporting mult
 
 ## Getting Started
 
+### Prerequisites
+
+This project uses [Bun](https://bun.sh) as its primary runtime and package manager for faster installs and better performance. However, it remains fully compatible with [Node.js](https://nodejs.org) & npm if you prefer.
+
+**Option 1: Install [Bun](https://bun.com) (Recommended)**
+
+```bash
+# Linux/macOS
+curl -fsSL https://bun.sh/install | bash
+
+# Windows (PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+
+# Or visit https://bun.sh/docs/installation for more options
+```
+
+**Option 2: Use Node.js/npm**
+
+If you prefer to continue using npm, that works too! All commands work with both package managers.
+
 ### Install Dependencies
 
 ```bash
+# With Bun (recommended)
+bun install
+
+# Or with npm
 npm install
 ```
 
@@ -74,6 +99,10 @@ When you visit any tenant path without a tenant (e.g., `/drinks`), you'll be aut
 ### Development
 
 ```bash
+# With Bun
+bun run dev
+
+# Or with npm
 npm run dev
 ```
 
@@ -82,6 +111,11 @@ Visit `http://localhost:3000`.
 ### Build for Production
 
 ```bash
+# With Bun
+bun run build
+bun run preview
+
+# Or with npm
 npm run build
 npm run preview
 ```
@@ -89,6 +123,10 @@ npm run preview
 ### Generate Static Site
 
 ```bash
+# With Bun
+bun run generate
+
+# Or with npm
 npm run generate
 ```
 
@@ -128,7 +166,7 @@ Once deployed, your tenants will be accessible at:
 
 #### How It Works
 
-The deployed site fetches data directly from your Cockpit CMS API at runtime. This means:
+The GitHub Actions workflow now uses Bun for faster builds and deployments. The deployed site fetches data directly from your Cockpit CMS API at runtime. This means:
 
 - Visitors see fresh, up-to-date inventory and drink data
 - No need to rebuild/redeploy when data changes in Cockpit CMS
@@ -148,6 +186,11 @@ You can also trigger a deployment manually:
 To preview what will be deployed:
 
 ```bash
+# With Bun
+bun run generate
+bunx serve .output/public
+
+# Or with npm
 npm run generate
 npx serve .output/public
 ```
@@ -258,12 +301,20 @@ const inventory = useState(`${tenantSlug}_inventory`, () => []);
 ## Testing
 
 ```bash
+# With Bun
+bun test
+
+# Or with npm
 npm test
 ```
 
 ## Code Formatting
 
 ```bash
+# With Bun
+bun run format
+
+# Or with npm
 npm run format
 ```
 
