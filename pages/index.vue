@@ -10,15 +10,12 @@
 </template>
 
 <script setup lang="ts">
-  // Set page meta
-  useHead({
+  import { usePageMeta } from "~/composables/usePageMeta";
+
+  // Set page meta (SSR-friendly)
+  usePageMeta({
     title: "BOOZ",
-    meta: [
-      {
-        name: "description",
-        content: "Your new favorite way to manage your home bar.",
-      },
-    ],
+    description: "Your new favorite way to manage your home bar.",
   });
 </script>
 
