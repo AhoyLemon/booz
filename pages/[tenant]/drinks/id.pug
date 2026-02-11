@@ -101,7 +101,7 @@
             p {{ step }}
 
 // Skeleton for Drink (while loading)
-.drink-detail-page.drink-skeleton(v-else-if="isLoading || (drinkId.startsWith('random-') && !drink && !dataReady)")
+.drink-detail-page.drink-skeleton(v-else-if="isLoading || (drinkId.startsWith('cocktaildb-') && !drink && !dataReady)")
   .container
 
     .drink-hero.has-image
@@ -135,8 +135,8 @@
             span.ingredient-name.skeleton-text &nbsp;
             span.ingredient-qty.skeleton-text &nbsp;
       
-      .drink-instructions
-        h2 Instructions
+      .drink-instructions.skeleton
+        h2.skeleton-text Instructions
         .instructions-container
           .instruction-step.skeleton(v-for="n in 3" :key="n")
             .step-number &nbsp;
