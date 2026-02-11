@@ -1,37 +1,59 @@
 <template lang="pug">
 .error-page
   .container
-    .error-banner
-      .error-icon {{ errorIcon }}
+    // Missing Tenant (e.g., /drinks)
+    .error-banner(v-if="errorScenario === 'missing-tenant'")
+      .error-icon 🔗
       .error-content
-        h1 {{ errorTitle }}
-        p {{ errorMessage }}
-        p.error-explanation(v-if="errorExplanation") {{ errorExplanation }}
-        
-        // Suggestion for missing tenant in URL
-        .suggestion-box(v-if="suggestedTenantUrl")
+        h1 Missing Bar Name
+        p The page "{{ requestedPath }}" is missing a bar name.
+        p.error-explanation BOOZ requires a bar name in the URL (e.g., /sample/drinks instead of /drinks).
+        .suggestion-box
           p Did you mean:
           NuxtLink(:to="suggestedTenantUrl" class="btn-primary") {{ suggestedTenantUrl }}
+    
+    // Invalid Tenant (e.g., /lime/drinks or /badtenant)
+    .error-banner(v-else-if="errorScenario === 'invalid-tenant'")
+      .error-icon 🚫
+      .error-content
+        h1 Bar Not Found
+        p The bar "{{ possibleTenant }}" could not be found.
+        p.error-explanation This might happen if you mistyped the URL or if the bar has been removed.
         
-        // Show available tenants for invalid tenant
-        .sample-tenants(v-else-if="showAvailableTenants && availableTenants.length > 0")
-          p Available bars:
+        // Single sample tenant - show CTA button
+        .sample-cta(v-if="sampleTenants.length === 1")
+          p Double check your URL, or if you're curious to see how BOOZ works:
+          NuxtLink(:to="`/${sampleTenants[0]}`" class="btn-primary") Explore {{ getTenantName(sampleTenants[0]) }}
+        
+        // Multiple sample tenants - show list
+        .sample-tenants(v-else-if="sampleTenants.length > 1")
+          p Try exploring our sample data:
           ul
-            li(v-for="slug in availableTenants" :key="slug")
+            li(v-for="slug in sampleTenants" :key="slug")
               NuxtLink(:to="`/${slug}`") {{ getTenantName(slug) }}
-        
-        // Generic help for unknown pages
-        .help-links(v-else)
-          p You might want to:
+    
+    // Generic 404 (e.g., /foo or /no.jpg)
+    .error-banner(v-else)
+      .error-icon ❓
+      .error-content
+        h1 Page Not Found
+        p.intro-text BOOZ is a multi-tenant bar inventory management system. Each bar has its own URL path (e.g., /sample, /lemon, /victor).
+        p.error-explanation The page "{{ requestedPath }}" doesn't exist. You might be looking for a bar that isn't here, or a page that was moved or removed.
+        .help-links
+          p Here's where you can go:
           ul
             li
-              NuxtLink(to="/") Go to the home page
-            li
-              NuxtLink(to="/sample") Explore our Sample Bar
+              NuxtLink(to="/about" class="link-about") 
+                strong About BOOZ
+                span  - Learn about this project
+            li(v-for="slug in sampleTenants" :key="slug")
+              NuxtLink(:to="`/${slug}`")
+                strong {{ getTenantName(slug) }}
+                span  - Explore our sample bar
 </template>
 
 <script setup lang="ts">
-  import { getTenantConfig, isValidTenant, getSampleDataTenantSlugs, TENANT_CONFIG } from "~/utils/tenants";
+  import { getTenantConfig, isValidTenant, getSampleDataTenantSlugs } from "~/utils/tenants";
 
   // Define props from Nuxt's error object
   const props = defineProps({
@@ -52,65 +74,21 @@
   // Determine the error scenario
   const errorScenario = computed(() => {
     const tenant = possibleTenant.value;
-    const path = requestedPath.value;
+    const secondSegment = pathSegments.value[1];
 
     // Scenario 1: Missing tenant (e.g., /drinks instead of /sample/drinks)
     if (knownTenantPages.includes(tenant)) {
       return "missing-tenant";
     }
 
-    // Scenario 2: Invalid tenant (e.g., /badtenant or /badtenant/drinks)
-    if (tenant && !isValidTenant(tenant)) {
+    // Scenario 2: Invalid tenant (e.g., /lime/drinks)
+    // Only treat as invalid tenant if there's a second segment that's a known page route
+    if (tenant && !isValidTenant(tenant) && secondSegment && knownTenantPages.includes(secondSegment)) {
       return "invalid-tenant";
     }
 
-    // Scenario 3: Generic 404
+    // Scenario 3: Generic 404 for everything else (e.g., /foo, /no.jpg)
     return "not-found";
-  });
-
-  // Configure error display based on scenario
-  const errorIcon = computed(() => {
-    switch (errorScenario.value) {
-      case "missing-tenant":
-        return "🔗";
-      case "invalid-tenant":
-        return "🚫";
-      default:
-        return "❓";
-    }
-  });
-
-  const errorTitle = computed(() => {
-    switch (errorScenario.value) {
-      case "missing-tenant":
-        return "Missing Bar Name";
-      case "invalid-tenant":
-        return "Bar Not Found";
-      default:
-        return "Page Not Found";
-    }
-  });
-
-  const errorMessage = computed(() => {
-    switch (errorScenario.value) {
-      case "missing-tenant":
-        return `The page "${requestedPath.value}" is missing a bar name.`;
-      case "invalid-tenant":
-        return `The bar "${possibleTenant.value}" could not be found.`;
-      default:
-        return `The page "${requestedPath.value}" does not exist.`;
-    }
-  });
-
-  const errorExplanation = computed(() => {
-    switch (errorScenario.value) {
-      case "missing-tenant":
-        return "BOOZ requires a bar name in the URL (e.g., /sample/drinks instead of /drinks).";
-      case "invalid-tenant":
-        return "This might happen if you mistyped the URL or if the bar has been removed.";
-      default:
-        return "The page you're looking for might have been moved or doesn't exist.";
-    }
   });
 
   // Suggest correct URL for missing tenant scenario
@@ -121,12 +99,9 @@
     return null;
   });
 
-  // Show available tenants for invalid tenant scenario
-  const showAvailableTenants = computed(() => errorScenario.value === "invalid-tenant");
-
-  const availableTenants = computed(() => {
-    // Show all tenants including sample data
-    return Object.keys(TENANT_CONFIG);
+  // Get sample tenants (only show sample data tenants for invalid tenant scenario)
+  const sampleTenants = computed(() => {
+    return getSampleDataTenantSlugs();
   });
 
   const getTenantName = (slug: string) => {
@@ -178,6 +153,12 @@
         font-size: 1.125rem;
       }
 
+      .intro-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: $spacing-lg;
+      }
+
       .error-explanation {
         color: rgba(255, 255, 255, 0.8);
         font-size: 1rem;
@@ -187,6 +168,7 @@
 
       .suggestion-box,
       .sample-tenants,
+      .sample-cta,
       .help-links {
         background: rgba(0, 0, 0, 0.2);
         padding: $spacing-md;
@@ -218,6 +200,18 @@
               &:hover {
                 background: rgba(255, 255, 255, 0.2);
               }
+
+              strong {
+                font-weight: 600;
+              }
+
+              span {
+                opacity: 0.9;
+              }
+            }
+
+            .link-about {
+              display: block;
             }
           }
         }

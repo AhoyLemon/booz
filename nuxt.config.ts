@@ -28,21 +28,25 @@ export default defineNuxtConfig({
       "@nuxtjs/sitemap",
       {
         baseURL: process.env.NODE_ENV === "production" ? "https://booz.bar" : "http://127.0.0.1:3000",
-        urls: () => {
+        urls: async () => {
           const slugs = new Set(Object.values(TENANT_CONFIG).map((t) => t.slug));
           const urls = [];
+          
+          // Use build time as lastmod (represents when site was last deployed)
+          const lastmod = new Date().toISOString();
+          
           for (const slug of slugs) {
-            urls.push(`/${slug}`);
-            urls.push(`/${slug}/drinks`);
-            urls.push(`/${slug}/bottles`);
-            urls.push(`/${slug}/essentials`);
-            urls.push(`/${slug}/beer-wine`);
-            urls.push(`/${slug}/fingers`);
-            urls.push(`/${slug}/available`);
+            urls.push({ loc: `/${slug}`, lastmod });
+            urls.push({ loc: `/${slug}/drinks`, lastmod });
+            urls.push({ loc: `/${slug}/bottles`, lastmod });
+            urls.push({ loc: `/${slug}/essentials`, lastmod });
+            urls.push({ loc: `/${slug}/beer-wine`, lastmod });
+            urls.push({ loc: `/${slug}/fingers`, lastmod });
+            urls.push({ loc: `/${slug}/available`, lastmod });
+            urls.push({ loc: `/${slug}/qr`, lastmod });
           }
-          // Add lastModified as current date (build time)
-          const lastModified = new Date().toISOString();
-          return urls.map((loc) => ({ loc, lastModified }));
+          
+          return urls;
         },
       },
     ],
