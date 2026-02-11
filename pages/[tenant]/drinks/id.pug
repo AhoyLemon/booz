@@ -79,25 +79,21 @@
         .drink-instructions
           h2 Instructions
           .instructions-container
-            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+            .instruction-step.scroll-animated(v-if="servingStyle === 'bottle'")
               .step-number 1
-              p Ask for a {{ beerWineItem.name }} #[strong in a glass]
-            .instruction-step.scroll-animated(v-else-if="servingStyle === 'bottle'")
+              p Grab a {{ beerWineItem.name }}
+            .instruction-step.scroll-animated(v-if="servingStyle === 'bottle'")
+              .step-number 2
+              p Drink it.
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'glass'")
               .step-number 1
-              p Ask for a {{ beerWineItem.name }}
+              p Get a {{ beerWineItem.name }} and a pint glass
             .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
               .step-number 2
-              p Wait for the {{ beerWineItem.name }} to be poured into a glass for you.
-            .instruction-step.scroll-animated(v-else-if="servingStyle === 'bottle'")
-              .step-number 2
-              p Wait for the {{ beerWineItem.name }} to be handed to you.
-            .instruction-step.scroll-animated
+              p Pour the {{ beerWineItem.name }} into the glass, leaving about an inch of head at the top of the glass.
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
               .step-number 3
-              p(v-if="servingStyle === 'glass'") Drink it
-              p(v-else) Thank the person who gave you a beer.
-            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
-              .step-number 4
-              p If you order another one, don't get all pissy if they use the same glass for your second beer.
+              p Drink your beer.
 
 // Wine drink display
 .drink-detail-page(v-else-if="isWineDrink && beerWineItem")
@@ -129,8 +125,8 @@
               span.ingredient-name Glass
               span.ingredient-qty 1
             li.available(v-if="servingStyle === 'ice'")
-              span.ingredient-name Ice!?
-              span.ingredient-qty a few cubes 
+              span.ingredient-name Ice
+              span.ingredient-qty Really!? 
 
         .drink-instructions
           h2 Instructions
@@ -146,7 +142,7 @@
               p Drink the {{ beerWineItem.name }} when it's given to you
             .instruction-step.scroll-animated(v-else-if="servingStyle === 'ice'")
               .step-number 2
-              p Make direct eye contact with the person you're talking to.
+              p Make direct eye contact with the person you're talking to
             .instruction-step.scroll-animated(v-if="servingStyle === 'ice'")
               .step-number 3
               p Try to hide the shame you feel
@@ -155,7 +151,7 @@
               p When finally presented with your iced glass of {{ beerWineItem.name }}, drink it quickly, and talk endlessly about how, in other countries, it's actually pretty normal to order a glass of wine with ice
             .instruction-step.scroll-animated(v-if="servingStyle === 'ice'")
               .step-number 5
-              p Avoid eye contact from then on.
+              p Try to convince yourself that you're perfectly fine with the person you've become.
 
 // Regular drink display
 .drink-detail-page(v-else-if="drink && !isLoading")

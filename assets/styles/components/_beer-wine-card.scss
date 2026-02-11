@@ -50,6 +50,7 @@
   .name {
     font-weight: 600;
     color: $dark-bg;
+    font-family: $font-heading;
   }
 
   .type {
@@ -57,13 +58,10 @@
     color: color.adjust($text-dark, $lightness: 20%);
     font-style: italic;
   }
-  .options {
+  .card-links {
     grid-column: span 2;
     display: flex;
-    flex-wrap: wrap;
-    //gap: 0.35em;
-    .beer-option,
-    .wine-option {
+    .card-link {
       font-size: 0.75rem;
       font-weight: 525;
       &:after {
@@ -75,6 +73,10 @@
         content: "";
         padding-left: unset;
         padding-right: unset;
+      }
+      &:hover,
+      &:focus-visible {
+        text-decoration: underline;
       }
     }
   }

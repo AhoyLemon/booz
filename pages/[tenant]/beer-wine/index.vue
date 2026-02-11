@@ -32,6 +32,9 @@
                 .beer-wine-info
                   .name {{ beer.name }}
                   .type(v-if="beer.subtype") {{ beer.subtype }}
+              .card-links
+                NuxtLink.card-link(:to="`/${tenant}/drinks/beer-${beer.id}-glass`") In a Glass
+                NuxtLink.card-link(:to="`/${tenant}/drinks/beer-${beer.id}-bottle`") From the Bottle
           .empty-state(v-else)
             p No beers in inventory
           
@@ -50,6 +53,9 @@
                 .beer-wine-info
                   .name {{ wine.name }}
                   .type(v-if="wine.subtype") {{ wine.subtype }}
+              .card-links
+                NuxtLink.card-link(:to="`/${tenant}/drinks/wine-${wine.id}-glass`") In a Glass
+                NuxtLink.card-link(:to="`/${tenant}/drinks/wine-${wine.id}-ice`") With Ice
           .empty-state(v-else)
             p No wines in inventory
 

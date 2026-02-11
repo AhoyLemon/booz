@@ -60,10 +60,8 @@
             .type(v-if="item.subtype") {{ item.subtype }}
           .card-links
             NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-glass`") In a Glass
-            span(v-if="item.type === 'beer'")  | 
             NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-bottle`") From the Bottle
             NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-glass`") In a Glass
-            span(v-if="item.type === 'wine'")  | 
             NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-ice`") With Ice
             
 
