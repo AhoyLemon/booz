@@ -58,11 +58,13 @@
           .text
             .name {{ item.name }}
             .type(v-if="item.subtype") {{ item.subtype }}
-          .options
-            .beer-option(v-if="item.type === 'beer'") in a glass
-            .beer-option(v-if="item.type === 'beer'") bottle will be fine
-            .wine-option(v-if="item.type === 'wine'") in a glass
-            .wine-option(v-if="item.type === 'wine'") please give it to me in a glass with ice, because I am an absolute psychopath
+          .card-links
+            NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-glass`") In a Glass
+            span(v-if="item.type === 'beer'")  | 
+            NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-bottle`") From the Bottle
+            NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-glass`") In a Glass
+            span(v-if="item.type === 'wine'")  | 
+            NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-ice`") With Ice
             
 
     section.drinks-section(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")

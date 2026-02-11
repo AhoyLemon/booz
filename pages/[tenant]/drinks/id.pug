@@ -47,6 +47,116 @@
               .step-number {{ servingStyle === 'rocks' ? '3' : '2' }}
               p Serve and enjoy this special occasion spirit on its own, without any mixers.
 
+// Beer drink display
+.drink-detail-page(v-else-if="isBeerDrink && beerWineItem")
+  .container
+      .drink-hero(:class="{ 'full-width': !beerWineItem.image, 'has-image': beerWineItem.image }")
+        .hero-content
+          hgroup
+            h1.drink-name {{ beerWineItem.name }}{{ servingStyle === 'glass' ? ' in a Glass' : ' from the Bottle' }}
+          .back-navigation
+            NuxtLink.back-btn(:to="`/${tenant}/beer-wine`") ← Back to Beer & Wine
+          .badge-row
+            abbr.badge.category(title="This is a beer") 🍺 Beer
+            abbr.badge.category {{ servingStyle === 'glass' ? '🍺 In a Glass' : '🍾 From the Bottle' }}
+          .tags-row(v-if="beerWineItem.subtype")
+            span.tag {{ beerWineItem.subtype }}
+        .drink-hero__image(v-if="beerWineItem.image")
+          img(:src="beerWineItem.image" :alt="beerWineItem.name")
+        
+
+      .drink-content
+        .drink-ingredients
+          h2 What You'll Need
+          ul.ingredients-list
+            li.available
+              span.ingredient-name {{ beerWineItem.name }}
+              span.ingredient-qty 1
+            li.available(v-if="servingStyle === 'glass'")
+              span.ingredient-name Glass
+              span.ingredient-qty 1
+
+        .drink-instructions
+          h2 Instructions
+          .instructions-container
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+              .step-number 1
+              p Ask for a {{ beerWineItem.name }} #[strong in a glass]
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'bottle'")
+              .step-number 1
+              p Ask for a {{ beerWineItem.name }}
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+              .step-number 2
+              p Wait for the {{ beerWineItem.name }} to be poured into a glass for you.
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'bottle'")
+              .step-number 2
+              p Wait for the {{ beerWineItem.name }} to be handed to you.
+            .instruction-step.scroll-animated
+              .step-number 3
+              p(v-if="servingStyle === 'glass'") Drink it
+              p(v-else) Thank the person who gave you a beer.
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+              .step-number 4
+              p If you order another one, don't get all pissy if they use the same glass for your second beer.
+
+// Wine drink display
+.drink-detail-page(v-else-if="isWineDrink && beerWineItem")
+  .container
+      .drink-hero(:class="{ 'full-width': !beerWineItem.image, 'has-image': beerWineItem.image }")
+        .hero-content
+          hgroup
+            h1.drink-name {{ beerWineItem.name }}{{ servingStyle === 'ice' ? ' in a Glass with Ice' : ' in a Glass' }}
+          .back-navigation
+            NuxtLink.back-btn(:to="`/${tenant}/beer-wine`") ← Back to Beer & Wine
+          .badge-row
+            abbr.badge.category(title="This is a wine") 🍷 Wine
+            abbr.badge.category {{ servingStyle === 'ice' ? '🧊 With Ice' : '🍷 In a Glass' }}
+          .tags-row(v-if="beerWineItem.subtype")
+            span.tag {{ beerWineItem.subtype }}
+            span.tag(v-if="servingStyle === 'ice'") ice!?
+        .drink-hero__image(v-if="beerWineItem.image")
+          img(:src="beerWineItem.image" :alt="beerWineItem.name")
+        
+
+      .drink-content
+        .drink-ingredients
+          h2 What You'll Need
+          ul.ingredients-list
+            li.available
+              span.ingredient-name {{ beerWineItem.name }}
+              span.ingredient-qty 5 oz
+            li.available
+              span.ingredient-name Glass
+              span.ingredient-qty 1
+            li.available(v-if="servingStyle === 'ice'")
+              span.ingredient-name Ice!?
+              span.ingredient-qty 
+
+        .drink-instructions
+          h2 Instructions
+          .instructions-container
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+              .step-number 1
+              p Ask for a glass of {{ beerWineItem.name }}
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'ice'")
+              .step-number 1
+              p Ask for a glass of {{ beerWineItem.name }}, but nervously ask if you can have ice in your glass
+            .instruction-step.scroll-animated(v-if="servingStyle === 'glass'")
+              .step-number 2
+              p Drink the {{ beerWineItem.name }} when it's given to you
+            .instruction-step.scroll-animated(v-else-if="servingStyle === 'ice'")
+              .step-number 2
+              p Make direct eye contact with the person you're talking to.
+            .instruction-step.scroll-animated(v-if="servingStyle === 'ice'")
+              .step-number 3
+              p Try to hide the shame you feel
+            .instruction-step.scroll-animated(v-if="servingStyle === 'ice'")
+              .step-number 4
+              p When finally presented with your iced glass of {{ beerWineItem.name }}, drink it quickly, and talk endlessly about how, in other countries, it's actually pretty normal to order a glass of wine with ice
+            .instruction-step.scroll-animated(v-if="servingStyle === 'ice'")
+              .step-number 5
+              p Avoid eye contact from then on.
+
 // Regular drink display
 .drink-detail-page(v-else-if="drink && !isLoading")
   .container
@@ -144,7 +254,7 @@
 
 
 // ERROR: Drink not found
-.not-found(v-else-if="dataReady && !isLoading && !drink && !isFingerDrink")
+.not-found(v-else-if="dataReady && !isLoading && !drink && !isFingerDrink && !isBeerDrink && !isWineDrink")
   .container
     h2 {{ drinkId.startsWith('cocktaildb-') ? 'Cocktail Not Available' : 'Drink Not Found' }}
     p(v-if="drinkId.startsWith('cocktaildb-')") 
