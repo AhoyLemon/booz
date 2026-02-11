@@ -24,6 +24,9 @@
   import type { Bottle, Drink } from "~/types";
   import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
 
+  // Constant for "finger-" prefix length
+  const FINGER_PREFIX_LENGTH = 7;
+
   const route = useRoute();
   const tenant = computed(() => route.params.tenant as string);
   const drinkId = computed(() => route.params.id as string);
@@ -48,9 +51,13 @@
     // Check if this is a finger drink
     if (drinkId.value.startsWith("finger-")) {
       isFingerDrink.value = true;
-      const parts = drinkId.value.split("-");
-      const bottleId = parts[1];
-      servingStyle.value = parts[2] as "straight" | "rocks";
+      // Remove "finger-" prefix
+      const withoutPrefix = drinkId.value.substring(FINGER_PREFIX_LENGTH);
+      // Extract serving style from the end (either "-straight" or "-rocks")
+      const lastDashIndex = withoutPrefix.lastIndexOf("-");
+      servingStyle.value = withoutPrefix.substring(lastDashIndex + 1) as "straight" | "rocks";
+      // Everything before the last dash is the bottle ID
+      const bottleId = withoutPrefix.substring(0, lastDashIndex);
 
       // Find the bottle
       fingerBottle.value = inventory.value.find((b) => b.id === bottleId) || null;

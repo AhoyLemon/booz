@@ -23,6 +23,10 @@ export const useCocktails = (tenantSlug?: string) => {
     return local;
   };
 
+  // Version number for drink data format - increment when ID format changes
+  const DRINKS_DATA_VERSION = 2;
+  const drinksVersion = useState<number>(`${stateKey}drinksVersion`, () => 0);
+
   // Centralized ingredient synonym mapping (imported at top)
 
   // Load inventory from API
@@ -52,6 +56,11 @@ export const useCocktails = (tenantSlug?: string) => {
 
   // Load local drinks from API
   const loadLocalDrinks = async () => {
+    // Skip if already loaded AND version matches
+    if (localDrinks.value.length > 0 && drinksVersion.value === DRINKS_DATA_VERSION) {
+      return;
+    }
+
     loading.value = true;
     error.value = null;
     try {
@@ -93,6 +102,7 @@ export const useCocktails = (tenantSlug?: string) => {
       }
 
       localDrinks.value = drinks;
+      drinksVersion.value = DRINKS_DATA_VERSION; // Mark as loaded with current version
     } catch (e) {
       console.error("Failed to load local drinks:", e);
       error.value = "Failed to load local drinks";

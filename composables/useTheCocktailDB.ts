@@ -20,7 +20,7 @@ export const useTheCocktailDB = () => {
           }
         }
         return {
-          id: `random-${Date.now()}-${index}`,
+          id: `cocktaildb-${drink.idDrink}`,
           name: drink.strDrink,
           ingredients,
           instructions: drink.strInstructions ? [drink.strInstructions] : [],

@@ -29,7 +29,7 @@
       h2.section-title Available Fingers
       .fingers-grid
 
-        NuxtLink.bottle-card(
+        .bottle-card(
           v-for="bottle in availableFingerBottles" 
           :key="bottle.id"
           :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
@@ -58,6 +58,12 @@
           .text
             .name {{ item.name }}
             .type(v-if="item.subtype") {{ item.subtype }}
+          .options
+            .beer-option(v-if="item.type === 'beer'") in a glass
+            .beer-option(v-if="item.type === 'beer'") bottle will be fine
+            .wine-option(v-if="item.type === 'wine'") in a glass
+            .wine-option(v-if="item.type === 'wine'") please give it to me in a glass with ice, because I am an absolute psychopath
+            
 
     section.drinks-section(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
       h2.section-title Cocktails

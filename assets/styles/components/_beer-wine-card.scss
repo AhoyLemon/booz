@@ -57,4 +57,25 @@
     color: color.adjust($text-dark, $lightness: 20%);
     font-style: italic;
   }
+  .options {
+    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
+    //gap: 0.35em;
+    .beer-option,
+    .wine-option {
+      font-size: 0.75rem;
+      font-weight: 525;
+      &:after {
+        content: "|";
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+      }
+      &:last-child::after {
+        content: "";
+        padding-left: unset;
+        padding-right: unset;
+      }
+    }
+  }
 }

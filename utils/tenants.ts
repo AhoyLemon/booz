@@ -27,7 +27,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     barName: "Sample Bar",
     barData: "sampleBar",
     description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
-    includeCommonDrinks: true,
+    includeCommonDrinks: false,
     includeRandomCocktails: true,
     isSampleData: true,
   },

@@ -3,17 +3,22 @@
   .container
       //-.back-navigation
         NuxtLink.btn.btn-back(:to="`/${tenant}/bottles/${fingerBottle.id}`") ← Back to Bottle
-      .drink-hero
+      .drink-hero(:class="{ 'full-width': !fingerBottle.image, 'has-image': fingerBottle.image }")
+        .hero-content
+          hgroup
+            h1.drink-name {{ fingerBottle.name }}{{ servingStyle === 'rocks' ? ' On The Rocks' : ', Straight Up' }}
+          //.badge-row
+          .back-navigation
+            NuxtLink.back-btn(:to="`/${tenant}/fingers`") ← Back to Fingers
+          .badge-row
+            abbr.badge.category(title="This drink's category is Special Fingers") 🥃 Special Fingers
+            abbr.badge.category {{ servingStyle === 'rocks' ? '🧊 On The Rocks' : '🧔‍♂️ Straight Up' }}
+          .tags-row
+            span.tag(v-for="tag in fingerBottle.tags" :key="tag") {{ tag }}
+            span.tag(v-if="servingStyle === 'rocks'") ice
         .drink-hero__image(v-if="fingerBottle.image")
           img(:src="fingerBottle.image" :alt="fingerBottle.name")
-        .drink-hero__content
-          h1 {{ fingerBottle.name }}{{ servingStyle === 'rocks' ? ' On The Rocks' : ', Straight Up' }}
-          .badge-row
-            span.source-badge.local 🥃 Special Finger
-            span.category-badge {{ fingerBottle.category }}
-          .availability-info
-            p(v-if="fingerBottle.inStock") ✅ Available now!
-            p(v-else) ⚠️ Currently out of stock
+        
 
       .drink-content
         .drink-ingredients
@@ -24,7 +29,7 @@
               span.ingredient-qty 2 oz
             li.available(v-if="servingStyle === 'rocks'")
               span.ingredient-name Ice
-              span.ingredient-qty As needed
+              span.ingredient-qty 2 large cubes
 
         .drink-instructions
           h2 Instructions
@@ -34,7 +39,7 @@
               p Pour 2 ounces of {{ fingerBottle.name }} into a rocks glass.
             .instruction-step.scroll-animated(v-else-if="servingStyle === 'rocks'")
               .step-number 1
-              p Fill a rocks glass with ice.
+              p Put 2 large ice cubes into a rocks glass.
             .instruction-step.scroll-animated(v-if="servingStyle === 'rocks'")
               .step-number 2
               p Pour 2 ounces of {{ fingerBottle.name }} over the ice.
@@ -98,44 +103,45 @@
 // Skeleton for Drink (while loading)
 .drink-detail-page.drink-skeleton(v-else-if="isLoading || (drinkId.startsWith('cocktaildb-') && !drink && !dataReady)")
   .container
-    .back-navigation
-      NuxtLink.btn.btn-back(:to="`/${tenant}/drinks`") ← Back to Drinks
 
-    .drink-hero
-      .drink-hero__image.skeleton
-        .skeleton-img
-          img(src="https://picsum.photos/800/600")
-      .drink-hero__content
-        h1 Loading drink...
+    .drink-hero.has-image
+      .hero-content
+        hgroup
+          h1.drink-name.skeleton-text &nbsp;
+          p.fully-available.skeleton-text &nbsp;
+        .back-navigation
+          NuxtLink.back-btn(:to="`/${tenant}/drinks`") ← Back to Drinks
         .badge-row
-          span.source-badge.external.skeleton 
+          abbr.badge.source.skeleton 
             span.skeleton-text loading
-          span.category-badge.skeleton
+          abbr.badge.category.skeleton 
             span.skeleton-text loading
-          span.prep-badge.skeleton 
+          abbr.badge.prep.skeleton 
             span.skeleton-text loading
         .tags-row
           span.tag.skeleton 
             span.skeleton-text loading
           span.tag.skeleton 
             span.skeleton-text loading
-        .availability-info.skeleton
-          p.skeleton-text loading
-    
+      .drink-hero__image.skeleton
+        .skeleton-img
+          img(src="https://picsum.photos/800/600")
+
     .drink-content
       .drink-ingredients.skeleton
-        h2 Ingredients
+        h2.skeleton-text Ingredients
         ul.ingredients-list
           li(v-for="n in 4" :key="n")
             span.ingredient-name.skeleton-text &nbsp;
             span.ingredient-qty.skeleton-text &nbsp;
-
-      .drink-instructions
-        h2 Instructions
+      
+      .drink-instructions.skeleton
+        h2.skeleton-text Instructions
         .instructions-container
           .instruction-step.skeleton(v-for="n in 3" :key="n")
             .step-number &nbsp;
             p.skeleton-text &nbsp;
+
 
 // ERROR: Drink not found
 .not-found(v-else-if="dataReady && !isLoading && !drink && !isFingerDrink")
