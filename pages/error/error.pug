@@ -1,0 +1,53 @@
+.error-page(:class="errorScenario")
+
+  // The big "404" in the background
+  .error-background 
+    .inside 404
+  
+  // Generic 404 (e.g., /foo or /no.jpg)
+  template(v-if="errorScenario === 'not-found'")
+    .error-foreground
+      h1 Page Not Found
+      .paragraphs
+        p.intro-text BOOZ is a multi-tenant bar inventory management system. Each bar has its own URL path - e.g., #[code /sample], #[code /lemon], #[code /fred].
+        p.error-explanation The page #[code {{ requestedPath }}] doesn't exist. You might be looking for a bar that isn't here, or a page that was moved or removed.
+      .help-links
+        p Here's where you can go:
+        //- ul
+        //-   li
+        .links
+          NuxtLink(to="/about" class="link") 
+            strong About BOOZ
+            span  Learn about this project
+          template(v-for="slug in sampleTenants" :key="slug")
+            NuxtLink(:to="`/${slug}`" class="link")
+              strong {{ getTenantName(slug) }}
+              span  Explore our sample bar
+  
+  // Missing Tenant (e.g., /drinks)
+  template(v-if="errorScenario === 'missing-tenant'")
+    .error-foreground
+      h1 Bar Not Found
+      .paragraphs
+        p The bar "{{ possibleTenant }}" could not be found.
+      .suggestion-box
+        p Did you mean:
+        NuxtLink(:to="suggestedTenantUrl" class="btn-primary") {{ suggestedTenantUrl }}
+
+  // Invalid Tenant (e.g., /lime/drinks or /badtenant)
+  template(v-else-if="errorScenario === 'invalid-tenant'")
+    .error-foreground
+      h1 Bar Not Found
+      .paragraphs
+        p.intro-text The bar #[code {{ possibleTenant }}] could not be found.
+        p.error-explanation This might happen if you mistyped the URL or if the bar has been removed.
+      
+      .suggestion-box(v-if="sampleTenants.length === 1")
+        p If you're curious to see how BOOZ works:
+        NuxtLink(:to="`/${sampleTenants[0]}`" class="btn-primary") Explore {{ getTenantName(sampleTenants[0]) }}
+      
+      .suggestion-box(v-else-if="sampleTenants.length > 1")
+        p Try exploring our sample data:
+        ul
+          li(v-for="slug in sampleTenants" :key="slug")
+            NuxtLink(:to="`/${slug}`") {{ getTenantName(slug) }}

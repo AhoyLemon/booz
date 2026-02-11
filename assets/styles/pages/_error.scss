@@ -1,0 +1,117 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+.error-page {
+  background: linear-gradient(135deg, #dc3545 0%, color.adjust(#dc3545, $lightness: -10%) 100%);
+  min-height: 100dvh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .error-background {
+    position: fixed;
+    inset: 0;
+    font-size: 53dvw;
+    font-weight: 200;
+    line-height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.4);
+    font-family: monospace;
+  }
+}
+
+.error-page {
+  .error-foreground {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: $spacing-lg;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 600px;
+    font-weight: 550;
+    .paragraphs {
+      display: grid;
+      gap: $spacing-md;
+    }
+    .help-links {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      flex-wrap: wrap;
+      padding-top: $spacing-md;
+      p {
+        font-weight: 600;
+      }
+      .links {
+        display: flex;
+        gap: $spacing-md;
+      }
+      .link {
+        flex-basis: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-xs;
+        padding: $spacing-sm;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        color: $text-light;
+        strong {
+          font-family: $font-heading;
+          font-size: 125%;
+          transition: all 0.15s linear;
+        }
+        span {
+          font-size: 0.9rem;
+          opacity: 0.8;
+        }
+
+        box-shadow: $shadow-sm;
+        transition: all 0.25s ease;
+        &:hover {
+          box-shadow: $shadow-lg;
+          transform: translateY(-0.5rem);
+          strong {
+            color: $secondary-color;
+          }
+        }
+      }
+    }
+
+    .suggestion-box {
+      background: linear-gradient(135deg, #8d1420 0%, #740e18 100%);
+      padding: $spacing-md;
+      border-radius: $border-radius-md;
+      margin: $spacing-lg 0;
+      box-shadow: inset 0 0 12px black;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      a {
+        background-color: white;
+        color: #8d1420;
+        font-weight: 700;
+        text-decoration: none;
+        padding: $spacing-xs $spacing-sm;
+        display: inline-block;
+        border-radius: $border-radius-sm;
+        transition: background-color 0.2s;
+        transition: all 0.25s ease;
+        &:hover {
+          box-shadow: $shadow-lg;
+          transform: translateX(-5px);
+          color: #d61024;
+        }
+      }
+      ul {
+        list-style: none;
+        display: grid;
+        gap: $spacing-md;
+      }
+    }
+  }
+}
