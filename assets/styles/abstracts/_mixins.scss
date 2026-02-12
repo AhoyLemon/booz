@@ -105,3 +105,31 @@
   border-radius: 0.35em;
   font-weight: 600;
 }
+
+@mixin loader($width: 100%, $padding: 18%, $color: #25b09b) {
+  width: $width;
+  padding: $padding;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: $color;
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+  mask: var(--_m);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  animation: loaderSpin 1s infinite linear;
+}
+
+// Mixin: attach an animated ellipsis to any inline text element via ::after
+// Usage: @include loading-ellipsis($duration: 1s, $spacing: 0.25rem);
+@mixin loading-ellipsis($duration: 1s) {
+  display: inline-flex;
+  &::after {
+    content: "";
+    min-width: 1.25ch; // reserve space for up to three dots
+    vertical-align: text-bottom;
+    animation: loadingEllipse $duration steps(4, end) infinite;
+    /* ensure dots use same font metrics */
+    font-variant-numeric: tabular-nums;
+  }
+}

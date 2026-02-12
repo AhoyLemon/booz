@@ -6,3 +6,27 @@
     transform: translateX(100%);
   }
 }
+
+@keyframes loaderSpin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes loadingEllipse {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+  100% {
+    content: "...";
+  }
+}

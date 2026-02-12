@@ -107,6 +107,13 @@ section.fingers-section {
             }
           }
         }
+
+        &.search-match {
+          background: rgba(255, 235, 59, 0.2);
+          padding-left: $spacing-xs;
+          padding-right: $spacing-xs;
+          border-radius: $border-radius-sm;
+        }
       }
     }
     .ingredient-name {
@@ -178,6 +185,55 @@ section.fingers-section {
     opacity: 1;
     .card-name {
       color: $secondary-color;
+    }
+  }
+
+  // Emphasize category when it was the search match
+  .category-match {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background: color.adjust($accent-color, $lightness: 48%);
+    color: color.adjust($accent-color, $lightness: -40%);
+    border-radius: $border-radius-sm;
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px color.adjust($accent-color, $lightness: 62%);
+  }
+}
+
+// Search highlighting
+:global(.search-highlight) {
+  background: rgba(255, 235, 59, 0.6);
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+// Tags section (shown when matched by tag search)
+.drink-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 1px solid $light-bg;
+  font-size: 0.85rem;
+
+  .tags-label {
+    color: color.adjust($text-dark, $lightness: 30%);
+    margin-right: 0.25rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    background: color.adjust($light-bg, $lightness: -5%);
+    border-radius: $border-radius-sm;
+    color: $text-dark;
+
+    &.tag-match {
+      background: rgba(255, 235, 59, 0.4);
+      font-weight: 600;
     }
   }
 }
