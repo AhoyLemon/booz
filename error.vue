@@ -16,6 +16,14 @@
   const pathSegments = computed(() => requestedPath.value.split("/").filter(Boolean));
   const possibleTenant = computed(() => pathSegments.value[0] || "");
 
+  // Set page meta (SSR-friendly)
+  import { usePageMeta } from "~/composables/usePageMeta";
+  usePageMeta({
+    title: "BOOZ - Page Not Found",
+    description: "That's not a good URL. Try again.",
+    ogDescription: "That's not a good URL. Try again.",
+  });
+
   // Define known page routes (tenant-based pages)
   const knownTenantPages = ["drinks", "bottles", "available", "essentials", "beer-wine", "fingers", "qr"];
 
