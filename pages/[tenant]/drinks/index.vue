@@ -28,8 +28,13 @@
   } = useCocktails(tenant.value);
 
   const { loadStarredDrinks, isStarred } = useStarredDrinks();
+  const { searchDrinks, clearSearch, sortSearchResults, searchResults, isSearching, searchProgress, searchError, currentSearchTerm } = useSearchDrinks(
+    tenant.value,
+  );
 
   const searchTerm = ref("");
+  const isSearchActive = computed(() => currentSearchTerm.value !== "" || isSearching.value || searchError.value !== null);
+  const sortBy = ref<"relevance" | "name" | "ingredient">("relevance");
   const filter = ref<"all" | "alcoholic" | "nonAlcoholic" | "available" | "beerWine">("all");
   const tagFilter = ref<string>("all");
   // Gather all tags from drinks
@@ -83,49 +88,71 @@
 
     // Load drinks including common and random if configured
     await loadLocalDrinks();
+
+    // Check for search query in URL
+    const searchQuery = route.query.search as string;
+    if (searchQuery && searchQuery.trim()) {
+      searchTerm.value = searchQuery;
+      await handleSearch();
+    }
   });
 
   const availableFingerBottles = computed(() => {
     return inventory.value.filter((b) => b.inStock && b.isFingers);
   });
 
+  const route = useRoute();
+  const router = useRouter();
+
   const handleSearch = async () => {
-    // Search functionality removed - focusing on tenant-specific data
+    if (!searchTerm.value.trim()) return;
+
+    // Update URL with search query
+    await router.push({
+      query: { search: searchTerm.value },
+    });
+
+    await searchDrinks(searchTerm.value);
   };
 
-  // Helper to filter drinks by search term
-  const applySearchFilter = (drinks: any[]) => {
-    if (!searchTerm.value.trim()) return drinks;
+  const handleClearSearch = () => {
+    searchTerm.value = "";
+    clearSearch();
+    sortBy.value = "relevance";
 
-    const term = searchTerm.value.toLowerCase();
-    return drinks.filter((drink) => {
-      const nameMatch = drink.name.toLowerCase().includes(term);
-      const categoryMatch = drink.category?.toLowerCase().includes(term);
-      const ingredientMatch = drink.ingredients.some((ing: { name: string }) => ing.name.toLowerCase().includes(term));
-      return nameMatch || categoryMatch || ingredientMatch;
+    // Remove search query from URL
+    router.push({
+      query: {},
     });
   };
 
-  // Computed properties that apply search filter
-  const filteredAllDrinks = computed(() => applySearchFilter(localDrinks.value));
-  const filteredAlcoholicDrinks = computed(() => applySearchFilter(getAlcoholicDrinks.value));
-  const filteredNonAlcoholicDrinks = computed(() => applySearchFilter(getNonAlcoholicDrinks.value));
-  const filteredAvailableDrinks = computed(() => applySearchFilter(getAvailableDrinks.value));
+  // Computed for displayed drinks
+  const displayedDrinks = computed(() => {
+    if (isSearchActive.value) {
+      // When search is active, show search results (even if empty)
+      return sortSearchResults(sortBy.value, getAllDrinks.value);
+    }
+    // Show default filteredDrinks
+    return filteredDrinks.value;
+  });
+
+  // No more live filtering - removed applySearchFilter and filtered computeds
+  // All filtering now happens through the dedicated search functionality
 
   const filteredDrinks = computed(() => {
     let drinks;
     switch (filter.value) {
       case "alcoholic":
-        drinks = filteredAlcoholicDrinks.value;
+        drinks = getAlcoholicDrinks.value;
         break;
       case "nonAlcoholic":
-        drinks = filteredNonAlcoholicDrinks.value;
+        drinks = getNonAlcoholicDrinks.value;
         break;
       case "available":
-        drinks = filteredAvailableDrinks.value;
+        drinks = getAvailableDrinks.value;
         break;
       default:
-        drinks = filteredAllDrinks.value;
+        drinks = getAllDrinks.value;
     }
 
     // Apply tag filter
@@ -133,29 +160,7 @@
       drinks = drinks.filter((drink) => (drink.tags || []).includes(tagFilter.value));
     }
 
-    // If there's a search term, sort by relevance
-    if (searchTerm.value.trim()) {
-      const term = searchTerm.value.toLowerCase();
-
-      // Sort by relevance: exact name matches first, then partial name matches, then others
-      return [...drinks].sort((a, b) => {
-        const aNameLower = a.name.toLowerCase();
-        const bNameLower = b.name.toLowerCase();
-
-        // Exact matches first
-        if (aNameLower === term && bNameLower !== term) return -1;
-        if (bNameLower === term && aNameLower !== term) return 1;
-
-        // Name starts with search term
-        if (aNameLower.startsWith(term) && !bNameLower.startsWith(term)) return -1;
-        if (bNameLower.startsWith(term) && !aNameLower.startsWith(term)) return 1;
-
-        // Name contains search term (already filtered, so all contain it)
-        return 0;
-      });
-    }
-
-    // No search term: sort by ingredient availability, then by favorited status
+    // Sort by ingredient availability, then by favorited status
     return sortDrinksByAvailability(drinks, isStarred);
   });
 

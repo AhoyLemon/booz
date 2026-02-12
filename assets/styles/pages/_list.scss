@@ -1,43 +1,6 @@
 @use "sass:color";
 @use "../variables" as *;
-
-.search-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 0;
-  form {
-    display: flex;
-  }
-  input {
-    flex: 1;
-    padding: 0.75em 1.25em;
-    border: 2px solid $border-color;
-    border-radius: $border-radius-md 0 0 $border-radius-md;
-    border-right: none;
-
-    font-size: 0.875rem;
-
-    &:focus {
-      outline: none;
-      border-color: $accent-color;
-    }
-  }
-  button {
-    background-color: $secondary-color;
-    padding: 0.75em 1.25em;
-    font-size: 0.875rem;
-    border: 2px solid $border-color;
-    border-radius: 0 $border-radius-md $border-radius-md 0;
-    color: $text-light;
-    font-weight: 625;
-    &:hover,
-    &:focus-visible {
-      background-color: color.adjust($secondary-color, $lightness: -15%);
-      border-color: $accent-color;
-    }
-  }
-}
+@use "@/assets/styles/abstracts/mixins" as *;
 
 section.filters {
   // background-color: lime;
@@ -79,5 +42,64 @@ section.filters {
     background: $accent-color;
     color: white;
     border-color: $accent-color;
+  }
+}
+
+// Empty state
+.empty-state {
+  background-color: color.adjust($light-bg, $lightness: -5%);
+  padding: $spacing-lg;
+  min-height: 50dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .empty-state-content {
+    text-align: center;
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: $spacing-lg;
+      opacity: 0.5;
+    }
+
+    h3 {
+      font-size: 4dvw;
+      opacity: 0.6;
+      color: $text-dark;
+      margin-bottom: $spacing-md;
+    }
+
+    p {
+      font-size: 1rem;
+      max-width: 66ch;
+      margin: 0 auto $spacing-sm auto;
+      color: color.adjust($text-dark, $lightness: 20%);
+      line-height: 1.6;
+    }
+
+    .suggestion {
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .clear-search-btn {
+      margin-top: $spacing-lg;
+      padding: $spacing-md $spacing-xl;
+      background: $secondary-color;
+      color: white;
+      border: none;
+      border-radius: $border-radius-md;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &:focus-visible {
+        background: color.adjust($secondary-color, $lightness: -15%);
+        box-shadow: $shadow-md;
+      }
+    }
   }
 }

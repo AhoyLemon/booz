@@ -328,6 +328,7 @@ export const useCocktails = (tenantSlug?: string) => {
     isIngredientInStock,
     countMatchedIngredients,
     getAvailabilityPercentage,
+    getTotalAvailabilityPercentage,
     sortDrinksByAvailability,
   };
 };

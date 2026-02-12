@@ -1,103 +1,122 @@
 .drinks-page
   .container
 
-      .header-section
-        hgroup
-          h2 All Drinks
-          p Explore cocktail potentials from the ingredients in {{barName}}.
+    .header-section
+      hgroup
+        h2 All Drinks
+        p Explore cocktail potentials from the ingredients in {{barName}}.
 
-      .error-banner(v-if="error")
-        .error-icon ⚠️
-        .error-content
-          h3 Failed to Load Data
-          p {{ error }}
-          p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
+    .error-banner(v-if="error")
+      .error-icon ⚠️
+      .error-content
+        h3 Failed to Load Data
+        p {{ error }}
+        p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
 
-      .search-bar
-        form(@submit.prevent="handleSearch")
-          input(
-            v-model="searchTerm"
-            type="text"
-            placeholder="Search for cocktails..."
-            @keyup.enter="handleSearch"
-          )
-          button.search-btn(type="submit") Search
+    // Show search bar only when NOT searching
+    .search-bar.drink-search-bar
+      form(@submit.prevent="handleSearch")
+        input(
+          v-model="searchTerm"
+          type="text"
+          placeholder="Search for cocktails..."
+        )
+        button.submit(type="submit") Search
+        template(v-if="isSearchActive && !isSearching")
+          button.reset( type="button" @click="handleClearSearch") Clear Search
 
-      section.filters
-        .filter-buttons
-          button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ allDrinksCount }})
-          //button.filter-btn(:class="{ active: filter === 'beerWine' }" @click="filter = 'beerWine'") Beer & Wine ({{ getInStockBeerWine.length }})
-          //button.filter-btn(:class="{ active: filter === 'available' }" @click="filter = 'available'") Available ({{ filteredAvailableDrinks.length + availableFingerBottles.length + getInStockBeerWine.length }})
-          button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ filteredNonAlcoholicDrinks.length }})
-          //button.filter-btn(:class="{ active: filter === 'fingers' }" @click="filter = 'fingers'") Fingers ({{ availableFingerBottles.length }})
-
-
-        // Tag filter selector (moved below filter buttons)
-        .tag-filters(v-if="tagOptions.length > 0")
-          label Tag Filter:
-          TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredDrinks.length")
-
-      .loading.fetching-drinks(v-if="loading" role="status" aria-live="polite" aria-label="Loading drinks data")
-        .inside
-          .loading-header(aria-hidden="true") Loading Drinks...
-          .animation-wrapper(aria-hidden="true")
-            .loader
+    // Search loading state
+    .searching-drinks(v-if="isSearching" role="status" aria-live="polite" aria-label="Searching for drinks")
+      .inside
+        .loading-header(aria-hidden="true")
+          .loader
           .text-wrapper
-            ul.steps(aria-label="Loading progress")
-              li(
-                v-for="(step, index) in loadingSteps"
-                :key="index"
-                :class="step.status"
-                :aria-label="step.text"
-              ) {{ step.text }}
+            span Searching
+        //.animation-wrapper(aria-hidden="true")
+          .loader
+        .text-wrapper
+          ul.steps(aria-label="Search progress")
+            li.step(
+              v-for="(step, index) in searchProgress"
+              :key="index"
+              :class="[step.status === 'complete' ? 'complete' : 'searching', step.status === 'complete' && step.count === 0 ? 'none-found' : '', step.status === 'complete' && step.count > 0 ? 'found' : '']"
+              :aria-label="step.labels.searching"
+            ) 
+              span.searching(v-if="step.status === 'searching'") {{ step.labels.searching }}
+              span.complete.none-found(v-else-if="step.status === 'complete' && step.count === 0") {{ step.labels.foundNone }}
+              span.complete.found(v-else-if="step.status === 'complete' && step.count > 0") {{ step.labels.found.replace('{count}', step.count.toString()) }}
 
+    // Search error banner
+    .search-error-banner(v-if="searchError && isSearchActive")
+      .error-icon ⚠️
+      .error-content
+        h3 Search Error
+        p {{ searchError }}
 
-      .error(v-if="error") {{ error }}
+    // Search results header with integrated search form
+    .search-results-header(v-if="isSearchActive && !isSearching")
+      .results-summary
+        .results-info
+          .results-count(v-if="searchResults.length > 0")
+            | Showing {{ searchResults.length }} result{{ searchResults.length === 1 ? '' : 's' }} for "{{ currentSearchTerm }}"
+          .no-results(v-else-if="!searchError")
+            | No results found for "{{ currentSearchTerm }}"
+        .results-actions
+          .sort-dropdown(v-if="searchResults.length > 0")
+            label(for="SortBy") Sort by:
+            select(id="SortBy" v-model="sortBy")
+              option(value="relevance") Relevance
+              option(value="name") Name (A-Z)
+              option(value="ingredient") Ingredient Match
+          //button.reset(type="button" @click="handleClearSearch") Clear Search
 
-      section.drinks-section(v-if="filteredDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers')")
-        h2.section-title Cocktails
-        .drinks-grid
-          DrinkCard(
-            v-for="drink in filteredDrinks"
-            :key="drink.id"
-            :drink="drink"
-            :show-availability="true"
-            :external="drink.external"
-            :tenant="tenant"
-          )
-        //.hydrate-btn-container
-          button.hydrate-btn(@click="hydrateMoreCocktailDB") RANDOM! COCKTAILS!
+    section.filters(v-if="!isSearchActive")
+      .filter-buttons
+        button.filter-btn(:class="{ active: filter === 'all' }" @click="filter = 'all'") All ({{ allDrinksCount }})
+        button.filter-btn(:class="{ active: filter === 'nonAlcoholic' }" @click="filter = 'nonAlcoholic'") Non-Alcoholic ({{ getNonAlcoholicDrinks.length }})
 
-      // Beer & Wine Section
-      //-section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'beerWine' || filter === 'all' || filter === 'available' || filter === 'alcoholic')")
-        h2.section-title Beer & Wine
-        .beer-wine-grid
-          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-            figure.beer-wine-image(:class="{ 'placeholder': !item.image }")
-              img(v-if="item.image" :src="item.image" :alt="item.name")
-              span.icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
-            .text
-              .name {{ item.name }}
-              .type(v-if="item.subtype") {{ item.subtype }}
-      
-      // Finger bottles section
-      //-section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'available' || filter === 'alcoholic')")
-        h2.section-title Special Fingers
-        .fingers-grid
-          NuxtLink.bottle-card(
-            v-for="bottle in availableFingerBottles" 
-            :key="bottle.id"
-            :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
-            :to="`/${tenant}/bottles/${bottle.id}`"
-          )
-            figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
-              img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
-              span.icon(v-else) 🍾
-              span.category Fingers
-            .card-content
-              .card-header
-                .card-name {{bottle.name}}
-              .card-links
-                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") Straight Up
-                span  | 
-                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") On The Rocks
+      // Tag filter selector (moved below filter buttons)
+      .tag-filters(v-if="tagOptions.length > 0")
+        label Tag Filter:
+        TagFilterSelect(v-model="tagFilter" :tags="tagOptions" :totalCount="filteredDrinks.length")
+
+    .loading.fetching-drinks(v-if="loading" role="status" aria-live="polite" aria-label="Loading drinks data")
+      .inside
+        .loading-header(aria-hidden="true") Loading Drinks...
+        .animation-wrapper(aria-hidden="true")
+          .loader
+        .text-wrapper
+          ul.steps(aria-label="Loading progress")
+            li(
+              v-for="(step, index) in loadingSteps"
+              :key="index"
+              :class="step.status"
+              :aria-label="step.text"
+            ) {{ step.text }}
+
+    .error(v-if="error") {{ error }}
+
+    // Empty state for no search results
+    .empty-state(v-if="isSearchActive && !isSearching && searchResults.length === 0")
+      .empty-state-content
+        h3 No drinks found.
+        p We searched high and low, but couldn't find any drinks matching #[strong {{ currentSearchTerm }}].
+        p.suggestion Try a different search term, or browse suggested drinks by clearing your search.
+        button.clear-search-btn(@click="handleClearSearch") Clear Search & Browse
+
+    // Only show drinks when NOT currently searching
+    section.drinks-section(v-if="!isSearching && displayedDrinks.length > 0 && (filter !== 'beerWine' && filter !== 'fingers')")
+      h2.section-title(v-if="!isSearchActive") Cocktails
+      h2.section-title(v-else) Search Results
+      .drinks-grid
+        DrinkCard(
+          v-for="drink in displayedDrinks"
+          :key="drink.id"
+          :drink="drink"
+          :show-availability="true"
+          :external="drink.external"
+          :tenant="tenant"
+          :search-term="isSearchActive ? currentSearchTerm : ''"
+        )
+      //.hydrate-btn-container
+        button.hydrate-btn(@click="hydrateMoreCocktailDB") RANDOM! COCKTAILS!

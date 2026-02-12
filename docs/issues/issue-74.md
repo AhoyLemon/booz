@@ -67,7 +67,8 @@ Instead of this, we'll have a powerful search action that will seach for drinks 
 
 ## Documentation
 
-Please update `docs\drinks.md` with documentation about the search functionality, including how the search logic works and how the results are displayed.
+- Please update `docs\drinks.md` with documentation about the search functionality, including how the search logic works and how the results are displayed.
+- If there's any clarification that would be helpful to add to .github\copilot-instructions.md please make those updates as well, but don't feel compelled to make changes there if you don't think it's necessary.
 
 ## Acceptance Criteria
 
@@ -83,3 +84,38 @@ Please update `docs\drinks.md` with documentation about the search functionality
 - [ ] If I leave the drinks page and come back, it will not remember my previous search, and it will show me the default list of drinks.
 - [ ] If the search fails somehow (create a test where the API request fails intentionally by mistyping the URL to be incorrect), it will show whatever results it _could_ find, but include a message at the top that says "There was an error searching for drinks. Some results may be missing."
   - [ ] If there are 0 results AND there was an API error, show the error message and the empty state, inferring the API error is probably the reason you got 0 results.
+
+## Change Requests 2
+
+- [ ] There seems to be SOMETHING on the search (a computed?) that's doing live filtering as I type into the search input, because I see boxes disappearing when I type into it. Please fix that. No filtering should happen until I submit the form. The search trigger should be on the `form` element, not on the button, so that if I hit "Enter" on my keyboard it also triggers the search.
+- [ ] Let's also try to match the search term on the "Category", for each drink, but only for the drinks that come ot of Cockpit. So if the user searches for "sour", then "The Last Word" (a drink in `lemonBar`) would be a match because that drink has the category of "Sour". This should only work on an exact match, and award 1 point.
+  - [ ] Hypothetically this could create a duplicate match. If the user searches for "sour", and there's a drink in `lemonBar` called "Whiskey Sour", which has a category of "Sour", then that drink would get 3 points for the name match, and 1 point for the category match, for a total of 4 points. This is fine, we just need to make sure we don't accidentally create a duplicate card for this drink in the results. It should just be one card with a score of 4.
+- [ ] Let's also use `pushState()` to update the URL with the search term, so that if I search for "margarita", the URL becomes `http://localhost:3000/lemon/drinks?search=margarita`. Then, if I copy and share that URL with someone else, or if I refresh the page, it will remember my search term and show me the same results. If there's no `search` query parameter in the URL, then it shows me the default list of drinks.
+
+## Change Requests 3
+
+Note: I've changed some pug and scss to pretty this page up.
+
+- [ ] I am not seeing the `.empty-state` box when I search for something that doesn't exist. Just now I searched for "argybargy", and when it got 0 results, it just showed me the default list view.
+- [ ] For the `.searching-drinks` section, I want the "step" text to be smarter. So I want the actual text to be different depending on the step's state, plus I want the span to have the classes I've detailed on lines 45-47 of `pages\[tenant]\drinks\index.pug`. So for example, on the step where it searches local drinks by name, it should be
+  - "Searching local drinks by name..." with the class of `searching`
+  - "No local drinks found by name" with the classes of `complete none-found`
+  - "Found X local drinks by name" with the classes of `complete found`
+
+### Change Requests 4
+
+- [ ] I'm now seeing the `.empty-state` box when I search for something that doesn't exist, but I'm ALSO seeing the `.drink-results` section. I've pasted a screensot in chat.
+- [ ] You'll notice that those loading spans have the `@include loading-ellipsis(1.5s);` mixin applied to them, which makes dots appear after the text to indicate loading. Please do not add "..." to the text itself, because the CSS will handle that. So for example, instead of "Searching local drinks by name...", it should just say "Searching local drinks by name" and then the CSS will add the animated ellipsis after it.
+- [ ] While we're at it, I think I'd also like you to add the searching/complete/found/none-found classes to the li as well.
+- [ ] And actually, I forgot about tags. A couple of those tags are important. So, in addition to category, let's also try to match the search term on the `tags` for each drink from Cockpit. A couple notes on that.
+  - The `tags` field is an array of strings
+  - Let's not do partial matches on tags, so if I search for "warm", I should see the drinks with a "warm" tag, but if I search for "war", I should not see those drinks
+  - Because the tags don't actually get displayed on `components\DrinkCard.vue` by default, we'll need to adjust that. If you're seeingt hat card because of a tag match, then we should show the tags on that card, and highlight the matching tag with the same yellow background as we do for ingredient matches. So if I search for "warm" and there's a drink with the tags of "warm", "cozy", and "winter", then on the card for that drink, it should say "Tags: warm, cozy, winter" and the word "warm" should be highlighted with a yellow background.
+  - Score this exactly like you would have if you found a category match. So 1 point, with the unlikely possibility of adding a +1 if the search term is both in the name and one of the tags
+  - SPECIAL case: Let's make sure both "non alcoholic" and "non-alcoholic" tags can be found by searching any of the following
+    - "non alcoholic"
+    - "non-alcoholic"
+    - "nonalcoholic"
+    - "n/a"
+  - This means you'll add 1 step to the steps in searching. Do this one after searching by category, but before seaching by ingredient
+  - Update docs\drinks.md with this new search step
