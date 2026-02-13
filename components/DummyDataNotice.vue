@@ -21,6 +21,7 @@
       max-width: 1400px;
       margin: 0 auto;
       display: flex;
+
       gap: $spacing-sm;
       align-items: center;
 
@@ -28,7 +29,9 @@
         font-size: 0.95rem;
         line-height: 1.5;
         display: flex;
-        gap: 1em;
+        flex-wrap: wrap;
+        column-gap: 1em;
+        row-gap: 0.25em;
         padding-left: 1em;
 
         strong {
