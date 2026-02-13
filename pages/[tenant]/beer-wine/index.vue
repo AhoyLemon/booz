@@ -70,39 +70,3 @@
     await loadBeerWine();
   });
 </script>
-
-<style lang="scss" scoped>
-  @use "sass:color";
-  @use "@/assets/styles/variables" as *;
-
-  .beer-wine-page {
-    .loading,
-    .error {
-      text-align: center;
-      padding: $spacing-xl;
-      font-size: 1.2rem;
-    }
-
-    .error {
-      color: #dc3545;
-      background: #f8d7da;
-      border-radius: $border-radius-md;
-      margin-bottom: $spacing-lg;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: $spacing-xxl;
-    }
-
-    .beer-section,
-    .wine-section {
-      ul {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: $spacing-lg;
-      }
-    }
-  }
-</style>
