@@ -4,6 +4,11 @@
 @use "@/assets/styles/abstracts/animations" as *;
 
 .drink-detail-page {
+  .container {
+    container-name: drink-container;
+    container-type: inline-size;
+  }
+
   // Drink Hero
   .drink-hero {
     display: grid;
@@ -212,6 +217,15 @@
       line-height: 1.6;
       flex: 1;
       align-self: center;
+    }
+  }
+
+  @container drink-container (max-width: 700px) {
+    .drink-hero.has-image {
+      grid-template-columns: 1fr;
+      .drink-hero__image {
+        max-height: 35dvh;
+      }
     }
   }
 }
