@@ -1,9 +1,14 @@
 <template lang="pug">
   header.app-header
-    .container
+    .name-holder
       .site-name 
         NuxtLink(:to="isNonTenantPage ? '/' : tenantPath('/')") {{ isNonTenantPage ? 'BOOZ' : barName }}
-    .nav-holder
+      .hamburger-holder
+        button.hamburger.menu-btn-4(@click="showNav = !showNav", aria-label="Toggle navigation" :class="{'active': showNav}")
+          span
+          span
+          span
+    .nav-holder(:class="{ visible: showNav }")
       nav
         template(v-if="isNonTenantPage")
           NuxtLink.nav-link(:to="'/'" :class="{ active: route.path === '/' }") Home
@@ -22,8 +27,12 @@
 
 <script setup lang="ts">
   import { getTenantConfig, getDefaultTenantConfig, isValidTenant } from "~/utils/tenants";
+  import { ref, computed } from "vue";
 
   const route = useRoute();
+
+  // Hamburger nav toggle
+  const showNav = ref(true);
 
   // Check if current page is a non-tenant page
   const isNonTenantPage = computed(() => {
@@ -62,9 +71,14 @@
     const tenantSlug = tenant.value;
     const fullPath = `/${tenantSlug}${path === "/" ? "" : path}`;
 
+    // normalize both current route and target to ignore trailing slashes
+    const normalize = (p: string) => (p || "").replace(/\/$/, "") || "/";
+    const current = normalize(route.path);
+    const target = normalize(fullPath);
+
     if (path === "/") {
-      return route.path === fullPath;
+      return current === target;
     }
-    return route.path.startsWith(fullPath);
+    return current.startsWith(target);
   };
 </script>

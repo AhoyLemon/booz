@@ -1,0 +1,24 @@
+header.app-header
+  .name-holder
+    .site-name 
+      NuxtLink(:to="isNonTenantPage ? '/' : tenantPath('/')") {{ isNonTenantPage ? 'BOOZ' : barName }}
+    .hamburger-holder
+      button.hamburger(@click="showNav = !showNav", aria-label="Toggle navigation")
+        span
+        span
+        span
+  .nav-holder(:class="{ visible: showNav }")
+    nav
+      template(v-if="isNonTenantPage")
+        NuxtLink.nav-link(:to="'/'" :class="{ active: route.path === '/' }") Home
+        NuxtLink.nav-link(:to="'/about'" :class="{ active: route.path === '/about' }") About
+        NuxtLink.nav-link(:to="'/sample'") Sample Data
+      template(v-else)
+        NuxtLink.nav-link(:to="tenantPath('/')" :class="{ active: isActive('/') }") Home
+        NuxtLink.nav-link(:to="tenantPath('/bottles')" :class="{ active: isActive('/bottles') }") Bottles
+        NuxtLink.nav-link(:to="tenantPath('/drinks')" :class="{ active: isActive('/drinks') }") Drinks
+        NuxtLink.nav-link(:to="tenantPath('/essentials')" :class="{ active: isActive('/essentials') }") Essentials
+        NuxtLink.nav-link(:to="tenantPath('/beer-wine')" :class="{ active: isActive('/beer-wine') }") Beer & Wine
+        NuxtLink.nav-link(:to="tenantPath('/fingers')" :class="{ active: isActive('/fingers') }") Fingers
+        NuxtLink.nav-link(:to="tenantPath('/available')" :class="{ active: isActive('/available') }") Available
+        NuxtLink.nav-link(:to="tenantPath('/qr')" :class="{ active: isActive('/qr') }") QR Code

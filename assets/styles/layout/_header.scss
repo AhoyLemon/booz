@@ -7,6 +7,61 @@
   padding-top: $spacing-md;
   box-shadow: $shadow-lg;
 
+  .name-holder {
+    max-width: $container-max-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    align-items: center;
+  }
+
+  button.hamburger {
+    aspect-ratio: 1;
+    // background-color: lime;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    -webkit-tap-highlight-color: transparent;
+    span {
+      background-color: white;
+      height: 4px;
+      border-radius: 2px;
+      transition:
+        rotate 0.4s ease,
+        translate 0.4s ease 0.4s,
+        opacity 0.4s ease 0.4s;
+    }
+
+    &.active {
+      span:nth-child(1) {
+        translate: 0 13px;
+        rotate: 45deg;
+        transition:
+          translate 0.4s ease,
+          rotate 0.4s ease 0.4s;
+      }
+      span:nth-child(2) {
+        translate: -20px 0; // Small nudge left before disappearing
+        opacity: 0;
+
+        // Hide quickly so it's gone before the others rotate
+        transition:
+          translate 0.3s ease,
+          opacity 0.3s ease;
+      }
+      span:nth-child(3) {
+        translate: 0 -13px;
+        rotate: -45deg;
+        transition:
+          translate 0.4s ease,
+          rotate 0.4s ease 0.4s;
+      }
+    }
+  }
+
   .site-name {
     margin: 0;
     font-size: 2.15rem;
@@ -32,7 +87,9 @@
   nav {
     padding: 0 1.5rem;
     display: flex;
-    gap: $spacing-lg;
+    flex-wrap: wrap;
+    column-gap: $spacing-lg;
+    row-gap: $shadow-sm;
     margin-top: $spacing-md;
     max-width: $container-max-width;
     margin-left: auto;
@@ -47,11 +104,39 @@
     }
   }
 }
+
+@media (min-width: 920px) {
+  .app-header {
+    .name-holder {
+      grid-template-columns: 1fr;
+    }
+    .hamburger-holder {
+      display: none;
+    }
+  }
+}
+
 @media (max-width: 920px) {
   .app-header {
     nav {
-      flex-wrap: wrap;
-      row-gap: 0;
+      padding: 0;
+      margin: 0;
+      flex-direction: column;
+      a.active {
+        order: 1;
+      }
+      a:not(.active) {
+        order: 2;
+      }
+    }
+    .nav-holder {
+      interpolate-size: allow-keywords;
+      overflow: hidden;
+      height: 0;
+      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      &.visible {
+        height: auto;
+      }
     }
   }
 }

@@ -3,11 +3,11 @@ NuxtLink.drink-card(:to="drinkLink" :class="{ 'fully-available': isFullyAvailabl
   button.star-button(@click.prevent="handleToggleStar" :class="{ 'starred': starred }" :title="starred ? 'Remove from favorites' : 'Add to favorites'")
     span {{ starred ? '★' : '☆' }}
   figure.drink-card__image(v-if="drink.imageUrl")
-    img(:src="drink.imageUrl" :alt="drink.name")
+    img(:src="drink.imageUrl" loading="lazy" :alt="drink.name")
     span.category(v-if="drink.category" :class="{ 'category-match': categoryMatch }" v-html="highlightedCategory")
     abbr.external-source(v-if="drink.external" title="This drink is sourced from an external API") 📡
   figure.drink-card__image(v-else-if="drink.image")
-    img(:src="`/images/drinks/${drink.image}`" :alt="drink.name")
+    img(:src="`/images/drinks/${drink.image}`" loading="lazy" :alt="drink.name")
     span.category(v-if="drink.category" :class="{ 'category-match': categoryMatch }" v-html="highlightedCategory")
     abbr.external-source(v-if="drink.external" title="This drink is sourced from an external API") 📡
   figure.placeholder(v-else)
