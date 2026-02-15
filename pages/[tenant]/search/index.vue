@@ -178,33 +178,3 @@
     description: `Search for drinks, bottles, beer, wine, and ingredients at ${barName.value}`,
   });
 </script>
-
-<style lang="scss" scoped>
-  @use "sass:color";
-  @use "@/assets/styles/variables" as *;
-  @use "@/assets/styles/abstracts/mixins" as *;
-
-  .search-page {
-    .container {
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .header-section,
-      .error-banner {
-        display: none;
-      }
-    }
-    .omnisearch-bar {
-      form {
-        .search-input-group {
-          display: flex;
-          gap: $spacing-md;
-        }
-        input[type="search"] {
-          border: 1px solid $border-color;
-        }
-      }
-    }
-  }
-</style>

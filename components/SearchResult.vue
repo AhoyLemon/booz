@@ -2,16 +2,21 @@
 .search-result(:class="`result-type-${result.type}`")
   NuxtLink.search-result__link(v-if="result.link" :to="result.link")
     .search-result__content
-      .search-result__header
-        .search-result__name(v-html="highlightedName")
-        .search-result__type {{ typeLabel }}
-      .search-result__details
-        span.detail(v-for="(detail, index) in result.displayDetails" :key="index" v-html="detail")
-      .search-result__match-info
-        span.match-info Matched in: 
-        span.match-fields(v-html="highlightedMatchFields")
+      .image-wrapper(:class="{ 'has-image': thumbnailUrl, 'no-image': !thumbnailUrl }")
+        img.result-thumbnail(v-if="thumbnailUrl" :src="thumbnailUrl" :alt="result.displayName" loading="lazy")
+        span(v-else-if="result.type === 'cocktaildb-drink-list'") 📡
+      .text-items
+        .search-result__header
+          .search-result__name(v-html="highlightedName")
+          .search-result__type {{ typeLabel }}
+        .search-result__details
+          span.detail(v-for="(detail, index) in result.displayDetails" :key="index" v-html="detail")
+        .search-result__match-info
+          span.match-info Matched in: 
+          span.match-fields(v-html="highlightedMatchFields")
+      
       //- Additional content based on type
-      .search-result__extra(v-if="extraContent")
+      //.search-result__extra(v-if="extraContent")
         .extra-content(v-if="result.type === 'local-bottle' || result.type === 'local-drink' || result.type === 'common-drink'")
           img.result-thumbnail(v-if="thumbnailUrl" :src="thumbnailUrl" :alt="result.displayName" loading="lazy")
         .extra-content(v-if="result.type === 'beer' || result.type === 'wine'")

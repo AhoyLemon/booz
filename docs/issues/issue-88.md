@@ -150,3 +150,9 @@ I'm realizing I want to change the scoring, because I don't like how the relevan
 | Match in name field            | +1    |
 | Match in multiple fields       | +1    |
 | Exact match                    | +1    |
+
+## Change Requests 2
+
+- [ ] The `searchProgressPercent` value isn't working out as expected. As I search, it just cycles between something like maybe 75(?) and 100, doing that for each query. Instead, it should take the number of steps in your search into consideration. So if there's 5 steps, and we're still doing the first, that's 10%. Once the first query finishes, that's 20%. Once we start with the second, that's 30%, etc.
+- [ ] In `components\SearchResult.vue` (lines 5-7) I want there to be a placeholder if you ever can't find the image. In the case of "3 external drinks with whiskey", the placeholder should be the number 3.
+- [ ] in these `components\SearchResult.vue` listings, let's get rid of the emojis. So don't display the 🌍 🔒 and 🔓 emojis I'm seeing currently.
