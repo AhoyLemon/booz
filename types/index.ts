@@ -130,3 +130,57 @@ export interface BarData {
 // Legacy type alias for backwards compatibility
 export type Recipe = Drink;
 export type RecipeData = DrinkData;
+
+// Omnisearch types
+export type SearchResultType =
+  | "local-drink"
+  | "common-drink"
+  | "local-bottle"
+  | "beer"
+  | "wine"
+  | "cocktaildb-drink"
+  | "cocktaildb-ingredient"
+  | "cocktaildb-drink-list";
+
+export interface SearchMatchInfo {
+  fields: string[]; // Fields that matched (e.g., ["name", "category"])
+  score: number; // Score from 1-3 (3 = name match, 2 = other string field, 1 = array field)
+}
+
+export interface CocktailDBIngredient {
+  idIngredient: string;
+  strIngredient: string;
+  strDescription: string | null;
+  strType: string | null;
+  strAlcohol: string | null;
+  strABV: string | null;
+  imageUrl?: string; // TheCocktailDB ingredient image
+  externalLink?: string; // TheCocktailDB ingredient page URL
+}
+
+export interface CocktailDBDrinkListItem {
+  strDrink: string;
+  strDrinkThumb: string;
+  idDrink: string;
+}
+
+export interface OmniSearchResult {
+  type: SearchResultType;
+  data: Drink | Bottle | Beer | Wine | CocktailDBIngredient | { ingredient: string; drinks: CocktailDBDrinkListItem[] };
+  matchInfo: SearchMatchInfo;
+  // For display purposes
+  displayName: string;
+  displayDetails: string[];
+  link?: string;
+}
+
+export interface OmniSearchProgress {
+  step: string;
+  count: number;
+  status: "searching" | "complete" | "error";
+  labels: {
+    searching: string;
+    foundNone: string;
+    found: string; // Use {count} placeholder
+  };
+}

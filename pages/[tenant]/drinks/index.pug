@@ -3,7 +3,7 @@
 
     .header-section
       hgroup
-        h1 All Drinks
+        h1 Drinks
         p Explore cocktail potentials from the ingredients in {{barName}}.
 
     .error-banner(v-if="error")
@@ -32,8 +32,6 @@
           .loader
           .text-wrapper
             span Searching
-        //.animation-wrapper(aria-hidden="true")
-          .loader
         .text-wrapper
           ul.steps(aria-label="Search progress")
             li.step(
@@ -85,6 +83,8 @@
         .loading-header(aria-hidden="true") Loading Drinks...
         .animation-wrapper(aria-hidden="true")
           .loader
+        .progress-bar-container
+          .progress-bar(:style="{ width: loadingProgressPercent + '%' }")
         .text-wrapper
           ul.steps(aria-label="Loading progress")
             li(

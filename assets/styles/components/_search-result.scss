@@ -1,0 +1,164 @@
+// Search Result Component Styles
+.search-result {
+  display: block;
+  margin-bottom: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__link,
+  &__no-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__link {
+    cursor: pointer;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex: 1;
+
+    mark {
+      background-color: yellow;
+      padding: 0 2px;
+    }
+  }
+
+  &__type {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--color-bg-secondary);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  &__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+
+    .detail {
+      &::after {
+        content: "•";
+        margin-left: 0.5rem;
+        color: var(--color-border);
+      }
+
+      &:last-child::after {
+        content: none;
+      }
+    }
+  }
+
+  &__match-info {
+    font-size: 0.813rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+
+    .match-info {
+      margin-right: 0.25rem;
+    }
+
+    .match-fields {
+      strong {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__extra {
+    margin-top: 0.5rem;
+
+    .result-thumbnail {
+      max-width: 100px;
+      max-height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+  }
+
+  // Type-specific styling
+  &.result-type-local-drink,
+  &.result-type-common-drink {
+    .search-result__header {
+      .search-result__name {
+        color: var(--color-accent-drink);
+      }
+    }
+  }
+
+  &.result-type-local-bottle {
+    .search-result__header {
+      .search-result__name {
+        color: var(--color-accent-bottle);
+      }
+    }
+  }
+
+  &.result-type-beer {
+    .search-result__header {
+      .search-result__name {
+        color: var(--color-accent-beer);
+      }
+    }
+  }
+
+  &.result-type-wine {
+    .search-result__header {
+      .search-result__name {
+        color: var(--color-accent-wine);
+      }
+    }
+  }
+
+  &.result-type-cocktaildb-drink,
+  &.result-type-cocktaildb-ingredient,
+  &.result-type-cocktaildb-drink-list {
+    .search-result__header {
+      .search-result__name {
+        color: var(--color-accent-external);
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .search-result {
+    &__header {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    &__type {
+      align-self: flex-start;
+    }
+  }
+}

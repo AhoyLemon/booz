@@ -1,0 +1,126 @@
+.search-page
+  .container
+
+    .header-section
+      hgroup
+        h1 Search {{ barName }}
+        p Find drinks, bottles, beer, wine, and more
+
+    .error-banner(v-if="error")
+      .error-icon ⚠️
+      .error-content
+        h3 Failed to Load Data
+        p {{ error }}
+        p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
+
+    // SEARCH FORM
+    .search-bar.omnisearch-bar
+      form(@submit.prevent="handleSearch")
+        .search-input-group
+          input(
+            v-model="searchTerm"
+            type="search"
+            placeholder="Search for anything..."
+            aria-label="Search term"
+          )
+          button.submit(type="submit" :disabled="!searchTerm.trim()") 🔍 Search
+          button.clear(v-if="currentSearchTerm" type="button" @click="handleClear") ✕ Clear
+
+        .search-filters(v-if="!isSearching")
+          .filter-group
+            .filter-label Search in:
+            .filter-checkboxes
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.localDrinks")
+                span Local Drinks
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.commonDrinks" :disabled="!tenantConfig.includeCommonDrinks")
+                span Common Drinks
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.localBottles")
+                span Bottles
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.beers")
+                span Beers
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.wines")
+                span Wines
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.cocktaildbDrinks")
+                span CocktailDB Drinks
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.cocktaildbIngredients")
+                span CocktailDB Ingredients
+              label.filter-checkbox
+                input(type="checkbox" v-model="filters.cocktaildbDrinkLists")
+                span CocktailDB Drink Lists
+
+    // SEARCH PROGRESS
+    .searching-container(v-if="isSearching" role="status" aria-live="polite" aria-label="Searching")
+      .inside
+        .loading-header(aria-hidden="true")
+          .loader
+          .text-wrapper
+            span Searching...
+        .progress-bar-container
+          .progress-bar(:style="{ width: searchProgressPercent + '%' }")
+        .text-wrapper
+          ul.steps(aria-label="Search progress")
+            li.step(
+              v-for="(step, index) in searchProgress"
+              :key="index"
+              :class="[step.status]"
+              :aria-label="step.labels.searching"
+            )
+              span.searching(v-if="step.status === 'searching'") {{ step.labels.searching }}
+              span.complete.none-found(v-else-if="step.status === 'complete' && step.count === 0") {{ step.labels.foundNone }}
+              span.complete.found(v-else-if="step.status === 'complete' && step.count > 0") {{ step.labels.found.replace('{count}', step.count.toString()) }}
+              span.error(v-else-if="step.status === 'error'") Error in this step
+
+    // SEARCH ERROR
+    .search-error-banner(v-if="searchError")
+      .error-icon ⚠️
+      .error-content
+        h3 Search Error
+        p {{ searchError }}
+
+    // RESULTS HEADER
+    .search-results-header(v-if="currentSearchTerm && !isSearching && searchResults.length > 0")
+      .results-summary
+        .results-count
+          | {{ filteredResults.length }} result{{ filteredResults.length === 1 ? '' : 's' }} for "{{ currentSearchTerm }}"
+        .results-actions
+          .sort-dropdown
+            label(for="sortBy") Sort by:
+            select(id="sortBy" v-model="sortBy" @change="handleSortChange")
+              option(value="relevance") Relevance
+              option(value="type") Type
+              option(value="name") Name (A-Z)
+      .result-type-filters(v-if="resultTypes.length > 1")
+        button.filter-btn(:class="{ active: resultTypeFilter === 'all' }" @click="resultTypeFilter = 'all'") All ({{ searchResults.length }})
+        button.filter-btn(
+          v-for="type in resultTypes"
+          :key="type.value"
+          :class="{ active: resultTypeFilter === type.value }"
+          @click="resultTypeFilter = type.value"
+        ) {{ type.label }} ({{ type.count }})
+
+    // EMPTY STATE
+    .empty-state(v-if="currentSearchTerm && !isSearching && searchResults.length === 0")
+      .empty-icon 🔍
+      .empty-content
+        h2 No Results Found
+        p We couldn't find anything matching "{{ currentSearchTerm }}"
+        p.empty-help Try:
+        ul.empty-suggestions
+          li Checking your spelling
+          li Using different keywords
+          li Searching for a specific category (e.g., "whiskey", "gin", "rum")
+          li Using fewer or different filters
+        button.reset(type="button" @click="handleClear") Clear Search
+
+    // SEARCH RESULTS
+    .search-results(v-if="currentSearchTerm && !isSearching && filteredResults.length > 0")
+      ul.results-list
+        li.result-item(v-for="result in filteredResults" :key="`${result.type}-${result.displayName}`")
+          SearchResult(:result="result" :searchTerm="currentSearchTerm")

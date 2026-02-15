@@ -19,6 +19,7 @@
 @use "components/drink-card";
 @use "components/loading";
 @use "components/searching";
+@use "components/search-result";
 
 // PAGES is for any specific page template
 @use "pages/home";
@@ -29,3 +30,4 @@
 @use "pages/beer-wine";
 @use "pages/about";
 @use "pages/error";
+@use "pages/search";

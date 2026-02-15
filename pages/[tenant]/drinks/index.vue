@@ -79,6 +79,13 @@
     },
   ]);
 
+  // Loading progress percentage
+  const loadingProgressPercent = computed(() => {
+    if (loadingSteps.value.length === 0) return 0;
+    const completed = loadingSteps.value.filter((step) => step.status === "complete").length;
+    return Math.round((completed / loadingSteps.value.length) * 100);
+  });
+
   // Load data on mount
   onMounted(async () => {
     await loadInventory();

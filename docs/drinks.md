@@ -88,6 +88,8 @@ The sorting system is designed to:
 
 ## Search Functionality
 
+> **Note**: For comprehensive search across all data types (drinks, bottles, beer, wine, and more), see the **[Omnisearch documentation](./search.md)**. This section focuses on the drink-specific search available on the drinks page.
+
 The drinks page includes a powerful search feature that searches across both local Cockpit drinks and The Cocktail DB, providing comprehensive results with intelligent scoring and sorting.
 
 ### Search Behavior

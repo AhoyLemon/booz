@@ -47,6 +47,21 @@
     font-weight: 625;
     color: rgba(0, 0, 0, 0.5);
   }
+  .progress-bar-container {
+    grid-column: span 2;
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: -0.5rem 0 0.5rem;
+
+    .progress-bar {
+      height: 100%;
+      background: $accent-color;
+      transition: width 0.3s ease;
+    }
+  }
   .steps {
     text-align: left;
     font-size: 0.875rem;
