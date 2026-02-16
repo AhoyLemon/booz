@@ -64,52 +64,101 @@ See [drinks.md](./drinks.md) for detailed information about drink-specific searc
 
 Key differences from Omnisearch:
 
-- Only searches drinks (local, common, and external)
-- Shows drink availability percentages
-- Includes ingredient highlighting
-- Sorts by availability and favorites
+- Only searches drinks (local, common, and external from TheCocktailDB)
+- Uses different scoring system optimized for cocktail recipes
+- Shows drink availability percentages and ingredient highlighting
+- Includes filtering by alcoholic/non-alcoholic status
+- Sorts by availability, favorites, and ingredient count (see [drinks.md](./drinks.md) for details)
 
 ## Search Scoring System
 
-Both Omnisearch and Drink Search use a scoring system to rank results by relevance.
+Both Omnisearch and Drink Search use different scoring systems to rank results by relevance.
 
-### Score Values
+### Omnisearch Scoring
 
-- **3 points** - Match in the `name` field
-- **2 points** - Match in other string fields (e.g., `category`, `baseSpirit`, `origin`, `company`)
-- **1 point** - Match in array fields (e.g., `tags`, `ingredients`)
+Omnisearch uses a tiered scoring system based on result type and match quality:
 
-### How Scoring Works
+#### Base Scores by Result Type
 
-For each item being searched:
+- **Local Drinks**: 3 points (highest priority - tenant-specific recipes)
+- **Local Bottles**: 3 points (highest priority - tenant's inventory)
+- **Common Drinks**: 2 points (shared recipes available to all tenants)
+- **Beers**: 2 points (tenant's beer inventory)
+- **Wines**: 2 points (tenant's wine inventory)
+- **CocktailDB Drinks**: 1 point (external API results)
+- **CocktailDB Ingredients**: 1 point (external ingredient data)
+- **CocktailDB Drink Lists**: 1 point (external drink collections)
 
-1. The search term is compared against searchable fields
-2. The highest-scoring field match determines the item's score
-3. Results are sorted by score (highest first)
-4. Ties are broken alphabetically by name
+#### Scoring Bonuses
 
-### Example
+After applying the base score, additional points are awarded:
+
+- **+1 point** - Match found in the `name` field
+- **+1 point** - Multiple fields matched the search term
+- **+1 point** - Exact match in the name field
+
+#### Example Omnisearch Scores
 
 Searching for "gin":
 
-- **Bottle named "Bombay Sapphire Gin"** → 3 points (name match)
-- **Bottle with baseSpirit "Gin"** → 2 points (baseSpirit match)
-- **Drink with tags ["gin", "classic"]** → 1 point (tags match)
+- **"Hendrick's Gin" (Local Bottle)** → 3 (base) + 1 (name) + 1 (multiple fields) + 1 (exact) = **6 points**
+- **"Gin & Tonic" (Local Drink)** → 3 (base) + 1 (name) + 1 (multiple fields) = **5 points**
+- **"Tanqueray Gin" (Local Bottle)** → 3 (base) + 1 (name) + 1 (multiple fields) = **5 points**
+- **"Martini" (Common Drink)** → 2 (base) + 1 (name) = **3 points**
+- **"Gin Fizz" (CocktailDB Drink)** → 1 (base) + 1 (name) = **2 points**
+
+### Drink Search Scoring
+
+The specialized drink search (used on `/[tenant]/drinks`) has its own scoring system focused on cocktail recipes:
+
+#### Name Matches
+- **3 points** - Base score for partial name match
+- **+1 point** - Full word match within drink name
+- **+1 point** - Exact match of drink name
+- **+1 point** - Bonus for local drinks (when common drinks are enabled)
+
+#### Category Matches
+- **1 point** - Exact category match only
+
+#### Tag Matches
+- **1 point** - Exact tag match (with special handling for non-alcoholic variations)
+
+#### Ingredient Matches
+- **2 points** - Base score for ingredient name match
+- **+1 point** - Full word match in ingredient name
+
+#### Example Drink Search Scores
+
+Searching for "whiskey":
+
+- **"Old Fashioned"** (contains whiskey ingredient) → 2 (base) + 1 (full word) = **3 points**
+- **"Whiskey Sour"** (name contains whiskey) → 3 (base) + 1 (full word) = **4 points**
+- **"Irish Whiskey"** (exact name match) → 3 (base) + 1 (full word) + 1 (exact) = **5 points**
+
+### How Scoring Works
+
+For both systems:
+
+1. Each result type has a base score reflecting its priority/relevance
+2. The search term is matched against searchable fields in each item
+3. Bonuses are applied based on match quality and field types
+4. Results are sorted by score (highest first)
+5. Ties are broken alphabetically by name
 
 ## Search Filters
 
 ### Omnisearch Filters
 
-Users can enable/disable search in specific sources:
+Users can enable/disable search in specific sources using checkboxes:
 
-- **Local Drinks** - Default: ON
-- **Common Drinks** - Default: Based on tenant config
-- **Bottles** - Default: ON
-- **Beers** - Default: ON
-- **Wines** - Default: ON
-- **CocktailDB Drinks** - Default: ON
-- **CocktailDB Ingredients** - Default: ON
-- **CocktailDB Drink Lists** - Default: ON
+- **localDrinks** - Local cocktail recipes (Default: ON)
+- **commonDrinks** - Shared cocktail recipes (Default: Based on tenant config)
+- **localBottles** - Bottles in tenant's inventory (Default: ON)
+- **beers** - Beer items (Default: ON)
+- **wines** - Wine items (Default: ON)
+- **cocktaildbDrinks** - External drinks from TheCocktailDB (Default: ON)
+- **cocktaildbIngredients** - External ingredient information (Default: ON)
+- **cocktaildbDrinkLists** - Collections of drinks by ingredient (Default: ON)
 
 ### Filter Behavior
 
@@ -134,41 +183,47 @@ Each search result shows:
 
 Different result types have customized displays:
 
-#### Local/Common Drinks
+#### Local Drinks (`local-drink`)
 
 - Name, category, availability percentage, tags
-- Link to drink detail page
+- Link to drink detail page (`/[tenant]/drinks/{id}`)
 - Thumbnail image
 
-#### Local Bottles
+#### Common Drinks (`common-drink`)
+
+- Name, category, availability percentage, "Common Recipe" label, tags
+- Link to drink detail page (`/[tenant]/drinks/{id}`)
+- Thumbnail image
+
+#### Local Bottles (`local-bottle`)
 
 - Name, category, base spirit, origin, ABV, bottle state
-- Link to bottle detail page
+- Link to bottle detail page (`/[tenant]/bottles/{id}`)
 - Thumbnail image
 
-#### Beer/Wine
+#### Beer/Wine (`beer`, `wine`)
 
 - Name, type/subtype
-- Link to beer-wine page (with anchor)
+- Link to beer-wine page with anchor (`/[tenant]/beer-wine#{type}-{id}`)
 - Thumbnail image
 
-#### CocktailDB Drinks
+#### CocktailDB Drinks (`cocktaildb-drink`)
 
-- Name, category, availability percentage, tags
+- Name, category, availability percentage, "External" label, tags
 - External indicator (📡)
-- Link to drink detail page
+- Link to drink detail page (`/[tenant]/drinks/{id}`)
 
-#### CocktailDB Ingredients
+#### CocktailDB Ingredients (`cocktaildb-ingredient`)
 
-- Name, type, alcohol status, ABV
+- Name, type, alcohol status, ABV, "External Ingredient" label
 - External indicator (📡)
-- No direct link (informational only)
+- Link to external CocktailDB page
 
-#### CocktailDB Drink Lists
+#### CocktailDB Drink Lists (`cocktaildb-drink-list`)
 
-- Ingredient name, drink count
-- External indicator (📡)
-- Link to first drink in list
+- "X external drinks with 'ingredient'" format
+- Shows first drink name and count of additional drinks
+- Link to drink search with external filter (`/[tenant]/drinks?search={ingredient}&filters=externalByIngredient`)
 
 ### Sorting Results
 
@@ -180,12 +235,19 @@ Results can be sorted by:
 
 ### Filtering Results
 
-After a search, results can be filtered by type:
+After a search, results can be filtered by type using the result type filter dropdown:
 
-- **All** - Shows all results
-- **Type-specific filters** - Shows only results of that type (e.g., "Local Drinks (5)")
+- **All** - Shows all results (default)
+- **Local Drinks** - Shows only `local-drink` results
+- **Common Drinks** - Shows only `common-drink` results  
+- **Bottles** - Shows only `local-bottle` results
+- **Beers** - Shows only `beer` results
+- **Wines** - Shows only `wine` results
+- **External Drinks** - Shows only `cocktaildb-drink` results
+- **Ingredients** - Shows only `cocktaildb-ingredient` results
+- **Drink Lists** - Shows only `cocktaildb-drink-list` results
 
-Type filters only appear when there are multiple result types.
+Type filters only appear in the dropdown when there are results of that type. Each filter shows the count of results in parentheses (e.g., "Local Drinks (5)").
 
 ## URL State Management
 
@@ -194,22 +256,22 @@ Search state is preserved in the URL for shareability and bookmarking.
 ### Query Parameters
 
 - `q` - The search term (e.g., `?q=whiskey`)
-- Filter flags - Individual filter states (e.g., `&localDrinks=1&localBottles=1`)
+- `filters` - Comma-separated list of enabled search sources (e.g., `&filters=localDrinks,localBottles,cocktaildbDrinks`)
 
 ### Example URLs
 
 ```
 /lemon/search?q=gin
-/lemon/search?q=whiskey&localBottles=1&cocktaildbDrinks=1
-/victor/search?q=margarita&localDrinks=1&commonDrinks=1
+/lemon/search?q=whiskey&filters=localBottles,cocktaildbDrinks
+/victor/search?q=margarita&filters=localDrinks,commonDrinks,cocktaildbDrinks
 ```
 
 ### Auto-Search
 
 When visiting a URL with search parameters:
 
-1. The search term is loaded from `?q=`
-2. Filter states are restored from query parameters
+1. The search term is loaded from `?q=` parameter
+2. Filter states are restored from `?filters=` comma-separated list
 3. Search is automatically executed
 4. Results are displayed immediately
 
@@ -227,9 +289,9 @@ When visiting a URL with search parameters:
   - Located at: `composables/useOmniSearch.ts`
   - Handles multi-source search, scoring, sorting, and filtering
 
-- **`useSearchDrinks()`** - Specialized drink search logic
+- **`useSearchDrinks()`** - Specialized drink search logic for the drinks page
   - Located at: `composables/useSearchDrinks.ts`
-  - Handles drink-specific search with availability calculation
+  - Handles drink-specific search with availability calculation and different scoring
 
 - **`useSearchHighlight()`** - Text highlighting utility
   - Located at: `composables/useSearchHighlight.ts`
