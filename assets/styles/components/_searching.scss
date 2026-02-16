@@ -72,12 +72,14 @@
   .inside {
     width: 100%;
     text-align: left;
-    max-width: 400px;
     display: flex;
     flex-direction: column;
     gap: $spacing-lg;
   }
   .loading-header {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
     display: grid;
     grid-template-columns: 60px 1fr;
     align-items: center;
@@ -94,6 +96,9 @@
     }
   }
   .steps {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: column;
     gap: $spacing-sm;
@@ -113,6 +118,10 @@
         }
       }
     }
+  }
+  .progress-bar-container {
+    width: 100%;
+    @include progress-bar-container();
   }
 }
 
@@ -156,18 +165,17 @@
   flex-direction: column;
   gap: $spacing-sm;
   margin: $spacing-lg 0;
+  background-color: color.adjust($light-bg, $lightness: -5%);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: $spacing-md;
 
   .results-summary {
-    // background: $white;
-    // border-radius: $border-radius-lg;
-    // box-shadow: $shadow-sm;
-    background-color: color.adjust($light-bg, $lightness: -5%);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-    padding: $spacing-md;
     display: flex;
     gap: $spacing-md;
     justify-content: space-between;
     align-items: center;
+    font-style: italic;
+    font-weight: 600;
   }
 
   .results-info {
@@ -211,5 +219,9 @@
         background-color: rgba(0, 0, 0, 0.15);
       }
     }
+  }
+  .filter-btn {
+    font-size: 0.75em;
+    padding: 0.4em 0.75em;
   }
 }

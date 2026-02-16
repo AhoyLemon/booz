@@ -153,6 +153,10 @@ I'm realizing I want to change the scoring, because I don't like how the relevan
 
 ## Change Requests 2
 
-- [ ] The `searchProgressPercent` value isn't working out as expected. As I search, it just cycles between something like maybe 75(?) and 100, doing that for each query. Instead, it should take the number of steps in your search into consideration. So if there's 5 steps, and we're still doing the first, that's 10%. Once the first query finishes, that's 20%. Once we start with the second, that's 30%, etc.
-- [ ] In `components\SearchResult.vue` (lines 5-7) I want there to be a placeholder if you ever can't find the image. In the case of "3 external drinks with whiskey", the placeholder should be the number 3.
-- [ ] in these `components\SearchResult.vue` listings, let's get rid of the emojis. So don't display the 🌍 🔒 and 🔓 emojis I'm seeing currently.
+- [x] The `searchProgressPercent` value isn't working out as expected. As I search, it just cycles between something like maybe 75(?) and 100, doing that for each query. Instead, it should take the number of steps in your search into consideration. So if there's 5 steps, and we're still doing the first, that's 10%. Once the first query finishes, that's 20%. Once we start with the second, that's 30%, etc.
+- [x] In `components\SearchResult.vue` (lines 5-7) I want there to be a placeholder if you ever can't find the image. In the case of "3 external drinks with whiskey", the placeholder should be the number 3.
+- [x] in these `components\SearchResult.vue` listings, let's get rid of the emojis. So don't display the 🌍 🔒 and 🔓 emojis I'm seeing currently.
+- [x] I'm seeing the title highlinged with `mark` when there's a match! That's great! However, if I am searching for "sour", the search result will show a title of "Lemon's Actual Proper Whiskey Sour", the category of "sour", and a tag of "sour". The word "sour" should have a `mark in all cases.
+- [x] When a search is completed, please clear the search input field, which will hide the filter tags until the user types in a new search.
+- [x] The External Drink List seems to refuse to fail. For example, if I search for `dsajdhasjdsajh`, I should get no results whatsoever. However, I see a Extrnal Drink List results item that says "13 external drinks with dsajdhasjdsajh", and then it says "including **undefined** and 12 more". So it looks like that card isn't working. As such, I can't debug the empty state view.
+- [x] I set a condition to show/hide the `.filter-group` depending on if there's something in the search input. Please animate this, preferrably with css-only solutions of opacity and transform.

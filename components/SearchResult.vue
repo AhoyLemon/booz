@@ -4,13 +4,13 @@
     .search-result__content
       .image-wrapper(:class="{ 'has-image': thumbnailUrl, 'no-image': !thumbnailUrl }")
         img.result-thumbnail(v-if="thumbnailUrl" :src="thumbnailUrl" :alt="result.displayName" loading="lazy")
-        span(v-else-if="result.type === 'cocktaildb-drink-list'") 📡
+        span.placeholder-number(v-else-if="result.type === 'cocktaildb-drink-list' && drinkListCount") {{ drinkListCount }}
       .text-items
         .search-result__header
           .search-result__name(v-html="highlightedName")
           .search-result__type {{ typeLabel }}
         .search-result__details
-          span.detail(v-for="(detail, index) in result.displayDetails" :key="index" v-html="detail")
+          span.detail(v-for="(detail, index) in highlightedDetails" :key="index" v-html="detail")
         .search-result__match-info
           span.match-info Matched in: 
           span.match-fields(v-html="highlightedMatchFields")
@@ -48,6 +48,15 @@
 
   const { highlightText } = useSearchHighlight();
 
+  // Extract drink list count from display name (e.g., "13 external drinks with bourbon" -> 13)
+  const drinkListCount = computed(() => {
+    if (props.result.type === "cocktaildb-drink-list") {
+      const match = props.result.displayName.match(/^(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  });
+
   // Type labels
   const typeLabels: Record<string, string> = {
     "local-drink": "Local Drink",
@@ -68,6 +77,17 @@
       return highlightText(props.result.displayName, props.searchTerm);
     }
     return props.result.displayName;
+  });
+
+  // Highlighted details - apply highlighting to ALL details
+  const highlightedDetails = computed(() => {
+    return props.result.displayDetails.map((detail) => {
+      // Check if this detail contains the search term
+      if (detail.toLowerCase().includes(props.searchTerm.toLowerCase())) {
+        return highlightText(detail, props.searchTerm);
+      }
+      return detail;
+    });
   });
 
   // Highlighted match fields

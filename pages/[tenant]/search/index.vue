@@ -39,8 +39,22 @@
   // Computed: Search progress percentage
   const searchProgressPercent = computed(() => {
     if (searchProgress.value.length === 0) return 0;
-    const completed = searchProgress.value.filter((step: OmniSearchProgress) => step.status === "complete" || step.status === "error").length;
-    return Math.round((completed / searchProgress.value.length) * 100);
+
+    // Count how many steps will be executed based on enabled filters
+    const enabledSteps = Object.values(filters.value).filter((v) => v).length;
+    if (enabledSteps === 0) return 0;
+
+    // Calculate percentage: (completedSteps + currentStepProgress) / totalSteps
+    const completedSteps = searchProgress.value.filter((step: OmniSearchProgress) => step.status === "complete" || step.status === "error").length;
+    const searchingSteps = searchProgress.value.filter((step: OmniSearchProgress) => step.status === "searching").length;
+
+    // Each step completion is worth (100 / enabledSteps) percent
+    // If a step is searching, it contributes its partial progress
+    const stepWeight = 100 / enabledSteps;
+    const completedPercent = completedSteps * stepWeight;
+    const searchingPercent = searchingSteps > 0 ? stepWeight * 0.5 : 0; // 50% for current step
+
+    return Math.min(Math.round(completedPercent + searchingPercent), 100);
   });
 
   // Computed: Filtered results based on type filter
@@ -94,6 +108,9 @@
 
     // Perform search
     await performSearch(searchTerm.value, filters.value);
+
+    // Clear search input
+    searchTerm.value = "";
 
     // Reset filters
     sortBy.value = "relevance";

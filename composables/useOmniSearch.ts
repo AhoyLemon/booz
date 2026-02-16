@@ -235,10 +235,10 @@ export const useOmniSearch = (tenantSlug: string) => {
 
         const details = [bottle.category, bottle.baseSpirit];
 
-        if (bottle.origin) details.push(`🌍 ${bottle.origin}`);
+        if (bottle.origin) details.push(bottle.origin);
         if (bottle.abv) details.push(`${bottle.abv}% ABV`);
         if (bottle.bottleState) {
-          const stateLabels = { unopened: "🔒 Unopened", opened: "🔓 Opened", empty: "⚠️ Empty" };
+          const stateLabels = { unopened: "Unopened", opened: "Opened", empty: "Empty" };
           details.push(stateLabels[bottle.bottleState]);
         }
 
@@ -396,7 +396,7 @@ export const useOmniSearch = (tenantSlug: string) => {
             score,
           },
           displayName: drink.name,
-          displayDetails: [drink.category || "Cocktail", `${availabilityPercent}% available`, "📡 External", ...(drink.tags || [])],
+          displayDetails: [drink.category || "Cocktail", `${availabilityPercent}% available`, "External", ...(drink.tags || [])],
           link: `/${tenantSlug}/drinks/${drink.id}`,
         });
       }
@@ -423,7 +423,7 @@ export const useOmniSearch = (tenantSlug: string) => {
         if (ingredient.strType) details.push(ingredient.strType);
         if (ingredient.strAlcohol) details.push(ingredient.strAlcohol === "Yes" ? "Alcoholic" : "Non-Alcoholic");
         if (ingredient.strABV) details.push(`${ingredient.strABV}% ABV`);
-        details.push("📡 External Ingredient");
+        details.push("External Ingredient");
 
         // Base score: 1 for CocktailDB ingredient
         const matchedFields = ["name"];
@@ -466,6 +466,8 @@ export const useOmniSearch = (tenantSlug: string) => {
 
       // Get first drink name for display
       const firstDrink = data.drinks[0];
+      if (!firstDrink || !firstDrink.strDrink) return []; // Return empty if no valid drink found
+
       const drinkCount = data.drinks.length;
       const remainingCount = drinkCount - 1;
 
@@ -485,8 +487,8 @@ export const useOmniSearch = (tenantSlug: string) => {
             score,
           },
           displayName: `${drinkCount} external drinks with "${searchTerm}"`,
-          displayDetails: [`including <strong>${firstDrink.strDrink}</strong> and ${remainingCount} more`, "📡 External Drink List"],
-          link: `/${tenantSlug}/drinks?search=${encodeURIComponent(searchTerm)}`,
+          displayDetails: [`including <strong>${firstDrink.strDrink}</strong> and ${remainingCount} more`],
+          link: `/${tenantSlug}/drinks?search=${encodeURIComponent(searchTerm)}&filters=externalByIngredient`,
         },
       ];
     } catch (error) {

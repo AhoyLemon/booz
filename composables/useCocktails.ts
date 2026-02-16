@@ -54,6 +54,11 @@ export const useCocktails = (tenantSlug?: string) => {
     }
   };
 
+  // ⏱️ THROTTLING FOR TESTING - Uncomment to slow down loading for styling adjustments
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const LOADING_DELAY_MS = 400; // Adjust this value to see loading screen longer
+  // ⏱️ END THROTTLING
+
   // Load local drinks from API
   const loadLocalDrinks = async () => {
     // Skip if already loaded AND version matches
@@ -70,11 +75,13 @@ export const useCocktails = (tenantSlug?: string) => {
 
       // Start loading local drinks
       localDrinksLoading.value = true;
+      // ⏱️ THROTTLE: Uncomment to add delay here: if (typeof delay !== 'undefined' && LOADING_DELAY_MS > 0) await delay(LOADING_DELAY_MS);
       let drinks = await cockpitAPI.fetchDrinks();
       localDrinksLoading.value = false;
 
       if (tenantConfig.includeCommonDrinks) {
         commonDrinksLoading.value = true;
+        // ⏱️ THROTTLE: Uncomment to add delay here: if (typeof delay !== 'undefined' && LOADING_DELAY_MS > 0) await delay(LOADING_DELAY_MS);
         const commonDrinks = await cockpitAPI.fetchDrinksCommon();
         // Merge, avoiding duplicates by name
         const combined = [...drinks];
@@ -89,6 +96,8 @@ export const useCocktails = (tenantSlug?: string) => {
 
       if (tenantConfig.includeRandomCocktails) {
         randomDrinksLoading.value = true;
+        // ⏱️ THROTTLE: Uncomment to add delay here:
+        if (typeof delay !== "undefined" && LOADING_DELAY_MS > 0) await delay(LOADING_DELAY_MS);
         // Calculate how many random cocktails we need to reach minimum 20 total
         const minTotalDrinks = 20;
         const currentCount = drinks.length;

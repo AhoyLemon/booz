@@ -29,14 +29,14 @@
             button.reset(v-if="currentSearchTerm" type="button" @click="handleClear") Clear
 
           .search-filters
-            .filter-group
+            .filter-group(:class="{ hidden: searchTerm.trim().length === 0 }")
               .filter-label Search in:
               .filter-checkboxes
                 label.filter-checkbox(:class="{ active: filters.localDrinks }")
                   input(type="checkbox" v-model="filters.localDrinks")
                   span Local Drinks
                 label.filter-checkbox(:class="{ active: filters.commonDrinks }")
-                  input(type="checkbox" v-model="filters.commonDrinks" :disabled="!tenantConfig.includeCommonDrinks")
+                  input(type="checkbox" v-model="filters.commonDrinks")
                   span Common Drinks
                 label.filter-checkbox(:class="{ active: filters.localBottles }")
                   input(type="checkbox" v-model="filters.localBottles")
@@ -109,17 +109,16 @@
 
       // EMPTY STATE
       .empty-state(v-if="currentSearchTerm && !isSearching && searchResults.length === 0")
-        .empty-icon 🔍
-        .empty-content
-          h2 No Results Found
+        .empty-state-content
+          h3 No Results Found
           p We couldn't find anything matching "{{ currentSearchTerm }}"
-          p.empty-help Try:
+          p.empty-help.left Try:
           ul.empty-suggestions
             li Checking your spelling
             li Using different keywords
-            li Searching for a specific category (e.g., "whiskey", "gin", "rum")
+            li Searching for a specific category (e.g., #[code whiskey], #[code gin], #[code rum])
             li Using fewer or different filters
-          button.reset(type="button" @click="handleClear") Clear Search
+          button.clear-search-btn(type="button" @click="handleClear") Clear Search
 
       // SEARCH RESULTS
       .search-results(v-if="currentSearchTerm && !isSearching && filteredResults.length > 0")

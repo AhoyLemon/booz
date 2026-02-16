@@ -86,6 +86,20 @@
     return Math.round((completed / loadingSteps.value.length) * 100);
   });
 
+  // Search progress percentage (for searching state)
+  const searchProgressPercent = computed(() => {
+    if (searchProgress.value.length === 0) return 0;
+    const completed = searchProgress.value.filter((step) => step.status === "complete").length;
+    const searching = searchProgress.value.filter((step) => step.status === "searching").length;
+
+    // Calculate: completed steps + (50% for current step if searching)
+    const stepWeight = 100 / searchProgress.value.length;
+    const completedPercent = completed * stepWeight;
+    const searchingPercent = searching > 0 ? stepWeight * 0.5 : 0;
+
+    return Math.min(Math.round(completedPercent + searchingPercent), 100);
+  });
+
   // Load data on mount
   onMounted(async () => {
     await loadInventory();
@@ -98,7 +112,13 @@
 
     // Check for search query in URL
     const searchQuery = route.query.search as string;
-    if (searchQuery && searchQuery.trim()) {
+    const filtersQuery = route.query.filters as string;
+
+    // Handle special filter: externalByIngredient
+    if (searchQuery && filtersQuery === "externalByIngredient") {
+      searchTerm.value = searchQuery;
+      await searchDrinks(searchQuery);
+    } else if (searchQuery && searchQuery.trim()) {
       searchTerm.value = searchQuery;
       await handleSearch();
     }

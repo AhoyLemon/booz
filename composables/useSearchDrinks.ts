@@ -25,7 +25,7 @@ export interface SearchProgress {
 
 // ⏱️ TEMPORARY THROTTLING - Easy to remove
 // Set to 0 to remove throttling completely
-const SEARCH_DELAY_MS = 400; // Delay between search steps for UX testing
+const SEARCH_DELAY_MS = 400; // Delay between search steps for UX testing (was typo: 40000)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // ⏱️ END TEMPORARY THROTTLING
 
