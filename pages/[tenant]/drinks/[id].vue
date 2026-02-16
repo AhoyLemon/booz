@@ -44,7 +44,7 @@
   const fingerBottle = ref<Bottle | null>(null);
   const servingStyle = ref<"straight" | "rocks" | "glass" | "bottle" | "ice">("straight");
   const fetchedDrink = ref<Drink | null>(null);
-  
+
   // Beer/Wine specific state
   const isBeerDrink = ref(false);
   const isWineDrink = ref(false);
@@ -138,20 +138,14 @@
         const tenantConfig = getTenantConfig(tenant.value) || getDefaultTenantConfig();
         const title = `${newDrink.name} - ${tenantConfig.barName}`;
         const description = `Recipe for ${newDrink.name} at ${tenantConfig.barName}. ${newDrink.ingredients.length} ingredients required.`;
+        const ogImage = newDrink.imageUrl || newDrink.image || tenantConfig.ogImage || "/opengraph-generic.png";
 
-        useHead({
+        usePageMeta({
+          tenant: tenant.value,
+          pageType: "drinks",
           title,
-          meta: [
-            { name: "description", content: description },
-            { property: "og:title", content: title },
-            { property: "og:description", content: description },
-            { property: "og:image", content: newDrink.imageUrl || newDrink.image || tenantConfig.ogImage || "/opengraph-generic.png" },
-            { property: "og:type", content: "article" },
-            { name: "twitter:card", content: "summary_large_image" },
-            { name: "twitter:title", content: title },
-            { name: "twitter:description", content: description },
-            { name: "twitter:image", content: newDrink.imageUrl || newDrink.image || tenantConfig.ogImage || "/opengraph-generic.png" },
-          ],
+          description,
+          ogImage,
         });
       }
     },

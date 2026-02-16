@@ -14,6 +14,7 @@
 
   // Set page meta (SSR-friendly)
   usePageMeta({
+    pageType: "home",
     title: "BOOZ",
     description: "Your new favorite way to manage your home bar.",
   });

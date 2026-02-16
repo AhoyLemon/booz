@@ -14,16 +14,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   // List of routes that should be tenant-specific
-  const tenantRoutes = [
-    "/drinks",
-    "/bottles",
-    "/essentials",
-    "/beer-wine",
-    "/fingers",
-    "/available",
-    "/search", // Add search to tenant routes
-    "/qr",
-  ];
+  const tenantRoutes = ["/drinks", "/bottles", "/essentials", "/beer-wine", "/fingers", "/available", "/search", "/qr"];
 
   // Check if current path is a tenant route without a tenant prefix
   const pathSegments = to.path.split("/").filter((s) => s);

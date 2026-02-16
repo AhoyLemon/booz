@@ -21,6 +21,23 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     includeCommonDrinks: false,
     includeRandomCocktails: true,
     isSampleData: true,
+    metaInfo: {
+      description: "Explore our sample bar inventory with demo data.",
+      ogImage: "/opengraph-generic.png",
+      pages: {
+        drinks: {
+          title: "Sample Cocktails",
+          description: "Browse our demo collection of cocktail recipes with randomly generated suggestions.",
+        },
+        bottles: {
+          description: "Explore our sample spirits inventory - featuring demo bottles and liquors.",
+        },
+        available: {
+          title: "Available Now",
+          description: "See what cocktails you can make right now with our sample inventory.",
+        },
+      },
+    },
   },
   lemon: {
     slug: "lemon",
@@ -30,6 +47,28 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     ogImage: "/opengraph-lemon.png",
     includeCommonDrinks: true,
     includeRandomCocktails: false,
+    metaInfo: {
+      description: "Lemonhaus - Your destination for expertly crafted cocktails and premium spirits.",
+      ogImage: "/opengraph-lemon.png",
+      pages: {
+        drinks: {
+          title: "Cocktails | Lemonhaus",
+          description: "Explore the cocktail menu at Lemonhaus - from classic recipes to signature creations.",
+        },
+        bottles: {
+          title: "Our Spirits | Lemonhaus",
+          description: "Browse the curated collection of spirits, liqueurs, and mixers at Lemonhaus.",
+          ogImage: "/opengraph-lemon.png",
+        },
+        available: {
+          title: "Currently Available | Lemonhaus",
+          description: "See what's ready to serve right now at Lemonhaus - updated in real-time.",
+        },
+        fingers: {
+          description: "Premium spirits served neat or on the rocks at Lemonhaus.",
+        },
+      },
+    },
   },
   victor: {
     slug: "victor",
@@ -38,6 +77,19 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     description: "Victor's Place - Your destination for premium spirits, expertly crafted cocktails, and fine wine selection. Check availability now!",
     includeCommonDrinks: true,
     includeRandomCocktails: true,
+    metaInfo: {
+      description: "Victor's Place offers an extensive selection of cocktails, craft beer, and fine wines.",
+      pages: {
+        drinks: {
+          title: "Drinks Menu",
+          description: "Discover our extensive drinks menu at Victor's Place - featuring classic cocktails and unique creations.",
+        },
+        "beer-wine": {
+          title: "Beer & Wine Selection",
+          description: "Explore our carefully selected craft beers and fine wines at Victor's Place.",
+        },
+      },
+    },
   },
 };
 
