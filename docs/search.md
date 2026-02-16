@@ -112,18 +112,22 @@ Searching for "gin":
 The specialized drink search (used on `/[tenant]/drinks`) has its own scoring system focused on cocktail recipes:
 
 #### Name Matches
+
 - **3 points** - Base score for partial name match
 - **+1 point** - Full word match within drink name
 - **+1 point** - Exact match of drink name
 - **+1 point** - Bonus for local drinks (when common drinks are enabled)
 
 #### Category Matches
+
 - **1 point** - Exact category match only
 
 #### Tag Matches
+
 - **1 point** - Exact tag match (with special handling for non-alcoholic variations)
 
 #### Ingredient Matches
+
 - **2 points** - Base score for ingredient name match
 - **+1 point** - Full word match in ingredient name
 
@@ -239,7 +243,7 @@ After a search, results can be filtered by type using the result type filter dro
 
 - **All** - Shows all results (default)
 - **Local Drinks** - Shows only `local-drink` results
-- **Common Drinks** - Shows only `common-drink` results  
+- **Common Drinks** - Shows only `common-drink` results
 - **Bottles** - Shows only `local-bottle` results
 - **Beers** - Shows only `beer` results
 - **Wines** - Shows only `wine` results

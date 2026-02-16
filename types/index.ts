@@ -1,73 +1,153 @@
+// Tenant Configuration Interface
+export interface TenantConfig {
+  /** URL path segment for the tenant (e.g., "lemon", "victor") */
+  slug: string;
+  /** Display name for the bar (e.g., "Lemonhaus", "Victor's Place") */
+  barName: string;
+  /** Cockpit singleton name containing bar data (e.g., "sampleBar", "lemonBar", "barVictor") */
+  barData: string;
+  /** SEO description for the bar */
+  description?: string;
+  /** OpenGraph image path for social media sharing */
+  ogImage?: string;
+  /** Include common cocktails from shared collection */
+  includeCommonDrinks: boolean;
+  /** Include random cocktails from The Cocktail DB API */
+  includeRandomCocktails: boolean;
+  /** Whether this tenant contains sample/demo data (affects UI behavior) */
+  isSampleData?: boolean;
+}
+
+// Complete bar inventory data structure
+export interface BarData {
+  /** Name of the bar */
+  name: string;
+  /** Array of bottle objects in the bar's inventory */
+  bottles: Bottle[];
+  /** Array of drink recipes specific to this bar */
+  drinks: Drink[];
+  /** Array of beer items available */
+  beers: Beer[];
+  /** Array of wine items available */
+  wines: Wine[];
+  /** Array of bitters available */
+  bitters: Bitter[];
+  /** Array of essential ingredients (raw strings, processed by frontend) */
+  essentials: string[];
+}
+
 export interface Bottle {
   id: string;
+  /** Name of the bottle */
   name: string;
+  /** Category (e.g., "Staples", "Liqueur", etc.) */
   category: string;
+  /** Primary spirit category (e.g., "Whiskey", "Gin", "Rum", "Vodka") */
   baseSpirit: string;
+  /** Additional tags for categorization and search */
   tags: string[];
+  /** Whether the bottle is currently in stock */
   inStock: boolean;
+  /** Whether this bottle should be excluded from cocktails and served only as fingers */
   isFingers?: boolean;
+  /** Size of the bottle (e.g., "750ml (Fifth)") */
   bottleSize?: string;
+  /** Current state of the bottle */
   bottleState?: "unopened" | "opened" | "empty";
+  /** Image URL or path */
   image?: string;
+  /** Alcohol by volume percentage */
   abv?: number;
+  /** Country or region of origin */
   origin?: string;
+  /** Producer/brand company */
   company?: string;
+  /** Alternative names or aliases */
   aka?: string[];
 }
 
 export interface Beer {
   id: string;
+  /** Name of the beer */
   name: string;
+  /** Type of beer (e.g., "Lager", "IPA", etc.) */
   type: string;
+  /** Whether the beer is currently in stock */
   inStock: boolean;
+  /** Image URL or path */
   image?: string;
 }
 
 export interface Wine {
   id: string;
+  /** Name of the wine */
   name: string;
+  /** Type of wine (e.g., "Red", "White", etc.) */
   type: string;
+  /** Whether the wine is currently in stock */
   inStock: boolean;
+  /** Image URL or path */
   image?: string;
 }
 
 export interface Bitter {
   id: string;
+  /** Name of the bitters */
   name: string;
+  /** Array of flavor profiles (e.g., ["Citrus", "Spicy"]) */
   flavors: string[];
+  /** Producer/brand company */
   company?: string;
+  /** Whether the bitters are currently in stock */
   inStock: boolean;
+  /** Image URL or path */
   image?: string;
 }
 
-// New essentials data structure - now just an array of strings
+// Raw essentials data from Cockpit CMS - array of strings
 export type EssentialsRawData = string[];
 
 // Processed essential item for display
 export interface Essential {
   id: string;
+  /** Name of the essential item */
   name: string;
+  /** Category the item belongs to (processed from essentialCategories.ts) */
   category: string;
+  /** Whether the essential item is currently in stock */
   inStock: boolean;
 }
 
 export interface Ingredient {
+  /** Name of the ingredient */
   name: string;
+  /** Quantity specification (e.g., "2 oz", "1 dash") */
   qty?: string;
+  /** Whether this ingredient is optional */
   optional?: boolean;
 }
 
 export interface Drink {
   id: string;
+  /** Name of the drink */
   name: string;
+  /** List of ingredients with quantity and optional flag */
   ingredients: Ingredient[];
+  /** Preparation instructions */
   instructions: string | string[];
+  /** Image URL or path */
   image?: string;
+  /** Alternative image URL (for external drinks) */
   imageUrl?: string;
+  /** Preparation method (e.g., "Shake", "Build", etc.) */
   prep?: string;
+  /** Category (e.g., "Classic", "Tiki", etc.) */
   category?: string;
+  /** Additional tags for categorization */
   tags?: string[];
+  /** Whether this drink is starred/favorited by the user */
   starred?: boolean;
+  /** Whether this drink comes from an external API */
   external?: boolean;
 }
 
@@ -114,17 +194,6 @@ export interface BeerWine {
 export interface BeerWineData {
   items: BeerWine[];
   lastUpdated: string;
-}
-
-// New bar data interface
-export interface BarData {
-  name: string;
-  bottles: Bottle[];
-  drinks: Drink[];
-  beers: Beer[];
-  wines: Wine[];
-  bitters: Bitter[];
-  essentials: string[];
 }
 
 // Legacy type alias for backwards compatibility

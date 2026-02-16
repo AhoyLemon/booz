@@ -6,7 +6,7 @@
     slot
   footer.app-footer
     .container
-      p by 
+      p BOOZ is by 
         a(href="https://ahoylemon.xyz") Lemon
         | . GitHub repo is 
         a(href="https://github.com/ahoylemon/booz") here

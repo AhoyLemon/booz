@@ -55,7 +55,7 @@ This app supports multiple tenants (bars), each with their own inventory and dri
    1. Give this new bar a name
    1. ALL DONE
 
-1. **Update `utils/tenants.ts`**: Add your tenant configuration:
+1. **Update `utils/tenants.ts`**: Add your tenant configuration (see `TenantConfig` interface in [`types/index.ts`](./types/index.ts)):
 
    ```typescript
    export const TENANT_CONFIG: Record<string, TenantConfig> = {
@@ -65,9 +65,9 @@ This app supports multiple tenants (bars), each with their own inventory and dri
        barData: "mySpecialNewBar", // This should match the unique id you created in 1.3
        barName: "My New Bar",
        description: "This is the Page meta description in case you want something special here",
-       includeCommonDrinks: false, // Set to true if you want to include drinks from the common collection
+       includeCommonDrinks: true, // Set to true if you want to include drinks from the common collection
        includeRandomCocktails: true, // Set to true if you want to include random cocktails from The Cocktail DB
-       isSampleData: true, // Set to true if this tenant is meant for sample/demo purposes (affects UI and data handling in some places)
+       isSampleData: false, // Set to true if this tenant is meant for sample/demo purposes (affects UI and data handling in some places)
      },
    };
    ```
@@ -209,94 +209,20 @@ The site will be available at `http://localhost:3000`
 
 ## Data Structure
 
-### Individual Tenant
+All TypeScript interfaces and types are defined in [`types/index.ts`](./types/index.ts). This file contains comprehensive type definitions for:
 
-The Root object is a tenant, which is an array containing a single `bar` object.
+- **Tenant Configuration** - Multi-tenant setup and routing
+- **Bar Data** - Complete bar inventory structure
+- **Bottles** - Spirit inventory with detailed metadata
+- **Drinks** - Cocktail recipes with ingredients and instructions
+- **Beer/Wine** - Non-spirit bottle inventory
+- **Bitters** - Cocktail bitters and flavor profiles
+- **Essentials** - Bar essentials and mixers
+- **Search Types** - Omnisearch and drink search interfaces
 
-The bar object looks like this:
+The root data structure for each tenant is a `BarData` object containing arrays of bottles, drinks, beers, wines, bitters, and essentials.
 
-```ts
-{
-  name: String // Name of the bar
-  bottles: Array<{...}> // Array of bottle objects
-  drinks: Array<{...}> // Array of drink objects
-  beers: Array<{...}> // Array of beer objects
-  wines: Array<{...}> // Array of wine objects
-  bitters: Array<{...}> // Array of bitters objects
-  essentials: String[] // Array of essential ingredients (strings)
-}
-```
-
-#### Bottle Object
-
-```ts
-{
-  name: String // Name of the bottle
-  category: String // Category (e.g., "Staples", "Liqueur", etc.)
-  baseSpirit: String[] // Array of base spirits (e.g., ["Whiskey", "Rum"])
-  whiskeyTypes: String[] // Array of whiskey types (if applicable)
-  tequilaTypes: String[] // Array of tequila types (if applicable)
-  ginTypes: String[] // Array of gin types (if applicable)
-  rumTypes: String[] // Array of rum types (if applicable)
-  liqueurTypes: String[] // Array of liqueur types (if applicable)
-  additionalTags: String[], // Any additional tags for categorization
-  bottleSize: String // Size of the bottle (e.g., "750ml (Fifth)")
-  company: String // Producer/brand
-  abv: Number // Alcohol by volume percentage
-  origin: String // Country or region of origin
-  bottleState: String // "Unopened", "Opened","Empty" or null
-  image: ImageObject // Usually a picture of the bottle
-  isFingers: Boolean // Whether this bottle should be excluded from cocktails and served only as fingers
-}
-```
-
-#### Drink Object
-
-```ts
-{
-  name: String // Name of the drink
-  category: String // Category (e.g., "Classic", "Tiki", etc.)
-  ingredients: Array<{ name: String, qty: String, optional: Boolean }> // List of ingredients with quantity and optional flag
-  steps: Array<{ step: String }> // Preparation steps
-  prep: String // Preparation method (e.g., "Shake", "Build", etc.)
-  image: ImageObject // Usually a picture of the drink
-  tags: String[] // Any additional tags for categorization
-```
-
-#### Beer Object
-
-```ts
-{
-  name: String; // Name of the beer
-  type: String; // Type of beer (e.g., "Lager", "IPA", etc.)
-  image: ImageObject; // Usually a picture of the beer
-}
-```
-
-#### Wine Object
-
-```ts
-{
-  name: String; // Name of the wine
-  type: String; // Type of wine (e.g., "Red", "White", etc.)
-  image: ImageObject; // Usually a picture of the wine
-}
-```
-
-#### Bitters Object
-
-```ts
-{
-  name: String; // Name of the bitters
-  flavors: String[]; // Array of flavor profiles (e.g., ["Citrus", "Spicy"])
-  company: String; // Producer/brand
-  image: ImageObject; // Usually a picture of the bitters
-}
-```
-
-#### Essentials
-
-The essentials are passed through as a single array of strings. They are broken into categories in the frontend using `utils\essentialCategories.ts`
+For detailed field descriptions and comments, see the type definitions in [`types/index.ts`](./types/index.ts).
 
 ## Architecture
 

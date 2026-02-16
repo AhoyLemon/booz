@@ -5,21 +5,12 @@
  * This enables multi-tenant support with path-based routing.
  */
 
+import type { TenantConfig } from "~/types";
+
 // Common/shared bar configuration
 export const COMMON_BAR = {
   barData: "commonBar",
 };
-
-export interface TenantConfig {
-  slug: string;
-  barName: string;
-  barData: string; // Cockpit singleton name (e.g., "sampleBar", "barLemon")
-  description?: string;
-  ogImage?: string;
-  includeCommonDrinks: boolean; // Include common cocktails from Cockpit API
-  includeRandomCocktails: boolean; // Include random cocktails from TheCocktailDB
-  isSampleData?: boolean; // Whether this tenant contains sample/demo data
-}
 
 export const TENANT_CONFIG: Record<string, TenantConfig> = {
   sample: {
