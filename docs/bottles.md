@@ -4,6 +4,8 @@
 
 When viewing a bottle detail page, the system searches for cocktails that can be made with that bottle. This document describes the search strategy, sorting logic, and technical implementation.
 
+> **See Also**: For general search functionality across all inventory types, see the **[Omnisearch documentation](./search.md)** and **[Drinks Search documentation](./drinks.md)**.
+
 ## Search Strategy
 
 The system searches for matching drinks using a progressive specificity approach, stopping when it finds 3-10 drinks or exhausts all search options.

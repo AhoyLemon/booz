@@ -2,7 +2,12 @@
 @use "@/assets/styles/variables" as *;
 
 .app-header {
-  background: linear-gradient(135deg, $dark-bg 0%, color.adjust($dark-bg, $lightness: -10%) 100%);
+  // background: #ff512f; /* fallback for old browsers */
+  // background: -webkit-linear-gradient(45deg, #ff512f, #f09819); /* Chrome 10-25, Safari 5.1-6 */
+  // background: linear-gradient(-112deg, #ff512f, #f09819); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  // background: linear-gradient(to left, #41295a, #2f0743);
+  background-color: #152331;
+  background: linear-gradient(113deg, #152331, #000000);
   color: $text-light;
   padding-top: $spacing-md;
   box-shadow: $shadow-lg;
@@ -82,7 +87,7 @@
     font-size: 1.125rem;
   }
   .nav-holder {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 80, 0.1);
   }
   nav {
     padding: 0 1.5rem;
@@ -96,16 +101,19 @@
     margin-right: auto;
     a {
       padding: 0.5em 1em;
+      color: $primary-color;
+      transition: all 0.25s linear;
+      &:hover,
+      &:focus-visible,
       &.active {
         background-color: rgba(0, 0, 0, 0.9);
-        box-shadow: $shadow-sm;
-        color: $primary-color;
+        color: $yellow;
       }
     }
   }
 }
 
-@media (min-width: 920px) {
+@media (min-width: 768px) {
   .app-header {
     .name-holder {
       grid-template-columns: 1fr;
@@ -116,7 +124,7 @@
   }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 767px) {
   .app-header {
     nav {
       padding: 0;

@@ -3,7 +3,7 @@
 
     .header-section
       hgroup
-        h1 All Drinks
+        h1 Drinks
         p Explore cocktail potentials from the ingredients in {{barName}}.
 
     .error-banner(v-if="error")
@@ -32,8 +32,6 @@
           .loader
           .text-wrapper
             span Searching
-        //.animation-wrapper(aria-hidden="true")
-          .loader
         .text-wrapper
           ul.steps(aria-label="Search progress")
             li.step(
@@ -45,6 +43,8 @@
               span.searching(v-if="step.status === 'searching'") {{ step.labels.searching }}
               span.complete.none-found(v-else-if="step.status === 'complete' && step.count === 0") {{ step.labels.foundNone }}
               span.complete.found(v-else-if="step.status === 'complete' && step.count > 0") {{ step.labels.found.replace('{count}', step.count.toString()) }}
+        .progress-bar-container
+          .progress-bar(:style="{ width: searchProgressPercent + '%' }")
 
     // Search error banner
     .search-error-banner(v-if="searchError && isSearchActive")
@@ -68,7 +68,6 @@
               option(value="relevance") Relevance
               option(value="name") Name (A-Z)
               option(value="ingredient") Ingredient Match
-          //button.reset(type="button" @click="handleClearSearch") Clear Search
 
     section.filters(v-if="!isSearchActive")
       .filter-buttons
@@ -93,6 +92,8 @@
               :class="step.status"
               :aria-label="step.text"
             ) {{ step.text }}
+        .progress-bar-container
+          .progress-bar(:style="{ width: loadingProgressPercent + '%' }")
 
     .error(v-if="error") {{ error }}
 
@@ -118,5 +119,3 @@
           :tenant="tenant"
           :search-term="isSearchActive ? currentSearchTerm : ''"
         )
-      //.hydrate-btn-container
-        button.hydrate-btn(@click="hydrateMoreCocktailDB") RANDOM! COCKTAILS!

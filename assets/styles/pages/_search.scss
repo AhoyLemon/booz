@@ -1,0 +1,235 @@
+@use "sass:color";
+@use "@/assets/styles/variables" as *;
+@use "@/assets/styles/abstracts/mixins" as *;
+
+.search-page {
+  .inside {
+    width: 100%;
+    max-width: 82ch;
+  }
+
+  .container {
+    min-height: calc(100dvh - 260px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .header-section,
+    .error-banner {
+      display: none;
+    }
+  }
+
+  .omnisearch-bar {
+    width: 100%;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-lg;
+      .search-input-group {
+        display: flex;
+      }
+      input[type="search"] {
+        flex: 1;
+        padding: 0.75em 1.25em;
+        border: 2px solid $border-color;
+        border-radius: $border-radius-md 0 0 $border-radius-md;
+        border-right: none;
+        font-size: 0.875rem;
+
+        &:hover,
+        &:focus {
+          outline: none;
+          border-color: $accent-color;
+        }
+      }
+      button {
+        padding: 0.75em 1.25em;
+        font-size: 0.875rem;
+        border: 2px solid $border-color;
+        border-radius: 0;
+        font-weight: 625;
+        color: $text-dark;
+        &.submit {
+          background-color: $primary-color;
+          &:hover,
+          &:focus-visible {
+            background-color: color.adjust($primary-color, $lightness: -15%);
+            border-color: $accent-color;
+            outline: none;
+          }
+        }
+        &.reset {
+          background-color: color.adjust($light-bg, $lightness: -5%);
+          &:hover,
+          &:focus-visible {
+            background-color: color.adjust($light-bg, $lightness: -14%);
+            border-color: $accent-color;
+            outline: none;
+          }
+        }
+        &:last-child {
+          border-radius: 0 $border-radius-md $border-radius-md 0;
+        }
+      }
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      // Smooth animation
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 500px; // Enough for all checkboxes
+      overflow: hidden;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        max-height 0.3s ease;
+
+      &.hidden {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+        pointer-events: none;
+      }
+    }
+    .filter-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .filter-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      gap: 1rem;
+      label {
+        display: inline-flex;
+        gap: 6px;
+        cursor: pointer;
+        color: #888;
+        &.active {
+          color: $text-dark;
+        }
+        &:hover {
+          color: $accent-color;
+        }
+      }
+      input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        border: 2px solid $border-color;
+        border-radius: 0.25rem;
+        outline: none;
+        cursor: pointer;
+        accent-color: $border-color; // default accent
+
+        &:focus-visible {
+          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+        }
+      }
+      label.active {
+        input[type="checkbox"] {
+          accent-color: #111;
+        }
+      }
+      label:hover {
+        input[type="checkbox"] {
+          accent-color: $accent-color;
+          border-color: lime;
+        }
+      }
+    }
+  }
+
+  .searching-container {
+    // width: 100%;
+    // max-width: 64ch;
+    max-width: 57ch;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: color.adjust($accent-color, $lightness: 50%, $saturation: -20%);
+    padding: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: $spacing-lg;
+    .inside {
+      width: 100%;
+      text-align: left;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-lg;
+    }
+    .loading-header {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      padding: $spacing-lg;
+      align-items: center;
+      gap: $spacing-md;
+      .loader {
+        @include loader();
+      }
+
+      span {
+        font-size: 125%;
+        font-weight: 600;
+        color: #25b09b;
+        @include loading-ellipsis(1.5s);
+      }
+    }
+    .text-wrapper {
+      padding-left: $spacing-lg;
+      padding-right: $spacing-lg;
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+        li {
+          font-size: 0.75em;
+          span.searching {
+            opacity: 0.6;
+            @include loading-ellipsis();
+          }
+          span.complete {
+            font-weight: 600;
+            &.found {
+              color: green;
+            }
+            &.none-found {
+              opacity: 0.6;
+            }
+          }
+        }
+      }
+    }
+
+    .progress-bar-container {
+      @include progress-bar-container();
+    }
+  }
+
+  .search-results-header {
+    .result-type-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px 12px;
+      opacity: 1;
+      transform: scaleX(1);
+      transition: all 1s ease;
+
+      @starting-style {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+    }
+  }
+
+  .search-results {
+    li.result-item {
+      list-style: none;
+    }
+  }
+}

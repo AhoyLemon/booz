@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { TENANT_CONFIG } from "./utils/tenants";
+import { promises as fs } from "fs";
+import { join } from "path";
 
 const baseURL = process.env.NODE_ENV === "production" ? "/" : "/";
 
@@ -39,21 +41,72 @@ export default defineNuxtConfig({
           const urls = [];
           // Use configured hostname when generating URLs so generated sitemap is absolute
           const hostnameForSitemap = process.env.NODE_ENV === "production" ? "https://booz.bar" : "http://127.0.0.1:3000";
-          
-          // Use build time as lastmod (represents when site was last deployed)
-          const lastmod = new Date().toISOString();
-          
+
+          // Helper function to get last modified date of a Vue file
+          const getFileLastMod = async (filePath: string): Promise<string> => {
+            try {
+              const stats = await fs.stat(join(process.cwd(), filePath));
+              return stats.mtime.toISOString();
+            } catch (error) {
+              // If file doesn't exist or can't be read, fall back to current date
+              console.warn(`Could not get mtime for ${filePath}, using current date`);
+              return new Date().toISOString();
+            }
+          };
+
+          // Map URL paths to Vue file paths
+          const getVueFilePath = (urlPath: string): string => {
+            // Remove leading slash and split by /
+            const parts = urlPath.slice(1).split("/");
+            const slug = parts[0];
+            const page = parts[1] || "index";
+
+            // Handle non-tenant pages
+            if (slug === "about") {
+              return `pages/about/index.vue`;
+            }
+
+            // Handle tenant pages
+            if (page === slug) {
+              // This is a tenant home page like /lemon
+              return `pages/[tenant]/index.vue`;
+            }
+
+            // Map page names to file paths
+            const pageMap: Record<string, string> = {
+              drinks: "pages/[tenant]/drinks/index.vue",
+              bottles: "pages/[tenant]/bottles/index.vue",
+              essentials: "pages/[tenant]/essentials/index.vue",
+              "beer-wine": "pages/[tenant]/beer-wine/index.vue",
+              fingers: "pages/[tenant]/fingers/index.vue",
+              available: "pages/[tenant]/available/index.vue",
+              search: "pages/[tenant]/search/index.vue",
+              qr: "pages/[tenant]/qr/index.vue",
+            };
+
+            return pageMap[page] || `pages/[tenant]/index.vue`;
+          };
+
           for (const slug of slugs) {
-            urls.push({ url: `${hostnameForSitemap}/${slug}`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/drinks`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/bottles`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/essentials`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/beer-wine`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/fingers`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/available`, lastmod });
-            urls.push({ url: `${hostnameForSitemap}/${slug}/qr`, lastmod });
+            const tenantUrls = [
+              `/${slug}`,
+              `/${slug}/drinks`,
+              `/${slug}/bottles`,
+              `/${slug}/essentials`,
+              `/${slug}/beer-wine`,
+              `/${slug}/fingers`,
+              `/${slug}/available`,
+              `/${slug}/search`,
+              `/${slug}/qr`,
+            ];
+
+            for (const urlPath of tenantUrls) {
+              const vueFilePath = getVueFilePath(urlPath);
+              const lastmod = await getFileLastMod(vueFilePath);
+              urls.push({ url: `${hostnameForSitemap}${urlPath}`, lastmod });
+            }
           }
-          
+
           return urls;
         },
       },

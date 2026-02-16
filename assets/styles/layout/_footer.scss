@@ -2,7 +2,8 @@
 @use "@/assets/styles/variables" as *;
 
 .app-footer {
-  background: $dark-bg;
+  background-color: #152331;
+  background: linear-gradient(113deg, #152331, #000000);
   color: $text-light;
   padding: $spacing-sm 0;
   text-align: right;

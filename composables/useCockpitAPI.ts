@@ -1,6 +1,6 @@
-import type { Bottle, Drink, Beer, Wine, Bitter, BarData, EssentialsRawData } from "~/types";
+import type { Bottle, Drink, Beer, Wine, Bitter, BarData, EssentialsRawData, TenantConfig } from "~/types";
 import { COCKPIT_API_URL, COCKPIT_API_KEY } from "~/utils/cockpitConfig";
-import { getTenantConfig, getDefaultTenantConfig, type TenantConfig, COMMON_BAR } from "~/utils/tenants";
+import { getTenantConfig, getDefaultTenantConfig, COMMON_BAR } from "~/utils/tenants";
 
 interface CockpitBottle {
   _id?: string;

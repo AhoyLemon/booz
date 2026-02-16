@@ -47,6 +47,10 @@
     font-weight: 625;
     color: rgba(0, 0, 0, 0.5);
   }
+  .progress-bar-container {
+    grid-column: span 2;
+    @include progress-bar-container();
+  }
   .steps {
     text-align: left;
     font-size: 0.875rem;

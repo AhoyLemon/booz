@@ -22,6 +22,7 @@
           NuxtLink.nav-link(:to="tenantPath('/beer-wine')" :class="{ active: isActive('/beer-wine') }") Beer & Wine
           NuxtLink.nav-link(:to="tenantPath('/fingers')" :class="{ active: isActive('/fingers') }") Fingers
           NuxtLink.nav-link(:to="tenantPath('/available')" :class="{ active: isActive('/available') }") Available
+          NuxtLink.nav-link(:to="tenantPath('/search')" :class="{ active: isActive('/search') }") Search
           NuxtLink.nav-link(:to="tenantPath('/qr')" :class="{ active: isActive('/qr') }") QR Code
 </template>
 
