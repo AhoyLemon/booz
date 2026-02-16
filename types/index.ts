@@ -1,3 +1,35 @@
+// Page Meta Override Interface
+export interface PageMetaOverride {
+  /** Page title override */
+  title?: string;
+  /** Page description override */
+  description?: string;
+  /** OpenGraph image override */
+  ogImage?: string;
+}
+
+// Tenant Meta Configuration
+export interface TenantMetaConfig {
+  /** Default description for all tenant pages */
+  description?: string;
+  /** Default OpenGraph image for all tenant pages */
+  ogImage?: string;
+  /** Page-specific meta overrides (keyed by page name) */
+  pages?: {
+    index?: PageMetaOverride;
+    drinks?: PageMetaOverride;
+    bottles?: PageMetaOverride;
+    available?: PageMetaOverride;
+    fingers?: PageMetaOverride;
+    essentials?: PageMetaOverride;
+    "beer-wine"?: PageMetaOverride;
+    search?: PageMetaOverride;
+    qr?: PageMetaOverride;
+    error?: PageMetaOverride;
+    [key: string]: PageMetaOverride | undefined;
+  };
+}
+
 // Tenant Configuration Interface
 export interface TenantConfig {
   /** URL path segment for the tenant (e.g., "lemon", "victor") */
@@ -16,6 +48,8 @@ export interface TenantConfig {
   includeRandomCocktails: boolean;
   /** Whether this tenant contains sample/demo data (affects UI behavior) */
   isSampleData?: boolean;
+  /** Page-level meta configuration for this tenant */
+  metaInfo?: TenantMetaConfig;
 }
 
 // Complete bar inventory data structure

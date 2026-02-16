@@ -19,9 +19,9 @@
   // Set page meta (SSR-friendly)
   import { usePageMeta } from "~/composables/usePageMeta";
   usePageMeta({
+    pageType: "error",
     title: "BOOZ - Page Not Found",
     description: "That's not a good URL. Try again.",
-    ogDescription: "That's not a good URL. Try again.",
   });
 
   // Define known page routes (tenant-based pages)

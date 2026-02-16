@@ -191,7 +191,9 @@
 
   // Set page meta
   usePageMeta({
-    title: `Search ${barName.value}`,
-    description: `Search for drinks, bottles, beer, wine, and ingredients at ${barName.value}`,
+    tenant: tenant.value,
+    pageType: "search",
+    title: `Search - \${tenantName}`,
+    description: `Search for drinks, bottles, beer, wine, and ingredients at \${tenantName}.`,
   });
 </script>
