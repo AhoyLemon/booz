@@ -101,7 +101,7 @@ export function getTenantConfig(slug: string): TenantConfig | null {
  * @returns The default tenant configuration
  */
 export function getDefaultTenantConfig(): TenantConfig {
-  return TENANT_CONFIG.sample;
+  return TENANT_CONFIG.sample!;
 }
 
 /**
@@ -109,7 +109,10 @@ export function getDefaultTenantConfig(): TenantConfig {
  * @returns Array of tenant slugs (excluding sample data tenants)
  */
 export function getAllTenantSlugs(): string[] {
-  return Object.keys(TENANT_CONFIG).filter((slug) => !TENANT_CONFIG[slug].isSampleData);
+  return Object.keys(TENANT_CONFIG).filter((slug) => {
+    const config = TENANT_CONFIG[slug];
+    return config && !(config.isSampleData ?? false);
+  });
 }
 
 /**
@@ -117,7 +120,7 @@ export function getAllTenantSlugs(): string[] {
  * @returns Array of tenant slugs that contain sample/demo data
  */
 export function getSampleDataTenantSlugs(): string[] {
-  return Object.keys(TENANT_CONFIG).filter((slug) => TENANT_CONFIG[slug].isSampleData);
+  return Object.keys(TENANT_CONFIG).filter((slug) => TENANT_CONFIG[slug]?.isSampleData);
 }
 
 /**

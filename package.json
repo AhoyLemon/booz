@@ -15,32 +15,34 @@
     "watch-data": "chokidar \"data/bottles.csv\" \"data/drinks.json\" -c \"npm run sync-data\"",
     "test": "vitest run",
     "test:watch": "vitest watch",
+    "typecheck": "tsc --noEmit",
+    "test:ci": "vitest run --reporter=dot",
+    "ci": "npx nuxi prepare && npm run typecheck && npm run test:ci",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15",
+    "@notionhq/client": "^2.3.0",
     "@nuxtjs/sitemap": "^7.6.0",
-    "csv-parse": "^5.5.3",
+    "csv-parse": "^5.6.0",
     "csv-stringify": "^6.6.0",
-    "nuxt": "^3.11.2",
+    "nuxt": "^4.3.1",
     "qrcode": "^1.5.4",
-    "vue": "^3.4.21"
+    "vue": "^3.5.28"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.11.0",
-    "@types/node": "^20.11.30",
+    "@types/node": "^20.19.33",
     "@types/qrcode": "^1.5.6",
-    "@vue/test-utils": "^2.4.4",
+    "@vue/test-utils": "^2.4.6",
     "chokidar-cli": "^3.0.0",
-    "dotenv": "^17.2.3",
-    "happy-dom": "^20.0.0",
+    "dotenv": "^17.3.1",
+    "happy-dom": "^20.6.1",
     "node-fetch": "^3.3.2",
-    "prettier": "^3.2.5",
-    "pug": "^3.0.2",
-    "sass": "^1.72.0",
-    "tsx": "^4.7.1",
-    "typescript": "^5.4.3",
+    "prettier": "^3.8.1",
+    "pug": "^3.0.3",
+    "sass": "^1.97.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   }
 }
