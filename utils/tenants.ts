@@ -44,49 +44,27 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     barName: "Lemonhaus",
     barData: "lemonBar",
     description: "See the drinks you can order if you go to lemon's bar.",
-    ogImage: "/opengraph-lemon.png",
     includeCommonDrinks: true,
     includeRandomCocktails: false,
     metaInfo: {
-      description: "Lemonhaus - Your destination for expertly crafted cocktails and premium spirits.",
+      description: "Wilkommen am Lemonhaus! I've got a bunch of cocktail supplies, some nice bottles, and a few beers and wines. What can I make you.",
       ogImage: "/opengraph-lemon.png",
-      pages: {
-        drinks: {
-          title: "Cocktails | Lemonhaus",
-          description: "Explore the cocktail menu at Lemonhaus - from classic recipes to signature creations.",
-        },
-        bottles: {
-          title: "Our Spirits | Lemonhaus",
-          description: "Browse the curated collection of spirits, liqueurs, and mixers at Lemonhaus.",
-          ogImage: "/opengraph-lemon.png",
-        },
-        available: {
-          title: "Currently Available | Lemonhaus",
-          description: "See what's ready to serve right now at Lemonhaus - updated in real-time.",
-        },
-        fingers: {
-          description: "Premium spirits served neat or on the rocks at Lemonhaus.",
-        },
-      },
     },
   },
   victor: {
     slug: "victor",
-    barName: "Victor's Place",
+    barName: "Yay, Victor's!",
     barData: "barVictor",
     description: "Victor's Place - Your destination for premium spirits, expertly crafted cocktails, and fine wine selection. Check availability now!",
     includeCommonDrinks: true,
     includeRandomCocktails: true,
     metaInfo: {
-      description: "Victor's Place offers an extensive selection of cocktails, craft beer, and fine wines.",
+      description: "Explore what's available at Victor's Place.",
+      ogImage: "/opengraph-generic.png",
       pages: {
-        drinks: {
-          title: "Drinks Menu",
-          description: "Discover our extensive drinks menu at Victor's Place - featuring classic cocktails and unique creations.",
-        },
         "beer-wine": {
-          title: "Beer & Wine Selection",
-          description: "Explore our carefully selected craft beers and fine wines at Victor's Place.",
+          title: "Beer & Wine @ Victor's Place",
+          description: "Need a beer or a glass of wine? See what we got at Victor's Place.",
         },
       },
     },
@@ -98,7 +76,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     includeCommonDrinks: true,
     includeRandomCocktails: true,
     metaInfo: {
-      description: "House In The Trees - Your destination for expertly crafted cocktails and premium spirits.",
+      description: "Nestled in University Place is a a well stocked bar. What are you thirsty for?",
       ogImage: "/opengraph-yam.png",
       pages: {
         drinks: {

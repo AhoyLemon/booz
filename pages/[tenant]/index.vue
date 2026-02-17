@@ -42,6 +42,9 @@
   const { loadInventory, inventory, getAvailableDrinks, localDrinks } = useCocktails(tenant.value);
   const { loadBeerWine, getInStockBeerWine } = useBeerWine(tenant.value);
 
+  // State for common drinks
+  const commonDrinks = ref<any[]>([]);
+
   // Load data on mount
 
   onMounted(async () => {
@@ -49,11 +52,20 @@
     const cockpitAPI = useCockpitAPI(tenant.value);
     const barData = await cockpitAPI.fetchBarData();
     localDrinks.value = barData.drinks;
+
+    // Fetch common drinks
+    const drinksCommon = await cockpitAPI.fetchDrinksCommon();
+    commonDrinks.value = drinksCommon;
+
     await loadBeerWine();
   });
 
   const inventoryCount = computed(() => inventory.value.length);
-  const cocktailsCount = computed(() => localDrinks.value.length);
+  const cocktailsCount = computed(() => {
+    // Combine local drinks + common drinks (excluding duplicates)
+    const combinedDrinks = [...localDrinks.value, ...commonDrinks.value.filter((dc) => !localDrinks.value.some((d) => d.id === dc.id))];
+    return combinedDrinks.length;
+  });
   const fingersCount = computed(() => inventory.value.filter((b) => b.isFingers).length);
   const availableNowCount = computed(() => {
     const availableCocktails = getAvailableDrinks.value.length;

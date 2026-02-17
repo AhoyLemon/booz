@@ -18,7 +18,7 @@
           p.error-help Make sure you can access https://hirelemon.com/bar/api and check your browser's ad blocker settings.
       
       section.fingers-section
-        .bottle-grid
+        .bottle-grid(v-if="fingerBottles.length > 0")
           NuxtLink.bottle-card(
             v-for="bottle in filteredBottles" 
             :key="bottle.id"
@@ -34,6 +34,9 @@
                 .card-name {{ bottle.name || '(No Name)' }}
               .card-meta
                 span.tag(v-for="tag in bottle.tags" :key="tag") {{ tag }}
+        
+        .empty-state(v-else)
+          p No fingers found. Put anything you like in a cocktail!
 
 </template>
 

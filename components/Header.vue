@@ -33,7 +33,7 @@
   const route = useRoute();
 
   // Hamburger nav toggle
-  const showNav = ref(true);
+  const showNav = ref(false);
 
   // Check if current page is a non-tenant page
   const isNonTenantPage = computed(() => {

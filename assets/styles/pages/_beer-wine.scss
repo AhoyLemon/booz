@@ -35,6 +35,14 @@
       gap: $spacing-lg;
     }
   }
+  .empty-state {
+    //background-color: transparent;
+    min-height: unset;
+    p {
+      font-size: 150%;
+      opacity: 0.5;
+    }
+  }
 
   @container beer-wine-container (max-width: 700px) {
     .content-grid {

@@ -3,6 +3,7 @@
 @use "@/assets/styles/abstracts/mixins" as *;
 
 .search-page {
+  padding-bottom: $spacing-xl;
   .inside {
     width: 100%;
     max-width: 82ch;
