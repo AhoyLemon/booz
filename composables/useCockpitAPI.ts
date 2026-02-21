@@ -139,7 +139,9 @@ export const useCockpitAPI = (tenantSlug?: string) => {
       const bottles: Bottle[] = data.bottles.map((item, index) => {
         const tags: string[] = [];
 
-        if (item.baseSpirit) tags.push(item.baseSpirit);
+        // NOTE: baseSpirit is intentionally NOT added to tags here.
+        // baseSpirit is a separate field on the Bottle type and is used
+        // for ingredient matching in useCocktailMatching.ts independently.
         if (item.whiskeyTypes) tags.push(...item.whiskeyTypes);
         if (item.tequilaTypes) tags.push(...item.tequilaTypes);
         if (item.ginTypes) tags.push(...item.ginTypes);

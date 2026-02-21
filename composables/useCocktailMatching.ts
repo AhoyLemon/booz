@@ -1,9 +1,15 @@
 import type { Bottle, Drink } from "~/types";
 
 interface SearchResult {
-  drinks: Drink[];
-  matchType: "name" | "tag" | "baseSpirit" | null;
-  matchedTerm: string;
+  drinks: MatchedDrink[];
+  /** Whether the bottle name produced matches in the final list */
+  nameMatched: boolean;
+  /** Which tag strings produced matches in the final list */
+  tagsMatched: string[];
+  /** Whether the baseSpirit produced matches in the final list */
+  baseSpiritMatched: boolean;
+  /** The actual baseSpirit string used for matching */
+  baseSpiritTerm: string;
 }
 
 interface MatchedDrink extends Drink {
@@ -81,7 +87,7 @@ export const useCocktailMatching = (tenantSlug?: string) => {
   };
 
   // Find matching drinks for a bottle
-  const findMatchingDrinks = async (bottle: Bottle): Promise<SearchResult> => {
+  const findMatchingDrinks = async (bottle: Bottle, isIngredientInStock: (name: string) => boolean): Promise<SearchResult> => {
     searching.value = true;
     searchingFor.value = "";
     foundCount.value = 0;
@@ -91,77 +97,72 @@ export const useCocktailMatching = (tenantSlug?: string) => {
 
     const cockpitAPI = useCockpitAPI(tenantSlug);
     const allMatches: MatchedDrink[] = [];
-    let matchType: "name" | "tag" | "baseSpirit" | null = null;
-    let matchedTerm = "";
+
+    // Availability pct for a matched drink (required ingredients only)
+    const getAvailabilityPct = (drink: MatchedDrink): number => {
+      const required = drink.ingredients.filter((ing) => !ing.optional);
+      if (required.length === 0) return 0;
+      const available = required.filter((ing) => isIngredientInStock(ing.name)).length;
+      return (available / required.length) * 100;
+    };
+
+    // Prune lowest-availability matches of a given matchType until ≤10 total.
+    // Drinks at 100% availability are always protected and never pruned.
+    const pruneMatchType = (drinks: MatchedDrink[], matchTypeToPrune: "baseSpirit" | "tag" | "name"): MatchedDrink[] => {
+      if (drinks.length <= 10) return drinks;
+      const excess = drinks.length - 10;
+      const candidates = drinks
+        .filter((d) => getAvailabilityPct(d) < 100 && d.matchType === matchTypeToPrune)
+        .sort((a, b) => getAvailabilityPct(a) - getAvailabilityPct(b)); // lowest first = prune first
+      const toRemoveIds = new Set<string>();
+      for (let i = 0; i < Math.min(excess, candidates.length); i++) {
+        toRemoveIds.add(candidates[i].id);
+      }
+      return drinks.filter((d) => !toRemoveIds.has(d.id));
+    };
 
     try {
       // Step 1: Fetch drinks from Cockpit (local + common)
       searchingFor.value = "Loading local drinks...";
       const [localDrinks, commonDrinks] = await Promise.all([cockpitAPI.fetchDrinks(), cockpitAPI.fetchDrinksCommon()]);
 
-      // Helper to check if a drink matches search term
+      // Helper to check if a drink matches search term via ingredient name
       const drinkMatches = (drink: Drink, searchTerm: string): boolean => {
         return drink.ingredients.some((ing) => ingredientMatches(ing.name, searchTerm));
       };
 
       // Step 2: Search by bottle name (most specific)
-      if (bottle.name) {
+      if (bottle.name && !stopSearchRequested.value) {
         searchingFor.value = `Searching for drinks with ${bottle.name}...`;
         if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
 
-        // Check local drinks
-        const localMatches = localDrinks.filter((d) => drinkMatches(d, bottle.name));
-        localMatches.forEach((d) => {
-          allMatches.push({
-            ...d,
-            source: "local",
-            matchType: "name",
-            matchedTerm: bottle.name,
+        localDrinks
+          .filter((d) => drinkMatches(d, bottle.name))
+          .forEach((d) => {
+            if (!allMatches.some((m) => m.id === d.id)) {
+              allMatches.push({ ...d, source: "local", matchType: "name", matchedTerm: bottle.name });
+            }
           });
-        });
 
-        // Check common drinks
-        const commonMatches = commonDrinks.filter((d) => drinkMatches(d, bottle.name));
-        commonMatches.forEach((d) => {
-          allMatches.push({
-            ...d,
-            source: "common",
-            matchType: "name",
-            matchedTerm: bottle.name,
+        commonDrinks
+          .filter((d) => drinkMatches(d, bottle.name))
+          .forEach((d) => {
+            if (!allMatches.some((m) => m.id === d.id)) {
+              allMatches.push({ ...d, source: "common", matchType: "name", matchedTerm: bottle.name });
+            }
           });
-        });
 
         foundCount.value = allMatches.length;
 
-        // If we found matches and need more, try CocktailDB
-        if (allMatches.length > 0) {
-          matchType = "name";
-          matchedTerm = bottle.name;
-
-          if (allMatches.length < 10 && !stopSearchRequested.value && apiFailureCount.value < 2) {
-            const externalMatches = await fetchFromCocktailDB(bottle.name);
-            externalMatches.forEach((d) => {
-              if (drinkMatches(d, bottle.name)) {
-                allMatches.push({
-                  ...d,
-                  source: "external",
-                  matchType: "name",
-                  matchedTerm: bottle.name,
-                });
-              }
-            });
-            foundCount.value = allMatches.length;
-          }
-        }
-
-        // Stop if we have enough drinks
-        if (allMatches.length >= 3) {
-          searching.value = false;
-          return {
-            drinks: allMatches.slice(0, 10), // Limit to 10
-            matchType,
-            matchedTerm,
-          };
+        // Supplement with CocktailDB if under 10 total and not rate-limited
+        if (allMatches.length < 10 && !stopSearchRequested.value && apiFailureCount.value < 2) {
+          const externalMatches = await fetchFromCocktailDB(bottle.name);
+          externalMatches.forEach((d) => {
+            if (drinkMatches(d, bottle.name) && !allMatches.some((m) => m.id === d.id)) {
+              allMatches.push({ ...d, source: "external", matchType: "name", matchedTerm: bottle.name });
+            }
+          });
+          foundCount.value = allMatches.length;
         }
       }
 
@@ -173,134 +174,107 @@ export const useCocktailMatching = (tenantSlug?: string) => {
           searchingFor.value = `Searching for drinks with ${tag}...`;
           if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
 
-          // Check local drinks
-          const localMatches = localDrinks.filter((d) => drinkMatches(d, tag) && !allMatches.some((m) => m.id === d.id));
-          localMatches.forEach((d) => {
-            allMatches.push({
-              ...d,
-              source: "local",
-              matchType: "tag",
-              matchedTerm: tag,
+          localDrinks
+            .filter((d) => drinkMatches(d, tag) && !allMatches.some((m) => m.id === d.id))
+            .forEach((d) => {
+              allMatches.push({ ...d, source: "local", matchType: "tag", matchedTerm: tag });
             });
-          });
 
-          // Check common drinks
-          const commonMatches = commonDrinks.filter((d) => drinkMatches(d, tag) && !allMatches.some((m) => m.id === d.id));
-          commonMatches.forEach((d) => {
-            allMatches.push({
-              ...d,
-              source: "common",
-              matchType: "tag",
-              matchedTerm: tag,
+          commonDrinks
+            .filter((d) => drinkMatches(d, tag) && !allMatches.some((m) => m.id === d.id))
+            .forEach((d) => {
+              allMatches.push({ ...d, source: "common", matchType: "tag", matchedTerm: tag });
             });
-          });
 
           foundCount.value = allMatches.length;
 
-          // If we found matches for this tag and need more, try CocktailDB
-          if (allMatches.length > 0 && !matchType) {
-            matchType = "tag";
-            matchedTerm = tag;
-          }
-
+          // Supplement with CocktailDB if needed
           if (allMatches.length < 10 && apiFailureCount.value < 2) {
             const externalMatches = await fetchFromCocktailDB(tag);
             externalMatches.forEach((d) => {
               if (drinkMatches(d, tag) && !allMatches.some((m) => m.id === d.id)) {
-                allMatches.push({
-                  ...d,
-                  source: "external",
-                  matchType: "tag",
-                  matchedTerm: tag,
-                });
+                allMatches.push({ ...d, source: "external", matchType: "tag", matchedTerm: tag });
               }
             });
             foundCount.value = allMatches.length;
           }
-
-          // Stop if we have enough drinks
-          if (allMatches.length >= 10) break;
-        }
-
-        if (allMatches.length >= 3) {
-          searching.value = false;
-          return {
-            drinks: allMatches.slice(0, 10),
-            matchType,
-            matchedTerm,
-          };
         }
       }
 
-      // Step 4: Search by baseSpirit (least specific, guaranteed results)
-      if (bottle.baseSpirit && !stopSearchRequested.value && apiFailureCount.value < 2) {
-        if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+      // Step 4: Search by baseSpirit (least specific)
+      // IMPORTANT: Skip if baseSpirit is "Liqueur" — it is far too generic to be useful.
+      const baseSpiritNormalized = (bottle.baseSpirit || "").toLowerCase().trim();
+      if (bottle.baseSpirit && baseSpiritNormalized !== "liqueur" && !stopSearchRequested.value && apiFailureCount.value < 2) {
         searchingFor.value = `Searching for drinks with ${bottle.baseSpirit}...`;
+        if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
 
-        // Check local drinks
-        const localMatches = localDrinks.filter((d) => drinkMatches(d, bottle.baseSpirit) && !allMatches.some((m) => m.id === d.id));
-        localMatches.forEach((d) => {
-          allMatches.push({
-            ...d,
-            source: "local",
-            matchType: "baseSpirit",
-            matchedTerm: bottle.baseSpirit,
+        localDrinks
+          .filter((d) => drinkMatches(d, bottle.baseSpirit) && !allMatches.some((m) => m.id === d.id))
+          .forEach((d) => {
+            allMatches.push({ ...d, source: "local", matchType: "baseSpirit", matchedTerm: bottle.baseSpirit });
           });
-        });
 
-        // Check common drinks
-        const commonMatches = commonDrinks.filter((d) => drinkMatches(d, bottle.baseSpirit) && !allMatches.some((m) => m.id === d.id));
-        commonMatches.forEach((d) => {
-          allMatches.push({
-            ...d,
-            source: "common",
-            matchType: "baseSpirit",
-            matchedTerm: bottle.baseSpirit,
+        commonDrinks
+          .filter((d) => drinkMatches(d, bottle.baseSpirit) && !allMatches.some((m) => m.id === d.id))
+          .forEach((d) => {
+            allMatches.push({ ...d, source: "common", matchType: "baseSpirit", matchedTerm: bottle.baseSpirit });
           });
-        });
 
         foundCount.value = allMatches.length;
 
-        if (!matchType) {
-          matchType = "baseSpirit";
-          matchedTerm = bottle.baseSpirit;
-        }
-
-        // Try CocktailDB if we need more
         if (allMatches.length < 10 && apiFailureCount.value < 2) {
           const externalMatches = await fetchFromCocktailDB(bottle.baseSpirit);
           externalMatches.forEach((d) => {
             if (drinkMatches(d, bottle.baseSpirit) && !allMatches.some((m) => m.id === d.id)) {
-              allMatches.push({
-                ...d,
-                source: "external",
-                matchType: "baseSpirit",
-                matchedTerm: bottle.baseSpirit,
-              });
+              allMatches.push({ ...d, source: "external", matchType: "baseSpirit", matchedTerm: bottle.baseSpirit });
             }
           });
           foundCount.value = allMatches.length;
         }
       }
 
-      // Show rate limit message if we have < 3 drinks and had API failures
-      if (allMatches.length < 3 && apiFailureCount.value >= 2) {
+      // --- POST-COLLECTION FILTERING & PRUNING ---
+
+      // Filter out drinks with 0 required ingredients available (always a bug to show these)
+      const withAvailability = allMatches.filter((d) => {
+        const required = d.ingredients.filter((ing) => !ing.optional);
+        if (required.length === 0) return false; // no required ingredients — exclude
+        return required.some((ing) => isIngredientInStock(ing.name)); // must have at least 1 available
+      });
+
+      // Prune to ≤10, protecting 100%-available drinks throughout.
+      // Remove lowest-availability matches in order: baseSpirit → tag → name
+      let finalDrinks = withAvailability;
+      finalDrinks = pruneMatchType(finalDrinks, "baseSpirit");
+      finalDrinks = pruneMatchType(finalDrinks, "tag");
+      finalDrinks = pruneMatchType(finalDrinks, "name");
+
+      // Determine which match types survived into the final list (drives title logic)
+      const nameMatched = finalDrinks.some((d) => d.matchType === "name");
+      const tagsMatched = [...new Set(finalDrinks.filter((d) => d.matchType === "tag").map((d) => d.matchedTerm))];
+      const baseSpiritMatched = finalDrinks.some((d) => d.matchType === "baseSpirit");
+
+      if (withAvailability.length < 3 && apiFailureCount.value >= 2) {
         showRateLimitMessage.value = true;
       }
 
       searching.value = false;
       return {
-        drinks: allMatches.slice(0, 10),
-        matchType,
-        matchedTerm,
+        drinks: finalDrinks,
+        nameMatched,
+        tagsMatched,
+        baseSpiritMatched,
+        baseSpiritTerm: bottle.baseSpirit || "",
       };
     } catch (e) {
       console.error("Failed to find matching drinks:", e);
       searching.value = false;
       return {
         drinks: [],
-        matchType: null,
-        matchedTerm: "",
+        nameMatched: false,
+        tagsMatched: [],
+        baseSpiritMatched: false,
+        baseSpiritTerm: "",
       };
     }
   };

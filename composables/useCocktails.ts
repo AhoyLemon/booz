@@ -159,9 +159,12 @@ export const useCocktails = (tenantSlug?: string) => {
       }
     }
 
-    // Inventory bottle name and aka check
+    // Inventory bottle name, baseSpirit, and aka check
     for (const item of inStockItems) {
       if (matchesStrict(lowerIngredient, item.name.toLowerCase())) return true;
+      // baseSpirit is intentionally NOT in tags since it is its own field;
+      // check it directly so e.g. "Vodka" matches any in-stock vodka bottle.
+      if (item.baseSpirit && matchesStrict(lowerIngredient, item.baseSpirit.toLowerCase())) return true;
       if (item.aka && Array.isArray(item.aka)) {
         for (const akaName of item.aka) {
           if (matchesStrict(lowerIngredient, akaName.toLowerCase())) return true;
@@ -181,11 +184,15 @@ export const useCocktails = (tenantSlug?: string) => {
       }
     }
 
-    // Check if ingredient name maps to any tag through the ingredient mapping (strict)
+    // Check if ingredient name maps to any tag or baseSpirit through the ingredient mapping (strict)
     for (const [key, aliases] of Object.entries(ingredientSynonyms)) {
       for (const alias of aliases as string[]) {
         if (matchesStrict(lowerIngredient, alias)) {
-          if (inStockItems.some((item) => item.tags.some((tag) => matchesStrict(tag, key)))) {
+          if (
+            inStockItems.some(
+              (item) => item.tags.some((tag) => matchesStrict(tag, key)) || (item.baseSpirit && matchesStrict(item.baseSpirit.toLowerCase(), key)),
+            )
+          ) {
             return true;
           }
         }

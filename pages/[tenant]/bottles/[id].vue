@@ -17,6 +17,9 @@
             .detail-row
               span.label Category:
               span.value {{ bottle.category }}
+            .detail-row(v-if="bottle.baseSpirit")
+              span.label Spirit:
+              span.value {{ bottle.baseSpirit }}
             .detail-row(v-if="bottle.bottleSize")
               span.label Size:
               span.value {{ bottle.bottleSize }}
@@ -135,8 +138,10 @@
   const error = ref<string | null>(null);
 
   const drinksUsingBottle = ref<any[]>([]);
-  const matchType = ref<"name" | "tag" | "baseSpirit" | null>(null);
-  const matchedTerm = ref("");
+  const nameMatched = ref(false);
+  const tagsMatched = ref<string[]>([]);
+  const baseSpiritMatched = ref(false);
+  const baseSpiritTerm = ref("");
   const sourceFilter = ref<"all" | "local" | "external">("all");
 
   // Update head with specific bottle information when bottle loads
@@ -198,31 +203,49 @@
     return `${availableRequired}/${totalRequired} required ingredients available`;
   };
 
-  // Get headline based on match type
+  // Capitalize each word for display (e.g. "orange liqueur" → "Orange Liqueur")
+  const toTitleCase = (str: string): string => str.replace(/\b\w/g, (c) => c.toUpperCase());
+
+  // Build headline based on which match types survived into the final list
   const getHeadline = (): string => {
     if (!bottle.value) return "Drinks";
+    if (bottle.value.isFingers) return "Serving Options";
+    if (searching.value) return "Searching for Drinks...";
 
-    if (bottle.value.isFingers) {
-      return "Serving Options";
+    const hasName = nameMatched.value;
+    const hasTags = tagsMatched.value.length > 0;
+    const hasBaseSpirit = baseSpiritMatched.value;
+    const bsName = baseSpiritTerm.value ? toTitleCase(baseSpiritTerm.value) : "";
+    const bName = bottle.value.name;
+    const displayTags = tagsMatched.value.map(toTitleCase);
+
+    if (!hasName && !hasTags && !hasBaseSpirit) return "Drinks";
+
+    if (hasName) {
+      // Bottle name is the primary label; append baseSpirit and/or tags in parens
+      const extras: string[] = [];
+      if (hasBaseSpirit && bsName) extras.push(bsName);
+      extras.push(...displayTags);
+
+      if (extras.length === 0) return `Drinks With ${bName}`;
+      if (extras.length === 1) return `Drinks With ${bName} (or ${extras[0]})`;
+      return `Drinks With ${bName} (${extras.join(", ")})`;
     }
 
-    if (searching.value) {
-      return "Searching for Drinks...";
+    if (hasTags && !hasBaseSpirit) {
+      // Tags only — no name, no baseSpirit
+      if (displayTags.length === 1) return `Drinks With ${displayTags[0]}`;
+      return `Drinks With ${displayTags.join(" or ")}`;
     }
 
-    if (matchType.value === "name" && matchedTerm.value) {
-      return `Drinks Using ${matchedTerm.value}`;
+    if (hasBaseSpirit && !hasTags) {
+      // BaseSpirit only
+      return `Drinks With ${bsName}`;
     }
 
-    if (matchType.value === "tag" && matchedTerm.value) {
-      return `Drinks Using ${matchedTerm.value}`;
-    }
-
-    if (matchType.value === "baseSpirit" && matchedTerm.value) {
-      return `Drinks Using ${matchedTerm.value}`;
-    }
-
-    return "Drinks";
+    // BaseSpirit + tags (no name)
+    if (displayTags.length === 1) return `Drinks With ${bsName} (or ${displayTags[0]})`;
+    return `Drinks With ${bsName} (${displayTags.join(", ")})`;
   };
 
   // Check if we have both local and external drinks
@@ -325,10 +348,12 @@
     }
 
     try {
-      const result = await findMatchingDrinks(bottle.value as Bottle);
+      const result = await findMatchingDrinks(bottle.value as Bottle, isIngredientInStock);
       drinksUsingBottle.value = result.drinks;
-      matchType.value = result.matchType;
-      matchedTerm.value = result.matchedTerm;
+      nameMatched.value = result.nameMatched;
+      tagsMatched.value = result.tagsMatched;
+      baseSpiritMatched.value = result.baseSpiritMatched;
+      baseSpiritTerm.value = result.baseSpiritTerm;
     } catch (e) {
       console.error("Failed to load drinks:", e);
       error.value = "Failed to load drinks";
