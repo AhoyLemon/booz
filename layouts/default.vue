@@ -1,7 +1,7 @@
 <template lang="pug">
 .site-layout
   Header
-  main
+  main(:class="`template-${pageTemplate}`")
     DummyDataNotice(v-if="isSampleDataTenant && normalizedPath !== '/' && normalizedPath !== '/about'")
     slot
   footer.app-footer

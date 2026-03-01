@@ -10,7 +10,7 @@
           span
     .nav-holder(:class="{ visible: showNav }")
       nav
-        template(v-if="isNonTenantPage")
+        template(v-if="isNonTenantPage || route.path === '/'")
           NuxtLink.nav-link(:to="'/'" :class="{ active: route.path === '/' }") Home
           NuxtLink.nav-link(:to="'/about'" :class="{ active: route.path === '/about' }") About
           NuxtLink.nav-link(:to="'/sample'") Sample Data

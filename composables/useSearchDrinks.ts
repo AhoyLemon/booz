@@ -57,7 +57,11 @@ export const useSearchDrinks = (tenantSlug: string) => {
   };
 
   // Search Cockpit drinks by name
-  const searchCockpitDrinksByName = async (searchTerm: string, drinks: Drink[], isCommon: boolean = false): Promise<SearchResult[]> => {
+  const searchCockpitDrinksByName = async (
+    searchTerm: string,
+    drinks: Drink[],
+    isCommon: boolean = false,
+  ): Promise<SearchResult[]> => {
     const normalizedTerm = normalize(searchTerm);
     const results: SearchResult[] = [];
 
@@ -99,7 +103,11 @@ export const useSearchDrinks = (tenantSlug: string) => {
   };
 
   // Search Cockpit drinks by category (exact match only)
-  const searchCockpitDrinksByCategory = async (searchTerm: string, drinks: Drink[], isCommon: boolean = false): Promise<SearchResult[]> => {
+  const searchCockpitDrinksByCategory = async (
+    searchTerm: string,
+    drinks: Drink[],
+    isCommon: boolean = false,
+  ): Promise<SearchResult[]> => {
     const normalizedTerm = normalize(searchTerm);
     const results: SearchResult[] = [];
 
@@ -134,7 +142,11 @@ export const useSearchDrinks = (tenantSlug: string) => {
   };
 
   // Search Cockpit drinks by tags (exact match only)
-  const searchCockpitDrinksByTags = async (searchTerm: string, drinks: Drink[], isCommon: boolean = false): Promise<SearchResult[]> => {
+  const searchCockpitDrinksByTags = async (
+    searchTerm: string,
+    drinks: Drink[],
+    isCommon: boolean = false,
+  ): Promise<SearchResult[]> => {
     const normalizedTerm = normalize(searchTerm);
     const results: SearchResult[] = [];
     const isSearchingNonAlcoholic = isNonAlcoholicSearch(searchTerm);
@@ -175,7 +187,11 @@ export const useSearchDrinks = (tenantSlug: string) => {
   };
 
   // Search Cockpit drinks by ingredient
-  const searchCockpitDrinksByIngredient = async (searchTerm: string, drinks: Drink[], isCommon: boolean = false): Promise<SearchResult[]> => {
+  const searchCockpitDrinksByIngredient = async (
+    searchTerm: string,
+    drinks: Drink[],
+    isCommon: boolean = false,
+  ): Promise<SearchResult[]> => {
     const normalizedTerm = normalize(searchTerm);
     const results: SearchResult[] = [];
 
@@ -223,7 +239,9 @@ export const useSearchDrinks = (tenantSlug: string) => {
   // Search CocktailDB by name
   const searchCocktailDBByName = async (searchTerm: string): Promise<SearchResult[]> => {
     try {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(searchTerm)}`);
+      const response = await fetch(
+        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(searchTerm)}`,
+      );
       const data = await response.json();
 
       if (!data.drinks) {
@@ -268,7 +286,9 @@ export const useSearchDrinks = (tenantSlug: string) => {
           imageUrl: cocktailDBDrink.strDrinkThumb,
           prep: "",
           category:
-            cocktailDBDrink.strCategory && cocktailDBDrink.strCategory !== "Other / Unknown" && cocktailDBDrink.strCategory !== "Ordinary Drink"
+            cocktailDBDrink.strCategory &&
+            cocktailDBDrink.strCategory !== "Other / Unknown" &&
+            cocktailDBDrink.strCategory !== "Ordinary Drink"
               ? cocktailDBDrink.strCategory
               : (cocktailDBDrink.strTags ? cocktailDBDrink.strTags.split(",")[0].trim() : null) || "Cocktail",
           tags: cocktailDBDrink.strTags ? cocktailDBDrink.strTags.split(",").map((t: string) => t.trim()) : [],
@@ -297,7 +317,9 @@ export const useSearchDrinks = (tenantSlug: string) => {
   // Search CocktailDB by ingredient
   const searchCocktailDBByIngredient = async (searchTerm: string): Promise<SearchResult[]> => {
     try {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(searchTerm)}`);
+      const response = await fetch(
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(searchTerm)}`,
+      );
       const data = await response.json();
 
       if (!data.drinks) {
@@ -363,7 +385,7 @@ export const useSearchDrinks = (tenantSlug: string) => {
           found: "Found {count} local drinks by name",
         },
       });
-      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS);
       const localDrinks = await cockpitAPI.fetchDrinks();
       const localNameResults = await searchCockpitDrinksByName(searchTerm, localDrinks, false);
       localNameResults.forEach((result) => {
@@ -387,7 +409,7 @@ export const useSearchDrinks = (tenantSlug: string) => {
             found: "Found {count} common drinks by name",
           },
         });
-        if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+        if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS);
         const commonDrinks = await cockpitAPI.fetchDrinksCommon();
         const commonNameResults = await searchCockpitDrinksByName(searchTerm, commonDrinks, true);
         commonNameResults.forEach((result) => {
@@ -411,7 +433,7 @@ export const useSearchDrinks = (tenantSlug: string) => {
           found: "Found {count} drinks by category",
         },
       });
-      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS);
       const localCategoryResults = await searchCockpitDrinksByCategory(searchTerm, localDrinks, false);
       localCategoryResults.forEach((result) => {
         // Merge with existing result if already found
@@ -453,7 +475,7 @@ export const useSearchDrinks = (tenantSlug: string) => {
           found: "Found {count} drinks by tags",
         },
       });
-      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS);
       const localTagResults = await searchCockpitDrinksByTags(searchTerm, localDrinks, false);
       localTagResults.forEach((result) => {
         // Merge with existing result if already found
@@ -578,7 +600,7 @@ export const useSearchDrinks = (tenantSlug: string) => {
           found: "Found {count} CocktailDB drinks by ingredient",
         },
       });
-      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS); // ⏱️ TEMPORARY
+      if (SEARCH_DELAY_MS > 0) await delay(SEARCH_DELAY_MS);
       const cocktailDBIngredientResults = await searchCocktailDBByIngredient(searchTerm);
       cocktailDBIngredientResults.forEach((result) => {
         const existingIndex = allResults.findIndex((r) => r.id === result.id);
@@ -588,7 +610,9 @@ export const useSearchDrinks = (tenantSlug: string) => {
           if (!allResults[existingIndex].matchDetails.ingredientMatches) {
             allResults[existingIndex].matchDetails.ingredientMatches = [];
           }
-          allResults[existingIndex].matchDetails.ingredientMatches!.push(...(result.matchDetails.ingredientMatches || []));
+          allResults[existingIndex].matchDetails.ingredientMatches!.push(
+            ...(result.matchDetails.ingredientMatches || []),
+          );
         } else if (!seenIds.has(result.id)) {
           allResults.push(result);
           seenIds.add(result.id);

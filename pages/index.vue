@@ -35,6 +35,7 @@
   @use "@/assets/styles/variables" as *;
 
   .hero-section {
+    position: relative;
     text-align: center;
     padding: $spacing-xxl 0;
     min-height: calc(100vh - 230px);

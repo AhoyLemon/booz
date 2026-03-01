@@ -1,9 +1,11 @@
 import type { Drink } from "~/types";
 
 export const useTheCocktailDB = () => {
-  const fetchRandomCocktails = async (count: number = 5): Promise<Drink[]> => {
+  const fetchRandomCocktails = async (count: number = 20): Promise<Drink[]> => {
     try {
-      const promises = Array.from({ length: count }, () => fetch("https://www.thecocktaildb.com/api/json/v1/1/random.php").then((res) => res.json()));
+      const promises = Array.from({ length: count }, () =>
+        fetch("https://www.thecocktaildb.com/api/json/v1/1/random.php").then((res) => res.json()),
+      );
       const results = await Promise.all(promises);
       return results.map((result, index) => {
         const drink = result.drinks[0];

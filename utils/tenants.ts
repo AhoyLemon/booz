@@ -18,7 +18,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     barName: "Sample Bar",
     barData: "sampleBar",
     description: "Explore our sample bar inventory - spirits, cocktails, beer, and wine. Check what's available now!",
-    includeCommonDrinks: false,
+    includeCommonDrinks: true,
     includeRandomCocktails: true,
     isSampleData: true,
     metaInfo: {
@@ -47,7 +47,8 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     includeCommonDrinks: true,
     includeRandomCocktails: false,
     metaInfo: {
-      description: "Wilkommen am Lemonhaus! I've got a bunch of cocktail supplies, some nice bottles, and a few beers and wines. What can I make you.",
+      description:
+        "Wilkommen am Lemonhaus! I've got a bunch of cocktail supplies, some nice bottles, and a few beers and wines. What can I make you.",
       ogImage: "/opengraph-lemon.png",
     },
   },
@@ -67,7 +68,8 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
     slug: "victor",
     barName: "Yay, Victor's!",
     barData: "barVictor",
-    description: "Victor's Place - Your destination for premium spirits, expertly crafted cocktails, and fine wine selection. Check availability now!",
+    description:
+      "Victor's Place - Your destination for premium spirits, expertly crafted cocktails, and fine wine selection. Check availability now!",
     includeCommonDrinks: true,
     includeRandomCocktails: true,
     metaInfo: {
