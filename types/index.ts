@@ -68,6 +68,8 @@ export interface BarData {
   bitters: Bitter[];
   /** Array of essential ingredients (raw strings, processed by frontend) */
   essentials: string[];
+  /** Preferred display order for Available page sections (e.g. "Fingers > Beer & Wine > Drinks") */
+  availableSortOrder?: string;
 }
 
 export interface Bottle {
@@ -120,6 +122,10 @@ export interface Wine {
   type: string;
   /** Whether the wine is currently in stock */
   inStock: boolean;
+  /** Optional vintage year */
+  year?: number;
+  /** Country or region of origin */
+  origin?: string;
   /** Image URL or path */
   image?: string;
 }
@@ -223,6 +229,9 @@ export interface BeerWine {
   subtype?: string;
   inStock: boolean;
   image?: string;
+  // additional fields for wine
+  year?: number;
+  origin?: string;
 }
 
 export interface BeerWineData {

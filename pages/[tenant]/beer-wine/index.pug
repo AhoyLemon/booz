@@ -51,7 +51,10 @@
               .text
                 .beer-wine-info
                   .name {{ wine.name }}
-                  .type(v-if="wine.subtype") {{ wine.subtype }}
+                    span(v-if="wine.year")  ({{ wine.year }})
+                  .type(v-if="wine.subtype || wine.origin") 
+                    span {{ wine.subtype }}
+                    span.origin(v-if="wine.origin") , {{ wine.origin }}
               .card-links
                 NuxtLink.card-link(:to="`/${tenant}/drinks/wine-${wine.id}-glass`") In a Glass
                 NuxtLink.card-link(:to="`/${tenant}/drinks/wine-${wine.id}-ice`") With Ice

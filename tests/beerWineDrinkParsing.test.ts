@@ -93,3 +93,46 @@ describe("Wine Drink ID Parsing", () => {
     expect(servingStyle).toBe("ice");
   });
 });
+
+// New tests for wine metadata propagation
+import { useCockpitAPI } from "~/composables/useCockpitAPI";
+
+describe("BeerWine metadata mapping", () => {
+  it("should include year and origin when fetchBeerWine is called", async () => {
+    const api = useCockpitAPI("test");
+
+    // mock global fetch used by fetchFromCockpit inside fetchBarData
+    const fakeBarData = {
+      name: "",
+      bottles: [],
+      drinks: [],
+      beers: [],
+      wines: [
+        {
+          id: "wine-1",
+          name: "Test Wine",
+          type: "Red",
+          inStock: true,
+          image: null,
+          year: 2023,
+          origin: "France",
+        },
+      ],
+      bitters: [],
+      essentials: [],
+    };
+
+    // temporarily override global.fetch
+    const originalFetch = global.fetch;
+    global.fetch = async () => ({ ok: true, json: async () => fakeBarData }) as any;
+
+    try {
+      const items = await api.fetchBeerWine();
+      expect(items).toHaveLength(1);
+      expect(items[0]).toHaveProperty("year", 2023);
+      expect(items[0]).toHaveProperty("origin", "France");
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+});

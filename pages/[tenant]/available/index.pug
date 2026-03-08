@@ -22,57 +22,61 @@
         p {{ error }}
         p.error-help Make sure you can access {{ $cockpitApiUrl }} and check your browser's ad blocker settings.
       
-    // Finger bottles section
-    section.fingers-section(v-if="availableFingerBottles.length > 0 && (filter === 'all' || filter === 'fingers')")
-      h2.section-title Available Fingers
-      .fingers-grid
+    // Sections rendered in sectionOrder
+    template(v-for="section in sectionOrder" :key="section")
 
-        .bottle-card(
-          v-for="bottle in availableFingerBottles" 
-          :key="bottle.id"
-          :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
-          :to="`/${tenant}/bottles/${bottle.id}`"
-        )
-          figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
-            img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
-            span.icon(v-else) 🍾
-            span.category Fingers
-          .card-content
-            .card-header
-              .card-name {{bottle.name}}
+      // Finger bottles section
+      section.fingers-section(v-if="section === 'fingers' && availableFingerBottles.length > 0 && (filter === 'all' || filter === 'fingers')")
+        h2.section-title Available Fingers
+        .fingers-grid
+
+          .bottle-card(
+            v-for="bottle in availableFingerBottles" 
+            :key="bottle.id"
+            :class="{ 'is-finger': bottle.isFingers, 'out-of-stock': !bottle.inStock }"
+            :to="`/${tenant}/bottles/${bottle.id}`"
+          )
+            figure.bottle-image(:class="{ 'placeholder': !bottle.image }")
+              img(:src="bottle.image" :alt="bottle.name" v-if="bottle.image")
+              span.icon(v-else) 🍾
+              span.category Fingers
+            .card-content
+              .card-header
+                .card-name {{bottle.name}}
+              .card-links
+                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") Straight Up
+                span  | 
+                NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") On The Rocks
+
+      // Beer & Wine Section
+      section.beer-wine-section(v-if="section === 'beerWine' && getInStockBeerWine.length > 0 && (filter === 'all' || filter === 'beerWine')")
+        h2.section-title Beer & Wine
+        .beer-wine-grid
+          .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
+            figure.beer-wine-image(:class="{ 'placeholder': !item.image }")
+              img(v-if="item.image" :src="item.image" :alt="item.name")
+              span.icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
+            .text
+              .name {{ item.name }}
+              .type(v-if="item.subtype") {{ item.subtype }}
             .card-links
-              NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-straight`") Straight Up
-              span  | 
-              NuxtLink.card-link(:to="`/${tenant}/drinks/finger-${bottle.id}-rocks`") On The Rocks
+              NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-glass`") In a Glass
+              NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-bottle`") From the Bottle
+              NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-glass`") In a Glass
+              NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-ice`") With Ice
 
-    // Beer & Wine Section
-    section.beer-wine-section(v-if="getInStockBeerWine.length > 0 && (filter === 'all' || filter === 'beerWine')")
-      h2.section-title Beer & Wine
-      .beer-wine-grid
-        .beer-wine-card(v-for="item in getInStockBeerWine" :key="item.id")
-          figure.beer-wine-image(:class="{ 'placeholder': !item.image }")
-            img(v-if="item.image" :src="item.image" :alt="item.name")
-            span.icon(v-else) {{ item.type === 'beer' ? '🍺' : '🍷' }}
-          .text
-            .name {{ item.name }}
-            .type(v-if="item.subtype") {{ item.subtype }}
-          .card-links
-            NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-glass`") In a Glass
-            NuxtLink.card-link(v-if="item.type === 'beer'" :to="`/${tenant}/drinks/beer-${item.id}-bottle`") From the Bottle
-            NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-glass`") In a Glass
-            NuxtLink.card-link(v-if="item.type === 'wine'" :to="`/${tenant}/drinks/wine-${item.id}-ice`") With Ice
-            
-    section.drinks-section(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
-      h2.section-title Cocktails
-      .drinks-grid(v-if="getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
-        DrinkCard(
-          v-for="drink in getAvailableDrinks"
-          :key="drink.id"
-          :drink="drink"
-          :tenant="tenant"
-        )
+      // Cocktails section
+      section.drinks-section(v-if="section === 'cocktails' && getAvailableDrinks.length > 0 && (filter === 'all' || filter === 'cocktails')")
+        h2.section-title Cocktails
+        .drinks-grid
+          DrinkCard(
+            v-for="drink in getAvailableDrinks"
+            :key="drink.id"
+            :drink="drink"
+            :tenant="tenant"
+          )
 
-    .empty-state(v-else-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0 && getAvailableDrinks.length === 0")
+    .empty-state(v-if="getInStockBeerWine.length === 0 && availableFingerBottles.length === 0 && getAvailableDrinks.length === 0")
       .empty-state__icon 🔍
       h3 No Fully Available Drinks
       p Try adding more items to your bottles or essentials, or search for different cocktails

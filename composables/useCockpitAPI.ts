@@ -72,6 +72,8 @@ interface CockpitWine {
   type: string;
   subtype?: string;
   inStock?: boolean;
+  year?: number;
+  origin: string;
   image?: {
     path: string;
     [key: string]: any;
@@ -101,6 +103,7 @@ interface CockpitBarData {
   wines: CockpitWine[];
   bitters: CockpitBitter[];
   essentials: string[];
+  availableSortOrder?: string;
 }
 
 export const useCockpitAPI = (tenantSlug?: string) => {
@@ -230,6 +233,8 @@ export const useCockpitAPI = (tenantSlug?: string) => {
           name: item.name || "",
           type: item.type || "",
           inStock: true,
+          year: item.year,
+          origin: item.origin,
           image: imageUrl,
         };
       });
@@ -255,6 +260,7 @@ export const useCockpitAPI = (tenantSlug?: string) => {
         wines,
         bitters,
         essentials: data.essentials,
+        availableSortOrder: data.availableSortOrder,
       };
     } catch (error) {
       console.error("Error fetching bar data from Cockpit, falling back to old API:", error);
@@ -302,6 +308,8 @@ export const useCockpitAPI = (tenantSlug?: string) => {
         subtype: wine.type,
         inStock: wine.inStock,
         image: wine.image,
+        year: wine.year,
+        origin: wine.origin,
       });
     });
 

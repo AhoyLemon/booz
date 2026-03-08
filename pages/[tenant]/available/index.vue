@@ -10,9 +10,20 @@
   );
   const { loadStarredDrinks } = useStarredDrinks();
   const { loadBeerWine, getInStockBeerWine } = useBeerWine(tenant.value);
+  const cockpitAPI = useCockpitAPI(tenant.value);
 
   // Filter state
   const filter = ref<"all" | "fingers" | "beerWine" | "cocktails">("all");
+
+  // Section order derived from availableSortOrder (default: Fingers > Beer & Wine > Drinks)
+  type Section = "fingers" | "beerWine" | "cocktails";
+  const LABEL_MAP: Record<string, Section> = {
+    fingers: "fingers",
+    "beer & wine": "beerWine",
+    drinks: "cocktails",
+  };
+  const DEFAULT_ORDER: Section[] = ["fingers", "beerWine", "cocktails"];
+  const sectionOrder = ref<Section[]>(DEFAULT_ORDER);
 
   // Load data on mount
   onMounted(async () => {
@@ -21,6 +32,16 @@
     await loadLocalDrinks();
     loadStarredDrinks();
     await loadBeerWine();
+
+    // Resolve section order from bar data
+    const barData = await cockpitAPI.fetchBarData();
+    if (barData.availableSortOrder) {
+      const parsed = barData.availableSortOrder
+        .split(">")
+        .map((s) => LABEL_MAP[s.trim().toLowerCase()])
+        .filter((s): s is Section => !!s);
+      if (parsed.length > 0) sectionOrder.value = parsed;
+    }
   });
 
   // Get available finger bottles
