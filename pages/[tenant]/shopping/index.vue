@@ -14,10 +14,9 @@
     dismissItem,
     gotIt,
     addedIt,
-    shareList,
     copyList,
     moveBackToShopping,
-    moveAllToInventory,
+    resetSession: resetSessionList,
   } = useShoppingList(tenant.value);
 
   const newItemText = ref("");
@@ -28,7 +27,9 @@
 
     useHead({
       title: `Shopping List | ${tenant.value}`,
-      meta: [{ name: "description", content: "Your bar shopping list based on empty bottles and missing ingredients." }],
+      meta: [
+        { name: "description", content: "Your bar shopping list based on empty bottles and missing ingredients." },
+      ],
     });
   });
 
@@ -53,34 +54,18 @@
     moveBackToShopping(name);
   };
 
-  const handleBring = (item: ShoppingItem) => {
-    // deep link to Bring! app; will open external application if available
-    const url = `bring:///add_item?item=${encodeURIComponent(item.name)}`;
-    window.open(url);
-    // mark as got it
-    gotIt(item);
-  };
-
-  const handleShare = async () => {
-    const success = await shareList();
-    if (!success) return;
-
-    // ask user if they actually added items
-    const added = confirm("Did you add these items to your grocery list?\n(choose OK to move them to Add To Inventory)");
-    if (added) {
-      moveAllToInventory();
-    }
-  };
-
   const handleCopy = async () => {
     const ok = await copyList();
     if (ok) {
       copyConfirm.value = true;
       setTimeout(() => (copyConfirm.value = false), 2500);
-      // also ask about moving
-      const added = confirm("Did you add these items to your grocery list?\n(choose OK to move them to Add To Inventory)");
-      if (added) moveAllToInventory();
     }
+  };
+
+  // wrapper used by template to avoid direct naming collision
+  const onResetSession = async () => {
+    // clear persisted data and rebuild auto-generated items
+    await resetSessionList();
   };
 </script>
 
@@ -90,6 +75,7 @@
   @use "@/assets/styles/abstracts/mixins" as *;
 
   .shopping-page {
+    padding-bottom: $spacing-xl;
     .add-item-form {
       display: flex;
       flex-direction: column;
@@ -154,6 +140,11 @@
       gap: $spacing-sm;
     }
 
+    .shopping-section {
+      container-name: shopping-section;
+      container-type: inline-size;
+    }
+
     .shopping-item,
     .inventory-item {
       display: flex;
@@ -185,8 +176,17 @@
 
       .item-actions {
         display: flex;
+        flex-wrap: wrap;
         gap: $spacing-xs;
         flex-shrink: 0;
+      }
+    }
+
+    @container shopping-section (max-width: 600px) {
+      .inventory-item,
+      .shopping-item {
+        display: grid;
+        grid-template-columns: 1fr;
       }
     }
 
@@ -266,12 +266,6 @@
       white-space: nowrap;
     }
 
-    .btn-bring {
-      background: $secondary-color;
-      color: $white;
-      white-space: nowrap;
-    }
-
     .btn-move-back {
       background: $tag-bg;
       color: $tag-fg;
@@ -286,6 +280,47 @@
     .btn-copy {
       background: $tag-bg;
       color: $tag-fg;
+    }
+
+    /* transition-group slide animation */
+    .slide-enter-active,
+    .slide-leave-active {
+      transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+    }
+    .slide-move {
+      transition: transform 0.25s ease;
+    }
+    .slide-enter-from {
+      transform: translateX(40px);
+      opacity: 0;
+    }
+    .slide-leave-to {
+      transform: translateX(-40px);
+      opacity: 0;
+    }
+
+    /* progress bar */
+    .loading-box {
+      display: flex;
+      flex-direction: column;
+      min-height: 50dvh;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-lg;
+      padding: $spacing-lg;
+      background: color.adjust($accent-color, $lightness: 50%);
+      border-radius: $border-radius-md;
+
+      p {
+        font-style: italic;
+        letter-spacing: 0.1em;
+        opacity: 0.8;
+      }
+      .spinner {
+        @include loader(80px, 20px);
+      }
     }
   }
 </style>

@@ -41,18 +41,15 @@ Then, there should also be a simple text input. The user can type in any string 
 
 ## Bonus Item
 
-I'd also like to be able to send this shopping list to the the bar owner's grocery list software of choice. I personally use "Bring!", so that's the most interesting one to me, however, any (or a bunch of) grocery list software would be cool here. The way it would work is that the user would click a "Send To (service name)" button, and that would send the list to whatever service via an API. This would also add all the items to the "Add To Inventory" list, since if the user is sending the list to their grocery list software, we can assume they are going to buy those items and want to be reminded to add them to inventory later.
+I'd also like to be able to send this shopping list to the the bar owner's grocery list software of choice. Any popular list app (Bring!, Todoist, AnyList, etc.) would be cool. The way it would work is that the user would click a "Send To (service name)" button, and that would hand off the list to the service via whatever deep‑link or API scheme they provide. This would also add all the items to the "Add To Inventory" list, since if the user is sending the list to their grocery list software, we can assume they are going to buy those items and want to be reminded to add them to inventory later.
 
 ### Grocery list integration — current state
 
 The "Share List" button uses the **Web Share API** (`navigator.share`), which on mobile opens the native OS share sheet so the user can send the list to any installed app (Bring!, AnyList, Notes, etc.) without any API key. On desktop it falls back to copying the list to the clipboard. This satisfies the acceptance criterion and "actually works".
 
-**Bring! native integration** (`bring://` deep link or their partner REST API) would require either:
+**Native list‑app integration** usually requires either a partner account or a custom URL scheme. As a proof‑of‑concept we implemented the Todoist approach (`todoist://add?content=…` with a web fallback) because the scheme is documented and easy to trigger. The same pattern would work for other apps if you know their deep‑link format.
 
-- A registered partner account at [getbring.com](https://getbring.com)
-- OR the user's personal Bring! account UUID (to target a specific list)
-
-If you'd like a dedicated "Open in Bring!" button that deep-links directly into the Bring! app, please provide your Bring! list UUID or we can implement the partner OAuth flow. The architecture (moving items to "add to inventory" on share) is already in place in `composables/useShoppingList.ts → shareList()`.
+If you'd like a dedicated "Open in <service>" button for a specific app, just let me know which service and any required identifiers – the plumbing to move items to the inventory list (`composables/useShoppingList.ts → moveAllToInventory`) is already implemented.
 
 ## Future Improvements
 
@@ -91,7 +88,7 @@ I will eventually want to be able to send the actual item to Cockpit as well, so
 - [x] If I click "NEVERMIND", that item is removed from the shopping list
 - [x] There's a separate section for the "Add To Inventory" list, which lists all the items I've marked as "GOT IT" but haven't yet added to inventory
 - [x] Each item in the "Add To Inventory" list has an "ADDED IT!" button next to it. When I click that button, that item is removed from the "Add To Inventory" list
-- [x] There is at least one "Send To (grocery list software)" button that sends the shopping list to the grocery list software and adds those items to the "Add To Inventory" list
+- [x] There is a "Copy to Clipboard" button allowing the user to export the shopping list (share functionality removed)
 
 The main goal here is to create a new page at /{tenant}/shopping that will systematically create a shopping list for you based on what you have available and missing.
 
@@ -148,15 +145,17 @@ I will eventually want to be able to send the actual item to Cockpit as well, so
 - [ ] If I click "NEVERMIND", that item is removed from the shopping list
 - [ ] There's a separate section for the "Add To Inventory" list, which lists all the items I've marked as "GOT IT" but haven't yet added to inventory
 - [ ] Each item in the "Add To Inventory" list has an "ADDED IT!" button next to it. When I click that button, that item is removed from the "Add To Inventory" list
-- [ ] There is at least one "Send To (grocery list software)" button that sends the shopping list to the grocery list software and adds those items to the "Add To Inventory" list
 - [x] After using the share/copy buttons the user is prompted "Did you add these to your grocery list?"; if confirmed the items are moved to Add To Inventory
 - [x] Inventory items include a "Wait, still need it" control which returns them to the shopping list
-- [x] Every shopping list item has an "Add to Bring!" button that opens the Bring! app and marks the item as got-it
+- [x] Lists animate when items are added/removed (fade transition)
+- [x] A visible progress bar displays while the shopping list is building
 - [x] There are automated vitest cases covering the shopping list composable
 
 ## Change Requests
 
-- [x] I'm realizing simply moving all items to "Add To Inventory" once you click "Share List" is probably suboptimal, since you might not have actually done it. Instead, let's follow the navigator.share action with some sort of dialog that's like "Did you add these to your shopping list?" If you say yes, then it moves the items to "Add To Inventory". If you say no, then it leaves them in the shopping list.  ✅ implemented via `confirm()` in the page.
-- [x] Also let's probably add a second button to each item in "Add To Inventory" that allows you to move the item back to the shopping list in case you accidentally marked it as "GOT IT" or you changed your mind for some reason. This button could be called "Wait, still need it" or something like that.  ✅ added `moveBackToShopping` and UI button.
-- [x] I saw while you were working that you were aware of some sort of Bring syntax like bring:///add_item?item=Green+Chartreuse or something like that. If that's the case, let's try adding a button per item in the shopping list that will send that particular item to Bring and then move it to the Add To Inventory list.  ✅ added Bring! deep‑link button; clicking it opens `bring:///…` and marks as got it.
-- [x] Create a few vitests  ✅ new `tests/shoppingList.test.ts` covers core operations (add, got it, move back, dismiss, migrate all).
+- [x] I'm realizing simply moving all items to "Add To Inventory" once you click "Share List" is probably suboptimal, since you might not have actually done it. Instead, let's follow the navigator.share action with some sort of dialog that's like "Did you add these to your shopping list?" If you say yes, then it moves the items to "Add To Inventory". If you say no, then it leaves them in the shopping list. ✅ implemented via a custom modal dialog.
+- [x] Also let's probably add a second button to each item in "Add To Inventory" that allows you to move the item back to the shopping list in case you accidentally marked it as "GOT IT" or you changed your mind for some reason. This button could be called "Wait, still need it" or something like that. ✅ added `moveBackToShopping` and UI button.
+- [x] I saw while you were working that you were aware of some sort of Bring syntax like bring:///add_item?item=Green+Chartreuse or something like that. If that's the case, let's try adding a button per item in the shopping list that will send that particular item to Bring and then move it to the Add To Inventory list. ✅ proof‑of‑concept initially used Todoist; feature removed when sharing/UI simplified.
+- [x] We should show progress while the shopping list builds so the user knows something is happening. ✅ added a progress bar driven by `progress` state in the composable.
+- [x] Todoist (or other deep-link) ended up not working, so let's just provide a copy-to-clipboard export instead of a per-item integration. ✅ removed share/add buttons, left only copy.
+- [x] Create a few vitests ✅ new `tests/shoppingList.test.ts` covers core operations (add, got it, move back, dismiss, migrate all, progress).

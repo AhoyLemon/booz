@@ -6,7 +6,9 @@
       p Items to pick up, based on your empty bottles and missing drink ingredients
 
     .loading(v-if="!isLoaded")
-      p Building your shopping list…
+      .loading-box
+        .spinner
+        p Building your shopping list…
 
     template(v-if="isLoaded")
 
@@ -31,7 +33,7 @@
         .empty-state(v-if="shoppingItems.length === 0")
           p ✅ Nothing to buy right now — your bar is fully stocked for all your drinks!
 
-        ul.shopping-list(v-else)
+        transition-group(name="slide" tag="ul" class="shopping-list" v-else)
           li.shopping-item(v-for="item in shoppingItems" :key="item.id")
             .item-info
               span.item-name {{ item.name }}
@@ -42,28 +44,33 @@
               span.item-reason(v-else) you added this
             .item-actions
               button.btn.btn-got-it(@click="handleGotIt(item)") Got It ✓
-              button.btn.btn-bring(@click="handleBring(item)") Add to Bring! 🛒
               button.btn.btn-nevermind(@click="handleNevermind(item.name)") Nevermind ✕
 
       //- ── Share buttons ───────────────────────────────────────────────────
       .share-section(v-if="shoppingItems.length > 0")
-        p.share-desc Send your list to your grocery app — this will also move all items to the "Add to Inventory" list.
+        p.share-desc Copy your list to the clipboard — then paste it into the app of your choice.
         .share-buttons
-          button.btn.btn-share(@click="handleShare")
-            | 📤 Share List
           button.btn.btn-copy(@click="handleCopy")
             | {{ copyConfirm ? "✓ Copied!" : "📋 Copy to Clipboard" }}
+          
 
       //- ── Add to inventory list ───────────────────────────────────────────
       section.inventory-section(v-if="inventoryItems.length > 0")
         h2.section-title Add to Inventory
         p.section-desc
           | You've picked up these items — remember to log them in your inventory at&nbsp;
-          a(href="https://my.booz.bar" target="_blank" rel="noopener noreferrer") my.booz.bar
+          a(href="https://my.booz.bar" target="_blank") my.booz.bar
 
-        ul.inventory-list
+        transition-group(name="slide" tag="ul" class="inventory-list")
           li.inventory-item(v-for="item in inventoryItems" :key="item.id")
             span.item-name {{ item.name }}
             .inventory-actions
               button.btn.btn-added-it(@click="handleAddedIt(item.name)") Added It! ✓
               button.btn.btn-move-back(@click="handleMoveBack(item.name)") Wait, still need it
+
+      //- ── Reset session button ───────────────────────────────────────────
+      .share-section(v-if="inventoryItems.length > 0")
+        p.share-desc Made a mistake? Want to start over?
+        .share-buttons
+          button.btn.btn-copy(@click="onResetSession()")
+            | Reset Session

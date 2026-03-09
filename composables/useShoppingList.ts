@@ -1,3 +1,6 @@
+import { useCockpitAPI } from "~/composables/useCockpitAPI";
+import { useCocktails } from "~/composables/useCocktails";
+
 /**
  * useShoppingList
  *
@@ -43,18 +46,15 @@ export const useShoppingList = (tenantSlug: string) => {
 
   const isLoaded = useState<boolean>(`${tenantSlug}_shoppingLoaded`, () => false);
 
+  // percent complete while auto-building list (0–100)
+  const progress = useState<number>(`${tenantSlug}_shoppingProgress`, () => 0);
+
   // ─── Persistence helpers ────────────────────────────────────────────────────
 
   const saveSession = () => {
     if (!process.client) return;
-    sessionStorage.setItem(
-      SESSION_KEY(tenantSlug),
-      JSON.stringify(userAddedItems.value),
-    );
-    sessionStorage.setItem(
-      DISMISSED_KEY(tenantSlug),
-      JSON.stringify(dismissedNames.value),
-    );
+    sessionStorage.setItem(SESSION_KEY(tenantSlug), JSON.stringify(userAddedItems.value));
+    sessionStorage.setItem(DISMISSED_KEY(tenantSlug), JSON.stringify(dismissedNames.value));
   };
 
   const saveInventory = () => {
@@ -90,14 +90,10 @@ export const useShoppingList = (tenantSlug: string) => {
   // ─── Derived list ───────────────────────────────────────────────────────────
 
   /** Canonical "in inventory list" names for quick lookup (lower-cased) */
-  const inventoryItemNames = computed(() =>
-    new Set(inventoryItems.value.map((i) => i.name.toLowerCase().trim())),
-  );
+  const inventoryItemNames = computed(() => new Set(inventoryItems.value.map((i) => i.name.toLowerCase().trim())));
 
   /** Names dismissed this session (lower-cased) */
-  const dismissedSet = computed(() =>
-    new Set(dismissedNames.value.map((n) => n.toLowerCase().trim())),
-  );
+  const dismissedSet = computed(() => new Set(dismissedNames.value.map((n) => n.toLowerCase().trim())));
 
   const isExcluded = (name: string) => {
     const lower = name.toLowerCase().trim();
@@ -133,6 +129,7 @@ export const useShoppingList = (tenantSlug: string) => {
   const buildAutoItems = async () => {
     if (!process.client) return;
 
+    progress.value = 0;
     const cockpitAPI = useCockpitAPI(tenantSlug);
     const { inventory, loadInventory, isIngredientInStock, loadEssentials } = useCocktails(tenantSlug);
 
@@ -141,9 +138,13 @@ export const useShoppingList = (tenantSlug: string) => {
       await loadInventory();
       await loadEssentials();
     }
+    progress.value = 20;
 
     // Fetch tenant-only drinks (not common drinks)
     const tenantDrinks = await cockpitAPI.fetchDrinks();
+    progress.value = 40;
+
+    // calculate missing ingredient items
 
     // ── Missing ingredients ────────────────────────────────────────────────
     // Map: ingredient name (lower) → set of drink names that need it
@@ -160,23 +161,23 @@ export const useShoppingList = (tenantSlug: string) => {
       }
     }
 
-    const missingItems: ShoppingItem[] = Array.from(missingMap.entries()).map(
-      ([nameLower, drinkSet]) => {
-        // Preserve original casing from the first occurrence
-        const originalName =
-          tenantDrinks
-            .flatMap((d) => d.ingredients)
-            .find((i) => i.name.toLowerCase().trim() === nameLower)?.name ?? nameLower;
+    const missingItems: ShoppingItem[] = Array.from(missingMap.entries()).map(([nameLower, drinkSet]) => {
+      // Preserve original casing from the first occurrence
+      const originalName =
+        tenantDrinks.flatMap((d) => d.ingredients).find((i) => i.name.toLowerCase().trim() === nameLower)?.name ??
+        nameLower;
 
-        return {
-          id: `auto-missing-${nameLower.replace(/\s+/g, "-")}`,
-          name: originalName,
-          reasonType: "missing-ingredient",
-          neededForDrinks: Array.from(drinkSet),
-          addedAt: Date.now(),
-        };
-      },
-    );
+      return {
+        id: `auto-missing-${nameLower.replace(/\s+/g, "-")}`,
+        name: originalName,
+        reasonType: "missing-ingredient",
+        neededForDrinks: Array.from(drinkSet),
+        addedAt: Date.now(),
+      };
+    });
+
+    // update progress after determining missing ingredients
+    progress.value = 70;
 
     // ── Empty bottles ──────────────────────────────────────────────────────
     const emptyBottleItems: ShoppingItem[] = inventory.value
@@ -188,7 +189,9 @@ export const useShoppingList = (tenantSlug: string) => {
         addedAt: Date.now(),
       }));
 
+    // finalise
     autoItems.value = [...missingItems, ...emptyBottleItems];
+    progress.value = 100;
   };
 
   // ─── Actions ────────────────────────────────────────────────────────────────
@@ -199,9 +202,7 @@ export const useShoppingList = (tenantSlug: string) => {
     if (isExcluded(trimmed)) return;
 
     // Prevent duplicates
-    const already = shoppingItems.value.some(
-      (i) => i.name.toLowerCase().trim() === trimmed.toLowerCase(),
-    );
+    const already = shoppingItems.value.some((i) => i.name.toLowerCase().trim() === trimmed.toLowerCase());
     if (already) return;
 
     userAddedItems.value = [
@@ -217,10 +218,7 @@ export const useShoppingList = (tenantSlug: string) => {
   };
 
   const dismissItem = (name: string) => {
-    dismissedNames.value = [
-      ...dismissedNames.value,
-      name,
-    ];
+    dismissedNames.value = [...dismissedNames.value, name];
     // Also remove from userAdded if present
     userAddedItems.value = userAddedItems.value.filter(
       (i) => i.name.toLowerCase().trim() !== name.toLowerCase().trim(),
@@ -230,9 +228,7 @@ export const useShoppingList = (tenantSlug: string) => {
 
   const gotIt = (item: ShoppingItem) => {
     // Add to inventory list (avoid duplicates)
-    const alreadyIn = inventoryItems.value.some(
-      (i) => i.name.toLowerCase().trim() === item.name.toLowerCase().trim(),
-    );
+    const alreadyIn = inventoryItems.value.some((i) => i.name.toLowerCase().trim() === item.name.toLowerCase().trim());
     if (!alreadyIn) {
       inventoryItems.value = [...inventoryItems.value, { ...item, addedAt: Date.now() }];
       saveInventory();
@@ -246,10 +242,13 @@ export const useShoppingList = (tenantSlug: string) => {
   };
 
   const addedIt = (name: string) => {
+    // Dismiss so auto-generated items (empty bottles, missing ingredients) don't resurface
+    dismissedNames.value = [...dismissedNames.value, name];
     inventoryItems.value = inventoryItems.value.filter(
       (i) => i.name.toLowerCase().trim() !== name.toLowerCase().trim(),
     );
     saveInventory();
+    saveSession();
   };
 
   // Move a single item back to the shopping list as user-added
@@ -257,8 +256,10 @@ export const useShoppingList = (tenantSlug: string) => {
     const lower = name.toLowerCase().trim();
     const existing = inventoryItems.value.find((i) => i.name.toLowerCase().trim() === lower);
     if (!existing) return;
-    addedIt(name);
-    // push to user list
+    // Remove from inventory without dismissing (so it re-enters the shopping list)
+    inventoryItems.value = inventoryItems.value.filter((i) => i.name.toLowerCase().trim() !== lower);
+    saveInventory();
+    // Push back to user shopping list
     userAddedItems.value = [
       ...userAddedItems.value,
       {
@@ -278,7 +279,6 @@ export const useShoppingList = (tenantSlug: string) => {
       gotIt(item);
     }
   };
-
 
   // ─── Share / export ─────────────────────────────────────────────────────────
 
@@ -340,14 +340,42 @@ export const useShoppingList = (tenantSlug: string) => {
 
   const init = async () => {
     loadPersisted();
+    progress.value = 0;
     await buildAutoItems();
     isLoaded.value = true;
+  };
+
+  /**
+   * Completely clear both sessionStorage and localStorage entries for
+   * this tenant's shopping list plus the shared inventory list. This is
+   * primarily used by the "Reset Session" button in the shopping page.
+   *
+   * After wiping storage we also reset in-memory state and rebuild the
+   * auto-generated items so the page immediately returns to a fresh state.
+   */
+  const resetSession = async () => {
+    if (!process.client) return;
+
+    // remove persisted values
+    sessionStorage.removeItem(SESSION_KEY(tenantSlug));
+    sessionStorage.removeItem(DISMISSED_KEY(tenantSlug));
+    localStorage.removeItem(INVENTORY_KEY);
+
+    // clear in-memory stores
+    userAddedItems.value = [];
+    dismissedNames.value = [];
+    inventoryItems.value = [];
+
+    // rebuild auto items so page shows the current missing/empty items
+    progress.value = 0;
+    await buildAutoItems();
   };
 
   return {
     shoppingItems,
     inventoryItems,
     isLoaded,
+    progress,
     init,
     buildAutoItems,
     addUserItem,
@@ -358,5 +386,6 @@ export const useShoppingList = (tenantSlug: string) => {
     copyList,
     moveBackToShopping,
     moveAllToInventory,
+    resetSession,
   };
 };
