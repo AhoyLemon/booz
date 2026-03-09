@@ -1,0 +1,69 @@
+.shopping-page
+  .container
+
+    hgroup
+      h1 Shopping List
+      p Items to pick up, based on your empty bottles and missing drink ingredients
+
+    .loading(v-if="!isLoaded")
+      p Building your shopping list…
+
+    template(v-if="isLoaded")
+
+      //- ── Manual add input ────────────────────────────────────────────────
+      .add-item-form
+        label.add-label(for="new-item") Add an item
+        .add-input-row
+          input#new-item.add-input(
+            v-model="newItemText"
+            type="text"
+            placeholder="e.g. Disaronno, Triple Sec..."
+            @keyup.enter="handleAdd"
+          )
+          button.btn.btn-add(@click="handleAdd" :disabled="!newItemText.trim()") Add
+
+      //- ── Shopping list ────────────────────────────────────────────────────
+      section.shopping-section
+        h2.section-title
+          | Shopping List
+          sup.count(v-if="shoppingItems.length") &nbsp;({{ shoppingItems.length }})
+
+        .empty-state(v-if="shoppingItems.length === 0")
+          p ✅ Nothing to buy right now — your bar is fully stocked for all your drinks!
+
+        ul.shopping-list(v-else)
+          li.shopping-item(v-for="item in shoppingItems" :key="item.id")
+            .item-info
+              span.item-name {{ item.name }}
+              span.item-reason(v-if="item.reasonType === 'missing-ingredient'")
+                | needed for&nbsp;
+                strong {{ item.neededForDrinks?.join(", ") }}
+              span.item-reason(v-else-if="item.reasonType === 'empty-bottle'") bottle marked empty
+              span.item-reason(v-else) you added this
+            .item-actions
+              button.btn.btn-got-it(@click="handleGotIt(item)") Got It ✓
+              button.btn.btn-bring(@click="handleBring(item)") Add to Bring! 🛒
+              button.btn.btn-nevermind(@click="handleNevermind(item.name)") Nevermind ✕
+
+      //- ── Share buttons ───────────────────────────────────────────────────
+      .share-section(v-if="shoppingItems.length > 0")
+        p.share-desc Send your list to your grocery app — this will also move all items to the "Add to Inventory" list.
+        .share-buttons
+          button.btn.btn-share(@click="handleShare")
+            | 📤 Share List
+          button.btn.btn-copy(@click="handleCopy")
+            | {{ copyConfirm ? "✓ Copied!" : "📋 Copy to Clipboard" }}
+
+      //- ── Add to inventory list ───────────────────────────────────────────
+      section.inventory-section(v-if="inventoryItems.length > 0")
+        h2.section-title Add to Inventory
+        p.section-desc
+          | You've picked up these items — remember to log them in your inventory at&nbsp;
+          a(href="https://my.booz.bar" target="_blank" rel="noopener noreferrer") my.booz.bar
+
+        ul.inventory-list
+          li.inventory-item(v-for="item in inventoryItems" :key="item.id")
+            span.item-name {{ item.name }}
+            .inventory-actions
+              button.btn.btn-added-it(@click="handleAddedIt(item.name)") Added It! ✓
+              button.btn.btn-move-back(@click="handleMoveBack(item.name)") Wait, still need it

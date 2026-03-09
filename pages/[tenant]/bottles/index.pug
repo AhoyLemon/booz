@@ -3,7 +3,7 @@
     hgroup
       h1.with-count 
         span Your Bottles
-        sup.count(v-if="inventory.length > 0") ({{ inventory.length }})
+        sup.count(v-if="inStockBottles.length > 0") ({{ inStockBottles.length }})
       p Browse your bottle collection
 
     .error-banner(v-if="error")

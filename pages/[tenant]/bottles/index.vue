@@ -17,10 +17,10 @@
   const inStockBottles = computed(() => inventory.value.filter((b) => b.inStock));
   const outOfStockBottles = computed(() => inventory.value.filter((b) => !b.inStock));
 
-  // Get all unique tags from inventory
+  // Get all unique tags from in-stock inventory (empty bottles excluded)
   const availableTags = computed(() => {
     const tags = new Set<string>();
-    inventory.value.forEach((bottle) => {
+    inStockBottles.value.forEach((bottle) => {
       bottle.tags.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags).sort();
@@ -37,28 +37,22 @@
       .sort((a, b) => b.count - a.count);
   });
 
-  // Get bottle count for a specific tag
+  // Get bottle count for a specific tag (in-stock only)
   const getBottleCountForTag = (tag: string) => {
-    return inventory.value.filter((b) => b.tags.includes(tag)).length;
+    return inStockBottles.value.filter((b) => b.tags.includes(tag)).length;
   };
 
-  // Get bottle count for a specific category
+  // Get bottle count for a specific category (in-stock only)
   const getBottleCountForCategory = (category: string) => {
     if (category === "all") {
-      return inventory.value.length;
+      return inStockBottles.value.length;
     }
-    return inventory.value.filter((b) => b.category === category).length;
+    return inStockBottles.value.filter((b) => b.category === category).length;
   };
 
   const filteredBottles = computed(() => {
-    let bottles = inventory.value;
-
-    // Apply stock filter
-    if (filter.value === "inStock") {
-      bottles = inStockBottles.value;
-    } else if (filter.value === "outOfStock") {
-      bottles = outOfStockBottles.value;
-    }
+    // Always start from in-stock bottles — empty bottles are never displayed
+    let bottles = inStockBottles.value;
 
     // Apply category filter
     if (categoryFilter.value !== "all") {

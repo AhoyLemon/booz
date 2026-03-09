@@ -176,7 +176,7 @@ export const useCockpitAPI = (tenantSlug?: string) => {
           category: item.category || "Uncategorized",
           baseSpirit: item.baseSpirit || "Other Spirit",
           tags,
-          inStock: true, // Assume in stock unless specified
+          inStock: bottleState !== "empty",
           isFingers: item.isFingers === true,
           bottleSize: item.bottleSize,
           bottleState,
