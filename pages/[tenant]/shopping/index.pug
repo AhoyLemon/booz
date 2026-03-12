@@ -26,12 +26,17 @@
 
       //- ── Shopping list ────────────────────────────────────────────────────
       section.shopping-section
-        h2.section-title
+        h2.section-title(v-if="shoppingItems.length > 0")
           | Shopping List
           sup.count(v-if="shoppingItems.length") &nbsp;({{ shoppingItems.length }})
 
-        .empty-state(v-if="shoppingItems.length === 0")
-          p ✅ Nothing to buy right now — your bar is fully stocked for all your drinks!
+        .empty-state(v-if="shoppingItems.length === 0 && inventoryItems.length === 0")
+          .inside
+            h2 Your shopping list is empty.
+            p BOOZ shopping lists are created by the drinks you've listed as your specialties, as well as the bottles you've marked empty.
+            p If you're expecting to see something in this list, either log into 
+              a(href="https://my.booz.bar" target="_blank") my.booz.bar
+              |  and update your inventory, or use the form above to add items manually.
 
         transition-group(name="slide" tag="ul" class="shopping-list" v-else)
           li.shopping-item(v-for="item in shoppingItems" :key="item.id")

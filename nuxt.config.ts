@@ -85,6 +85,7 @@ export default defineNuxtConfig({
               available: "pages/[tenant]/available/index.vue",
               search: "pages/[tenant]/search/index.vue",
               qr: "pages/[tenant]/qr/index.vue",
+              shopping: "pages/[tenant]/shopping/index.vue",
             };
 
             return pageMap[page] || `pages/[tenant]/index.vue`;
