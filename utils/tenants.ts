@@ -39,6 +39,18 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
       },
     },
   },
+  bozarth: {
+    slug: "bozarth",
+    barName: "BoozeArt",
+    barData: "bozarthBar",
+    description: "Fans of alcohol enjoy these items.",
+    includeCommonDrinks: true,
+    includeRandomCocktails: true,
+    metaInfo: {
+      description: "Fans of alcohol enjoy these items.",
+      ogImage: "/opengraph-bozarth.png",
+    },
+  },
   lemon: {
     slug: "lemon",
     barName: "Lemonhaus",
