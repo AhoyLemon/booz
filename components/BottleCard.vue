@@ -48,6 +48,7 @@ NuxtLink.bottle-card(:class="{ 'out-of-stock': !bottle.inStock }" :to="bottleLin
   function getBottleTags(bottle: any): string[] {
     return [
       ...(bottle.baseSpirits || []),
+      ...(bottle.brandyTypes || []),
       ...(bottle.whiskeyTypes || []),
       ...(bottle.tequilaTypes || []),
       ...(bottle.ginTypes || []),

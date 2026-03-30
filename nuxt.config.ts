@@ -225,6 +225,11 @@ export default defineNuxtConfig({
 
         // Sample bar
         "/sample",
+        "/sample/available",
+        "/sample/bottles",
+        "/sample/drinks",
+        "/sample/fingers",
+        "/sample/qr",
       ],
     },
   },

@@ -19,6 +19,7 @@ interface CockpitBottle {
     [key: string]: any;
   };
   isFingers: boolean;
+  brandyTypes?: string[];
   whiskeyTypes?: string[];
   tequilaTypes?: string[];
   ginTypes?: string[];
@@ -149,6 +150,7 @@ export const useCockpitAPI = (tenantSlug?: string) => {
         // baseSpirit is a separate field on the Bottle type and is used
         // for ingredient matching in useCocktailMatching.ts independently.
         if (item.whiskeyTypes) tags.push(...item.whiskeyTypes);
+        if (item.brandyTypes) tags.push(...item.brandyTypes);
         if (item.tequilaTypes) tags.push(...item.tequilaTypes);
         if (item.ginTypes) tags.push(...item.ginTypes);
         if (item.rumTypes) tags.push(...item.rumTypes);
