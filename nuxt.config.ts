@@ -173,7 +173,6 @@ export default defineNuxtConfig({
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap",
-          // href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
         },
         { rel: "icon", type: "image/png", href: `${siteOrigin}/favicon.png` },
       ],
@@ -198,6 +197,14 @@ export default defineNuxtConfig({
         "/lemon/drinks",
         "/lemon/fingers",
         "/lemon/qr",
+
+        // Bozarth's pages
+        "/bozarth",
+        "/bozarth/available",
+        "/bozarth/bottles",
+        "/bozarth/drinks",
+        "/bozarth/fingers",
+        "/bozarth/qr",
 
         // Steve & Tara's pages
         "/ofox",
