@@ -25,7 +25,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
       description: "Explore our sample bar inventory with demo data.",
       ogImage: "/opengraph-generic.png",
       pages: {
-        drinks: {
+        cocktails: {
           title: "Sample Cocktails",
           description: "Browse our demo collection of cocktail recipes with randomly generated suggestions.",
         },
@@ -105,7 +105,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
       description: "Nestled in University Place is a a well stocked bar. What are you thirsty for?",
       ogImage: "/opengraph-yam.png",
       pages: {
-        drinks: {
+        cocktails: {
           title: "Cocktails | House In The Trees",
         },
       },

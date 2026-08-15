@@ -77,6 +77,7 @@ export default defineNuxtConfig({
 
             // Map page names to file paths
             const pageMap: Record<string, string> = {
+              cocktails: "pages/[tenant]/cocktails/index.vue",
               drinks: "pages/[tenant]/drinks/index.vue",
               bottles: "pages/[tenant]/bottles/index.vue",
               essentials: "pages/[tenant]/essentials/index.vue",
@@ -94,7 +95,7 @@ export default defineNuxtConfig({
           for (const slug of slugs) {
             const tenantUrls = [
               `/${slug}`,
-              `/${slug}/drinks`,
+              `/${slug}/cocktails`,
               `/${slug}/bottles`,
               `/${slug}/essentials`,
               `/${slug}/beer-wine`,
@@ -194,7 +195,7 @@ export default defineNuxtConfig({
         "/lemon",
         "/lemon/available",
         "/lemon/bottles",
-        "/lemon/drinks",
+        "/lemon/cocktails",
         "/lemon/fingers",
         "/lemon/qr",
 
@@ -202,7 +203,7 @@ export default defineNuxtConfig({
         "/bozarth",
         "/bozarth/available",
         "/bozarth/bottles",
-        "/bozarth/drinks",
+        "/bozarth/cocktails",
         "/bozarth/fingers",
         "/bozarth/qr",
 
@@ -210,7 +211,7 @@ export default defineNuxtConfig({
         "/ofox",
         "/ofox/available",
         "/ofox/bottles",
-        "/ofox/drinks",
+        "/ofox/cocktails",
         "/ofox/fingers",
         "/ofox/qr",
 
@@ -218,7 +219,7 @@ export default defineNuxtConfig({
         "/victor",
         "/victor/available",
         "/victor/bottles",
-        "/victor/drinks",
+        "/victor/cocktails",
         "/victor/fingers",
         "/victor/qr",
 
@@ -226,7 +227,7 @@ export default defineNuxtConfig({
         "/yam",
         "/yam/available",
         "/yam/bottles",
-        "/yam/drinks",
+        "/yam/cocktails",
         "/yam/fingers",
         "/yam/qr",
 
@@ -234,7 +235,7 @@ export default defineNuxtConfig({
         "/sample",
         "/sample/available",
         "/sample/bottles",
-        "/sample/drinks",
+        "/sample/cocktails",
         "/sample/fingers",
         "/sample/qr",
       ],

@@ -17,7 +17,7 @@
         template(v-else)
           NuxtLink.nav-link(:to="tenantPath('/')" :class="{ active: isActive('/') }") Home
           NuxtLink.nav-link(:to="tenantPath('/bottles')" :class="{ active: isActive('/bottles') }") Bottles
-          NuxtLink.nav-link(:to="tenantPath('/drinks')" :class="{ active: isActive('/drinks') }") Drinks
+          NuxtLink.nav-link(:to="tenantPath('/cocktails')" :class="{ active: isActive('/cocktails') }") Cocktails
           NuxtLink.nav-link(:to="tenantPath('/essentials')" :class="{ active: isActive('/essentials') }") Essentials
           NuxtLink.nav-link(:to="tenantPath('/beer-wine')" :class="{ active: isActive('/beer-wine') }") Beer & Wine
           NuxtLink.nav-link(:to="tenantPath('/fingers')" :class="{ active: isActive('/fingers') }") Fingers

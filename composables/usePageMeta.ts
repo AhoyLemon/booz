@@ -19,8 +19,8 @@ const PAGE_DEFAULTS: Record<string, { title: string; description: string }> = {
     title: "Bar Inventory",
     description: "Explore our bar inventory - spirits, cocktails, beer, and wine.",
   },
-  drinks: {
-    title: "Drinks",
+  cocktails: {
+    title: "Cocktails",
     description: "Browse our collection of cocktails and mixed drinks.",
   },
   bottles: {

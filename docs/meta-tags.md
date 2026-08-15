@@ -35,11 +35,11 @@ When determining meta tags for a page, the system checks in this order (first ma
 
 #### Example
 
-For the `/lemon/drinks` page:
+For the `/lemon/cocktails` page:
 
-1. **First**, check if `TENANT_CONFIG.lemon.metaInfo.pages.drinks` has a `title`
+1. **First**, check if `TENANT_CONFIG.lemon.metaInfo.pages.cocktails` has a `title`
 2. **If not**, check if the page explicitly passed `title` to `usePageMeta()`
-3. **If not**, use tenant's general title format: `"Drinks - Lemonhaus"`
+3. **If not**, use tenant's general title format: `"Cocktails - Lemonhaus"`
 4. **If not**, use site default: `"BOOZ - Bar Inventory Management"`
 
 ## Configuration
@@ -67,7 +67,7 @@ export const TENANT_CONFIG: Record<string, TenantConfig> = {
 
       // Page-specific overrides
       pages: {
-        drinks: {
+        cocktails: {
           title: "Cocktails | Lemonhaus",
           description: "Explore the cocktail menu at Lemonhaus - from classic recipes to signature creations.",
         },
@@ -93,7 +93,7 @@ The following page types are recognized:
 - `home` - Site homepage (`/`)
 - `about` - About page (`/about`)
 - `index` - Tenant homepage (`/[tenant]`)
-- `drinks` - Drinks listing (`/[tenant]/drinks`)
+- `cocktails` - Cocktails listing (`/[tenant]/cocktails`)
 - `bottles` - Bottles listing (`/[tenant]/bottles`)
 - `available` - Available drinks (`/[tenant]/available`)
 - `fingers` - Finger bottles (`/[tenant]/fingers`)

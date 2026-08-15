@@ -249,7 +249,7 @@ Search functionality is implemented in:
 - **Composable**: `composables/useSearchDrinks.ts` - Core search logic and scoring
 - **Composable**: `composables/useSearchHighlight.ts` - Text highlighting utility
 - **Component**: `components/DrinkCard.vue` - Enhanced to accept `searchTerm` prop for highlighting
-- **Page**: `pages/[tenant]/drinks/index.vue` - Integrates search UI and results display
+- **Page**: `pages/[tenant]/cocktails/index.vue` - Integrates search UI and results display
 
 ### User Flow Example
 

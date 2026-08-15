@@ -37,16 +37,16 @@ export interface TenantConfig {
 
 All pages use tenant-based dynamic routing:
 
-- **Pattern**: `/[tenant]/page` (e.g., `/lemon/drinks`, `/victor/bottles`)
+- **Pattern**: `/[tenant]/page` (e.g., `/lemon/cocktails`, `/victor/bottles`)
 - **Root path**: `/` serves the home page (`pages/index.vue`)
-- **Non-tenant redirect**: `/drinks` → `/sample/drinks`
+- **Non-tenant redirect**: `/cocktails` → `/sample/cocktails`, `/drinks` → `/sample/drinks` (detail routes)
 - **Invalid tenant**: `/invalid` → `/invalid/error` (error page)
 
 All pages are located under `/pages/[tenant]/`:
 
 - `/pages/[tenant]/index.vue` - Tenant home page
-- `/pages/[tenant]/drinks/index.vue` - Drinks listing
-- `/pages/[tenant]/drinks/[id].vue` - Individual drink
+- `/pages/[tenant]/cocktails/index.vue` - Cocktails listing
+- `/pages/[tenant]/drinks/[id].vue` - Individual drink (cocktails, fingers, beer, wine)
 - `/pages/[tenant]/bottles/index.vue` - Bottles listing
 - `/pages/[tenant]/bottles/[id].vue` - Individual bottle
 - `/pages/[tenant]/essentials/index.vue` - Essentials
@@ -59,7 +59,7 @@ All pages are located under `/pages/[tenant]/`:
 
 `/middleware/tenant.global.ts` handles:
 
-1. Redirecting non-tenant paths to default tenant (e.g., `/drinks` → `/sample/drinks`)
+1. Redirecting non-tenant paths to default tenant (e.g., `/cocktails` → `/sample/cocktails`)
 2. Validating tenant slugs
 3. Redirecting invalid tenants to error pages
 4. Skipping static assets
@@ -93,7 +93,7 @@ Each tenant has a single Cockpit CMS singleton ("tree") containing all their bar
   - Fetched when `includeRandomCocktails: true` in tenant config
   - Drinks marked with `external: true` and show 📡 indicator
   - Used to ensure minimum drink count (20 drinks) when local drinks are insufficient
-  - **Search Integration**: In `pages/[tenant]/drinks/index.vue`, search filters existing drinks (including external ones) by name, category, and ingredients
+  - **Search Integration**: In `pages/[tenant]/cocktails/index.vue`, search filters existing drinks (including external ones) by name, category, and ingredients
   - **Bottle Matching**: In `pages/[tenant]/bottles/[id].vue`, the `useCocktailMatching` composable searches for cocktails using progressive specificity:
     1. First searches by bottle name (most specific)
     2. Then searches by bottle tags (medium specificity)
@@ -257,10 +257,10 @@ When creating or modifying pages:
 
    ```vue
    <!-- Bad -->
-   <NuxtLink to="/drinks">Drinks</NuxtLink>
+   <NuxtLink to="/cocktails">Cocktails</NuxtLink>
 
    <!-- Good -->
-   <NuxtLink :to="`/${tenant}/drinks`">Drinks</NuxtLink>
+   <NuxtLink :to="`/${tenant}/cocktails`">Cocktails</NuxtLink>
    ```
 
 4. **For dynamic routes, extract both tenant and id**:

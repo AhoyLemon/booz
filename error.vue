@@ -25,7 +25,7 @@
   });
 
   // Define known page routes (tenant-based pages)
-  const knownTenantPages = ["drinks", "bottles", "available", "essentials", "beer-wine", "fingers", "qr"];
+  const knownTenantPages = ["drinks", "cocktails", "bottles", "available", "essentials", "beer-wine", "fingers", "qr"];
 
   // Determine the error scenario
   const errorScenario = computed(() => {

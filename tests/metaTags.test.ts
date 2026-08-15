@@ -16,20 +16,20 @@ describe("Meta Tag System", () => {
           description: "Tenant metaInfo description",
           ogImage: "/tenant-metainfo-image.png",
           pages: {
-            drinks: {
-              title: "Custom Drinks Title",
-              description: "Custom drinks description",
-              ogImage: "/custom-drinks-image.png",
+            cocktails: {
+              title: "Custom Cocktails Title",
+              description: "Custom cocktails description",
+              ogImage: "/custom-cocktails-image.png",
             },
           },
         },
       };
 
-      // For drinks page, should use tenant-page-specific values
-      const pageOverride = tenantConfig.metaInfo?.pages?.drinks;
-      expect(pageOverride?.title).toBe("Custom Drinks Title");
-      expect(pageOverride?.description).toBe("Custom drinks description");
-      expect(pageOverride?.ogImage).toBe("/custom-drinks-image.png");
+      // For cocktails page, should use tenant-page-specific values
+      const pageOverride = tenantConfig.metaInfo?.pages?.cocktails;
+      expect(pageOverride?.title).toBe("Custom Cocktails Title");
+      expect(pageOverride?.description).toBe("Custom cocktails description");
+      expect(pageOverride?.ogImage).toBe("/custom-cocktails-image.png");
     });
 
     it("should fall back to tenant-general meta when page-specific not defined", () => {
@@ -134,25 +134,25 @@ describe("Meta Tag System", () => {
         includeRandomCocktails: false,
         metaInfo: {
           pages: {
-            drinks: {
+            cocktails: {
               title: "Cocktails | ${tenantName}",
-              description: "Browse the drink menu at ${tenantName}.",
+              description: "Browse the cocktails menu at ${tenantName}.",
             },
           },
         },
       };
 
-      const drinksTitle = tenantConfig.metaInfo?.pages?.drinks?.title?.replace(
+      const cocktailsTitle = tenantConfig.metaInfo?.pages?.cocktails?.title?.replace(
         /\$\{tenantName\}/g,
         tenantConfig.barName,
       );
-      const drinksDesc = tenantConfig.metaInfo?.pages?.drinks?.description?.replace(
+      const cocktailsDesc = tenantConfig.metaInfo?.pages?.cocktails?.description?.replace(
         /\$\{tenantName\}/g,
         tenantConfig.barName,
       );
 
-      expect(drinksTitle).toBe("Cocktails | Test Bar");
-      expect(drinksDesc).toBe("Browse the drink menu at Test Bar.");
+      expect(cocktailsTitle).toBe("Cocktails | Test Bar");
+      expect(cocktailsDesc).toBe("Browse the cocktails menu at Test Bar.");
     });
   });
 
@@ -167,7 +167,7 @@ describe("Meta Tag System", () => {
         metaInfo: {
           pages: {
             index: { title: "Home" },
-            drinks: { title: "Drinks" },
+            cocktails: { title: "Cocktails" },
             bottles: { title: "Bottles" },
             available: { title: "Available" },
             fingers: { title: "Fingers" },
@@ -181,7 +181,7 @@ describe("Meta Tag System", () => {
       };
 
       expect(tenantConfig.metaInfo?.pages?.index?.title).toBe("Home");
-      expect(tenantConfig.metaInfo?.pages?.drinks?.title).toBe("Drinks");
+      expect(tenantConfig.metaInfo?.pages?.cocktails?.title).toBe("Cocktails");
       expect(tenantConfig.metaInfo?.pages?.bottles?.title).toBe("Bottles");
       expect(tenantConfig.metaInfo?.pages?.available?.title).toBe("Available");
       expect(tenantConfig.metaInfo?.pages?.fingers?.title).toBe("Fingers");
@@ -287,7 +287,7 @@ describe("Meta Tag System", () => {
         { path: "/", expected: "home" },
         { path: "/about", expected: "about" },
         { path: "/lemon", expected: "index" },
-        { path: "/lemon/drinks", expected: "drinks" },
+        { path: "/lemon/cocktails", expected: "cocktails" },
         { path: "/lemon/bottles", expected: "bottles" },
         { path: "/lemon/drinks/drink-6", expected: "drinks" },
         { path: "/lemon/bottles/bottle-123", expected: "bottles" },
