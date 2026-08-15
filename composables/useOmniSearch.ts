@@ -488,7 +488,7 @@ export const useOmniSearch = (tenantSlug: string) => {
           },
           displayName: `${drinkCount} external drinks with "${searchTerm}"`,
           displayDetails: [`including <strong>${firstDrink.strDrink}</strong> and ${remainingCount} more`],
-          link: `/${tenantSlug}/drinks?search=${encodeURIComponent(searchTerm)}&filters=externalByIngredient`,
+          link: `/${tenantSlug}/cocktails?search=${encodeURIComponent(searchTerm)}&filters=externalByIngredient`,
         },
       ];
     } catch (error) {

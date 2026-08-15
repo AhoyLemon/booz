@@ -11,9 +11,9 @@
         p spirits, liquors, and mixers in inventory
 
 
-      NuxtLink.nav-card(:to="`/${tenant}/drinks`")
+      NuxtLink.nav-card(:to="`/${tenant}/cocktails`")
         .count {{ cocktailsCountUp }}
-        h3 Drinks
+        h3 Cocktails
         p special and common cocktails
 
 

@@ -156,7 +156,7 @@
           p.fully-available(v-if="drink && isFullyAvailable") All ingredients available
           p.partially-available(v-else-if="drink && !isFullyAvailable") ⚠️ {{ availableCount }}/{{ totalCount }} ingredients available
         .back-navigation
-          NuxtLink.back-btn(:to="`/${tenant}/drinks`") ← Back to Drinks
+          NuxtLink.back-btn(:to="`/${tenant}/cocktails`") ← Back to Drinks
         .badge-row
           abbr.badge.source(
             v-if="drink"
@@ -203,7 +203,7 @@
           h1.drink-name.skeleton-text &nbsp;
           p.fully-available.skeleton-text &nbsp;
         .back-navigation
-          NuxtLink.back-btn(:to="`/${tenant}/drinks`") ← Back to Drinks
+          NuxtLink.back-btn(:to="`/${tenant}/cocktails`") ← Back to Drinks
         .badge-row
           abbr.badge.source.skeleton 
             span.skeleton-text loading
@@ -241,7 +241,7 @@
       | Direct links to CocktailDB drinks don't work on static hosting. 
       br
       | Please search for this cocktail on the 
-      NuxtLink(:to="`/${tenant}/drinks`") drinks page
+      NuxtLink(:to="`/${tenant}/cocktails`") drinks page
       |  instead.
     p(v-else) The drink you're looking for doesn't exist.
-    NuxtLink.btn.btn-primary(:to="`/${tenant}/drinks`") Back to Drinks
+    NuxtLink.btn.btn-primary(:to="`/${tenant}/cocktails`") Back to Drinks

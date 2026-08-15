@@ -17,7 +17,7 @@ export interface TenantMetaConfig {
   /** Page-specific meta overrides (keyed by page name) */
   pages?: {
     index?: PageMetaOverride;
-    drinks?: PageMetaOverride;
+    cocktails?: PageMetaOverride;
     bottles?: PageMetaOverride;
     available?: PageMetaOverride;
     fingers?: PageMetaOverride;
