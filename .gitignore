@@ -23,6 +23,7 @@ dist
 .vercel_build_output
 .build-*
 .netlify
+public/pwa-manifests/
 
 # Env (not used in this project, but kept here as a safety measure)
 .env

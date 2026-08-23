@@ -40,7 +40,7 @@ For the `/lemon/cocktails` page:
 1. **First**, check if `TENANT_CONFIG.lemon.metaInfo.pages.cocktails` has a `title`
 2. **If not**, check if the page explicitly passed `title` to `usePageMeta()`
 3. **If not**, use tenant's general title format: `"Cocktails - Lemonhaus"`
-4. **If not**, use site default: `"BOOZ - Bar Inventory Management"`
+4. **If not**, use site default: `"BOOZ | Bar Inventory Management"`
 
 ## Configuration
 

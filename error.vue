@@ -20,7 +20,7 @@
   import { usePageMeta } from "~/composables/usePageMeta";
   usePageMeta({
     pageType: "error",
-    title: "BOOZ - Page Not Found",
+    title: "BOOZ | Page Not Found",
     description: "That's not a good URL. Try again.",
   });
 

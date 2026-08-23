@@ -16,7 +16,7 @@
 <script setup lang="ts">
   import DummyDataNotice from "~/components/DummyDataNotice.vue";
   import Header from "~/components/Header.vue";
-  import { getTenantConfig, getDefaultTenantConfig } from "~/utils/tenants";
+  import { getTenantConfig, getDefaultTenantConfig, isValidTenant } from "~/utils/tenants";
 
   const route = useRoute();
 
@@ -42,6 +42,11 @@
 
   const normalizedPath = computed(() => route.path.replace(/\/$/, "") || "/");
 
+  const manifestHref = computed(() => {
+    const routeTenant = route.params.tenant as string | undefined;
+    return routeTenant && isValidTenant(routeTenant) ? `/pwa-manifests/${routeTenant}.webmanifest` : "/site.webmanifest";
+  });
+
   // Derive a page template class from the route, e.g. "drinks", "bottles", "about"
   const pageTemplate = computed(() => {
     const segments = route.path.split("/").filter(Boolean);
@@ -54,4 +59,8 @@
   // This will automatically handle the fallback chain for all pages
   // Individual pages can override by calling usePageMeta with explicit values
   usePageMeta();
+
+  useHead(() => ({
+    link: [{ key: "pwa-manifest", rel: "manifest", href: manifestHref.value }],
+  }));
 </script>

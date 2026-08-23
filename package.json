@@ -5,9 +5,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "generate": "nuxi generate",
+    "generate:pwa-manifests": "tsx scripts/generate-pwa-manifests.ts",
+    "dev": "npm run generate:pwa-manifests && nuxi dev",
+    "build": "npm run generate:pwa-manifests && nuxi build",
+    "generate": "npm run generate:pwa-manifests && nuxi generate",
     "postgenerate": "cp -r public/* .output/public/",
     "preview": "nuxi preview",
     "postinstall": "nuxi prepare",
