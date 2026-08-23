@@ -8,7 +8,7 @@ export type PageMeta = {
 
 // Site-wide defaults (fallback when nothing else is defined)
 const SITE_DEFAULTS = {
-  title: "BOOZ - Bar Inventory Management",
+  title: "BOOZ | Bar Inventory Management",
   description: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations.",
   ogImage: "/opengraph-generic.png",
 };

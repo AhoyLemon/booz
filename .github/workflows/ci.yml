@@ -28,7 +28,7 @@ jobs:
 
       - name: 🏗️ Build
         run: |
-          bun run nuxi build
+          bun run build
 
       - name: ✅ Typecheck
         run: |

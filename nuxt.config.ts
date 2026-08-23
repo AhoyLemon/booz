@@ -137,17 +137,18 @@ export default defineNuxtConfig({
     baseURL: process.env.NODE_ENV === "production" ? "/" : "/",
     buildAssetsDir: "assets",
     head: {
-      title: "BOOZ - Bar Inventory Management",
+      title: "BOOZ | Bar Inventory Management",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "apple-mobile-web-app-title", content: "BOOZ" },
         {
           name: "description",
           content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations.",
         },
         { name: "theme-color", content: "#264653" },
         // OpenGraph
-        { property: "og:title", content: "BOOZ - Bar Inventory Management" },
+        { property: "og:title", content: "BOOZ | Bar Inventory Management" },
         {
           property: "og:description",
           content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations.",
@@ -157,7 +158,7 @@ export default defineNuxtConfig({
         { property: "og:url", content: `${siteOrigin}` },
         // Twitter Card
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "BOOZ - Bar Inventory Management" },
+        { name: "twitter:title", content: "BOOZ | Bar Inventory Management" },
         {
           name: "twitter:description",
           content: "Manage and explore cocktail recipes, bottle inventory, and bar essentials for multiple locations.",
@@ -165,17 +166,16 @@ export default defineNuxtConfig({
         { name: "twitter:image", content: `${siteOrigin}/opengraph-generic.png` },
       ],
       link: [
-        { rel: "icon", type: "image/x-icon", href: `${siteOrigin}/favicon.ico` },
-        { rel: "icon", type: "image/svg+xml", href: `${siteOrigin}/favicon.svg` },
-        { rel: "apple-touch-icon", href: `${siteOrigin}/apple-touch-icon.png` },
-        { rel: "manifest", href: `${siteOrigin}/site.webmanifest` },
+        { rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        { rel: "shortcut icon", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap",
         },
-        { rel: "icon", type: "image/png", href: `${siteOrigin}/favicon.png` },
       ],
     },
   },
